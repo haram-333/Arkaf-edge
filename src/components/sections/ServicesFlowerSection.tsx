@@ -136,6 +136,9 @@ export default function ServicesFlowerSection() {
                       ))}
                     </div>
                   </div>
+                  <p className="font-mono-label text-[9.5px] text-[#14f884] mb-1">
+                    {item.tagline}
+                  </p>
                   <h3 className="text-xl font-black tracking-[-0.02em] text-white uppercase leading-[1.08]">
                     {item.title.replace("\n", " ")}
                   </h3>
@@ -150,7 +153,7 @@ export default function ServicesFlowerSection() {
 
         {/* DESKTOP VIEW (md+): Exact 2x2 Quadrant Grid matching Screenshot 3 */}
         <div className="hidden md:block relative z-10 w-full max-w-[1380px] mx-auto px-10 lg:px-16 py-20">
-          <div className="grid grid-cols-2 gap-y-24 lg:gap-y-28 gap-x-[36%] lg:gap-x-[40%]">
+          <div className="grid grid-cols-2 gap-y-20 lg:gap-y-24 gap-x-[36%] lg:gap-x-[40%]">
             {SERVICES_QUADRANTS.map((item, idx) => {
               const isRight = item.align === "right";
               return (
@@ -164,12 +167,12 @@ export default function ServicesFlowerSection() {
                   tabIndex={0}
                   onKeyDown={(e) => e.key === "Enter" && scrollToQuadrant(idx)}
                   style={{ opacity: idx === 0 ? 1 : 0, transform: "translate3d(0, 0, 0)" }}
-                  className={`will-change-transform max-w-[360px] cursor-pointer group transition-transform duration-300 hover:scale-[1.02] ${
+                  className={`will-change-transform max-w-[370px] cursor-pointer group transition-transform duration-300 hover:scale-[1.02] ${
                     isRight ? "ml-auto text-right" : "mr-auto text-left"
                   }`}
                 >
                   <div
-                    className={`inline-flex items-center gap-2 font-mono-label text-[10px] sm:text-[11px] text-[#14f884] mb-2.5 ${
+                    className={`inline-flex items-center gap-2 font-mono-label text-[10px] sm:text-[11px] text-[#14f884] mb-2 ${
                       isRight ? "flex-row-reverse" : ""
                     }`}
                   >
@@ -179,13 +182,28 @@ export default function ServicesFlowerSection() {
                     </span>
                   </div>
 
-                  <h3 className="text-[clamp(1.45rem,2.55vw,2.3rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
+                  <p className="font-mono-label text-[10px] text-[#14f884]/90 mb-1">
+                    {item.tagline}
+                  </p>
+
+                  <h3 className="text-[clamp(1.4rem,2.4vw,2.2rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
                     {item.title}
                   </h3>
 
-                  <p className="mt-3 text-[clamp(0.85rem,1.25vw,1.1rem)] text-[#b8c7c2] font-light leading-[1.52]">
+                  <p className="mt-2.5 text-[clamp(0.82rem,1.18vw,1.02rem)] text-[#b8c7c2] font-light leading-[1.52]">
                     {item.description}
                   </p>
+
+                  <div className={`mt-3 flex flex-wrap gap-1.5 ${isRight ? "justify-end" : "justify-start"}`}>
+                    {item.capabilities.slice(0, 4).map((c) => (
+                      <span
+                        key={c}
+                        className="px-2.5 py-0.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[8.5px] text-[#9dbcb0]"
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               );
             })}

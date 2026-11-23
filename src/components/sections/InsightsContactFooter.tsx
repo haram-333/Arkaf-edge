@@ -6,9 +6,11 @@ import { EDGE_NOTES } from "@/data/content";
 
 const SERVICE_CHIPS = [
   "Brand Strategy",
-  "Creative & 3D",
-  "Digital Platform",
-  "Performance Growth",
+  "Marketing & Growth",
+  "Performance Marketing",
+  "Creative Production",
+  "Website & Digital",
+  "Something Else",
 ];
 
 export default function InsightsContactFooter() {
@@ -19,7 +21,8 @@ export default function InsightsContactFooter() {
   );
 
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [contactInfo, setContactInfo] = useState("");
+  const [company, setCompany] = useState("");
   const [brief, setBrief] = useState("");
   const [selectedService, setSelectedService] = useState<string>("Brand Strategy");
   const [submitted, setSubmitted] = useState(false);
@@ -53,7 +56,7 @@ export default function InsightsContactFooter() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
+    if (!name.trim() || !contactInfo.trim()) return;
     setSubmitted(true);
   };
 
@@ -65,7 +68,7 @@ export default function InsightsContactFooter() {
 
   return (
     <div className="bg-[#041d1a] text-white">
-      {/* SECTION 08 — INSIGHTS matching Screenshot 13 exact proportions */}
+      {/* SECTION 08 — INSIGHTS / EDGE NOTES */}
       <section
         id="insights"
         ref={insightsRef}
@@ -73,18 +76,21 @@ export default function InsightsContactFooter() {
       >
         <div className="max-w-[1000px] mx-auto px-5 sm:px-10">
           <span className="inline-block rounded-full border border-[#14f884]/25 bg-[#072924] font-mono-label text-[10px] text-[#14f884] px-4 py-1.5 mb-4">
-            08. INSIGHTS
+            08. INSIGHTS — EDGE NOTES
           </span>
 
-          {/* Single crisp line matching Screenshot 13 */}
-          <h2 className="text-[clamp(1.65rem,3.3vw,3.15rem)] font-black tracking-[-0.025em] uppercase leading-[1.04] mb-7 sm:mb-9 md:whitespace-nowrap">
+          <h2 className="text-[clamp(1.65rem,3.3vw,3.15rem)] font-black tracking-[-0.025em] uppercase leading-[1.04] mb-3 md:whitespace-nowrap">
             <span className="text-white">IDEAS WORTH </span>
             <span className="text-[#14f884] neon-text-glow">
-              THINKING ABOUT.
+              CARRYING FORWARD.
             </span>
           </h2>
 
-          {/* 3-Column Card Grid matching Screenshot 13 exact geometry */}
+          <p className="max-w-xl text-xs sm:text-sm text-[#99b3ab] font-light mb-7 sm:mb-9">
+            Not another corporate blog. Edge Notes is where we explore the intersections shaping modern businesses: Brand × Culture, Technology × Creativity, and Growth × Responsibility.
+          </p>
+
+          {/* 3-Column Card Grid matching Screenshot 13 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
             {EDGE_NOTES.map((note, idx) => (
               <article
@@ -160,32 +166,33 @@ export default function InsightsContactFooter() {
         </div>
       )}
 
-      {/* SECTION 09 — FINAL CTA matching Screenshot 14 exact proportions & clean interactive form */}
+      {/* SECTION 09 — FINAL CTA matching Screenshot 14 exact proportions & revised docx fields */}
       <section id="contact" className="pb-16 sm:pb-20 pt-2">
         <div className="max-w-[1000px] mx-auto px-5 sm:px-10">
           <div className="rounded-[20px] sm:rounded-[22px] border border-white/30 bg-[#04211d] p-6 sm:p-12 lg:p-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left Column matching Screenshot 14 */}
+            {/* Left Column from revised docx */}
             <div className="lg:col-span-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#14f884]/40 bg-[#041d1a] px-4 py-1.5 mb-5 sm:mb-7">
                 <Sparkles className="w-3 h-3 text-[#14f884]" />
                 <span className="font-mono-label text-[10px] text-[#14f884]">
-                  09. FINAL CTA
+                  09. CONTACT
                 </span>
               </div>
 
-              {/* Tight 2-line uppercase Black locked against wrapping */}
               <h2 className="text-[clamp(1.95rem,3.5vw,3.25rem)] font-black tracking-[-0.03em] leading-[1.02] uppercase">
                 <span className="block text-white sm:whitespace-nowrap">
-                  READY TO FIND
+                  YOU BRING THE
                 </span>
                 <span className="block text-[#14f884] neon-text-glow sm:whitespace-nowrap">
-                  YOUR EDGE?
+                  AMBITION.
+                </span>
+                <span className="block text-white sm:whitespace-nowrap">
+                  WE&apos;LL FIND THE EDGE.
                 </span>
               </h2>
 
-              <p className="mt-4 sm:mt-5 text-[clamp(0.875rem,1.25vw,1.1rem)] text-[#a8beb8] font-light leading-[1.58] max-w-md">
-                Let&apos;s explore what&apos;s possible when strategy,
-                creativity, and purpose come together.
+              <p className="mt-4 sm:mt-5 text-[clamp(0.875rem,1.25vw,1.08rem)] text-[#a8beb8] font-light leading-[1.58] max-w-md">
+                Whether you&apos;re launching something new, rebuilding something old or trying to take a good business somewhere it has never been before: tell us what you&apos;re building.
               </p>
 
               {/* Email with copy button */}
@@ -217,7 +224,7 @@ export default function InsightsContactFooter() {
               </div>
             </div>
 
-            {/* Right Nested Form Card matching Screenshot 14 */}
+            {/* Right Nested Form Card with exact 5 docx fields */}
             <div className="lg:col-span-6 rounded-[16px] border border-white/10 bg-[#031a17] p-5 sm:p-8">
               <h3 className="text-[19px] font-bold text-white mb-4">
                 Start a Conversation
@@ -230,14 +237,15 @@ export default function InsightsContactFooter() {
                     Sent to the Edge.
                   </h4>
                   <p className="mt-2 text-sm text-[#b8c7c2] font-light">
-                    Thanks, {name}. We&apos;ll reply soon regarding your {selectedService} inquiry.
+                    Thanks, {name}. We&apos;ll reach out soon at {contactInfo} to explore your {selectedService} initiative.
                   </p>
                   <button
                     type="button"
                     onClick={() => {
                       setSubmitted(false);
                       setName("");
-                      setEmail("");
+                      setContactInfo("");
+                      setCompany("");
                       setBrief("");
                     }}
                     className="mt-5 font-mono-label text-[10px] text-[#14f884] underline cursor-pointer"
@@ -247,10 +255,54 @@ export default function InsightsContactFooter() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Selectable Service Chips */}
+                  {/* Field 1: Name */}
+                  <div>
+                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-1.5">
+                      WHAT SHOULD WE CALL YOU?
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Your name"
+                      className="w-full rounded-[10px] border border-white/12 bg-[#051e1b] px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-[#14f884] focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  {/* Field 2: Email / Phone */}
+                  <div>
+                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-1.5">
+                      WHERE CAN WE REACH YOU?
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={contactInfo}
+                      onChange={(e) => setContactInfo(e.target.value)}
+                      placeholder="Email or phone"
+                      className="w-full rounded-[10px] border border-white/12 bg-[#051e1b] px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-[#14f884] focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  {/* Field 3: Company */}
+                  <div>
+                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-1.5">
+                      TELL US ABOUT THE COMPANY
+                    </label>
+                    <input
+                      type="text"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                      placeholder="Company name / industry"
+                      className="w-full rounded-[10px] border border-white/12 bg-[#051e1b] px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-[#14f884] focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  {/* Field 4: What are we building together? */}
                   <div>
                     <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-2">
-                      INTERESTED SERVICE
+                      WHAT ARE WE BUILDING TOGETHER?
                     </label>
                     <div className="flex flex-wrap gap-1.5">
                       {SERVICE_CHIPS.map((chip) => (
@@ -270,44 +322,17 @@ export default function InsightsContactFooter() {
                     </div>
                   </div>
 
+                  {/* Field 5: Problem to solve */}
                   <div>
-                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-2">
-                      NAME
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Your Name"
-                      className="w-full rounded-[10px] border border-white/12 bg-[#051e1b] px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#14f884] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-2">
-                      EMAIL
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="name@company.com"
-                      className="w-full rounded-[10px] border border-white/12 bg-[#051e1b] px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#14f884] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-2">
-                      PROJECT BRIEF
+                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-1.5">
+                      FORGET THE FORMAL BRIEF. WHAT&apos;S THE PROBLEM YOU&apos;RE TRYING TO SOLVE?
                     </label>
                     <textarea
                       rows={3}
                       value={brief}
                       onChange={(e) => setBrief(e.target.value)}
-                      placeholder="Tell us about your brand goals..."
-                      className="w-full rounded-[10px] border border-white/12 bg-[#051e1b] px-4 py-3 text-sm text-white placeholder:text-white/30 focus:border-[#14f884] focus:outline-none transition-colors resize-none"
+                      placeholder="Tell us everything..."
+                      className="w-full rounded-[10px] border border-white/12 bg-[#051e1b] px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-[#14f884] focus:outline-none transition-colors resize-none"
                     />
                   </div>
 

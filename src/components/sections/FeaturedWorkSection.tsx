@@ -57,26 +57,25 @@ export default function FeaturedWorkSection() {
       className="relative bg-[#041d1a] text-white py-16 sm:py-28"
     >
       <div className="max-w-[1040px] mx-auto px-5 sm:px-10">
-        {/* Exact 3-line Asymmetric Split Header matching Screenshot 9 */}
+        {/* Exact Split Header from revised docx */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-16">
-          <div className="shrink-0">
+          <div className="shrink-0 max-w-xl">
             <span className="inline-block rounded-full border border-[#14f884]/25 bg-[#072924] font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884] px-3.5 sm:px-4 py-1.5 mb-4 sm:mb-5">
               07. FEATURED WORK — SELECTED WORK
             </span>
             <h2 className="text-[clamp(2.35rem,5.3vw,4.85rem)] font-black tracking-[-0.03em] leading-[0.95] uppercase">
               <span className="block text-white sm:whitespace-nowrap">
-                IDEAS THAT
+                WORK WITH A
               </span>
-              <span className="block text-white">MAKE</span>
+              <span className="block text-white">REASON TO</span>
               <span className="block text-[#14f884] neon-text-glow sm:whitespace-nowrap">
-                AN IMPACT.
+                EXIST.
               </span>
             </h2>
           </div>
 
-          <p className="max-w-[330px] text-[clamp(0.875rem,1.15vw,1.02rem)] text-[#a8beb8] font-light leading-[1.58] lg:pb-1.5">
-            A selection of projects where strategic insight, creative
-            production, and digital craft combined to build competitive edge.
+          <p className="max-w-[420px] text-[clamp(0.85rem,1.1vw,0.98rem)] text-[#a8beb8] font-light leading-[1.58] lg:pb-1.5">
+            We are particularly drawn to businesses creating something better: better products, better systems, or a better relationship with the planet. Transformed 25+ brands including Doodlage, Aangrakha, and Aakar Gymnastics.
           </p>
         </div>
 

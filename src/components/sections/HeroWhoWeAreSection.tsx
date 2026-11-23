@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
 import HeroVortexCanvas from "@/components/canvas/HeroVortexCanvas";
-import { HERO_CONTENT, BRAND_STATEMENT } from "@/data/content";
+import { HERO_CONTENT, SUSTAINABILITY_CONTENT } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,23 +102,21 @@ export default function HeroWhoWeAreSection() {
               </span>
             </div>
 
-            {/* EXACT 2-Line Massive Display Headline locked against wrapping on desktop, crisp on mobile */}
-            <h1 className="text-[clamp(2.15rem,5.7vw,5.4rem)] font-black tracking-[-0.03em] leading-[1.03] uppercase">
+            {/* EXACT 3-Line Massive Display Headline from revised docx */}
+            <h1 className="text-[clamp(2.15rem,5.6vw,5.3rem)] font-black tracking-[-0.03em] leading-[1.02] uppercase">
               <span className="block text-white whitespace-nowrap">
                 {HERO_CONTENT.line1}
-                <span className="text-white ml-1.5 sm:ml-2">•</span>
               </span>
-              <span className="block sm:whitespace-nowrap">
-                <span className="text-[#14f884] neon-text-glow">
-                  {HERO_CONTENT.line2Accent}
-                </span>
-                <span className="text-white mx-1.5 sm:mx-2">•</span>
-                <span className="text-white">{HERO_CONTENT.line2End}</span>
+              <span className="block text-white whitespace-nowrap">
+                {HERO_CONTENT.line2}
+              </span>
+              <span className="block text-[#14f884] neon-text-glow whitespace-nowrap">
+                {HERO_CONTENT.line3Accent}
               </span>
             </h1>
 
             {/* Generous Editorial Subtitle */}
-            <p className="mt-4 sm:mt-6 max-w-[660px] text-[clamp(0.92rem,1.75vw,1.5rem)] text-[#c7d6d1] font-light leading-[1.52]">
+            <p className="mt-4 sm:mt-6 max-w-[680px] text-[clamp(0.92rem,1.55vw,1.25rem)] text-[#c7d6d1] font-light leading-[1.54]">
               {HERO_CONTENT.subtitle}
             </p>
 
@@ -141,7 +139,7 @@ export default function HeroWhoWeAreSection() {
             </div>
           </div>
 
-          {/* Clean Borderless Bottom Utility Row matching Screenshot 1 */}
+          {/* Clean Borderless Bottom Utility Row */}
           <div className="flex items-center justify-between gap-4">
             <span className="font-mono-label text-[9.5px] sm:text-[11px] text-[#8fa8a0]">
               {HERO_CONTENT.bottomLeft}
@@ -153,32 +151,48 @@ export default function HeroWhoWeAreSection() {
           </div>
         </div>
 
-        {/* STAGE 2 — WHO WE ARE LAYER (exact measured massive scale + clean mobile padding) */}
+        {/* STAGE 2 — SUSTAINABILITY / WHO WE ARE LAYER from revised docx */}
         <div
           ref={whoLayerRef}
           style={{ opacity: 0, pointerEvents: "none" }}
           className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-5 sm:px-12 will-change-transform"
         >
-          <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[10px] sm:text-[11px] font-bold px-3.5 sm:px-4 py-1.5 mb-5 sm:mb-7 shadow-[0_0_26px_rgba(169,245,207,0.38)]">
-            {BRAND_STATEMENT.badge}
+          <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[10px] sm:text-[11px] font-bold px-3.5 sm:px-4 py-1.5 mb-4 sm:mb-6 shadow-[0_0_26px_rgba(169,245,207,0.38)]">
+            {SUSTAINABILITY_CONTENT.badge}
           </span>
 
-          <h2 className="text-[clamp(2.1rem,6.4vw,5.8rem)] font-black tracking-[-0.03em] leading-[1.06] max-w-5xl">
-            <span className="block text-white">{BRAND_STATEMENT.headlineWhite}</span>
+          <h2 className="text-[clamp(1.85rem,4.4vw,3.95rem)] font-black tracking-[-0.03em] leading-[1.08] max-w-4xl">
+            <span className="block text-white">{SUSTAINABILITY_CONTENT.headlineWhite}</span>
             <span className="block text-[#14f884] neon-text-glow">
-              {BRAND_STATEMENT.headlineGreen}
+              {SUSTAINABILITY_CONTENT.headlineGreen}
             </span>
           </h2>
 
-          <p className="mt-5 sm:mt-7 max-w-[820px] text-[clamp(0.95rem,2.05vw,1.75rem)] text-[#dce8e4] font-light leading-[1.54]">
-            {BRAND_STATEMENT.body}
+          <p className="mt-4 sm:mt-5 max-w-[760px] text-[clamp(0.88rem,1.35vw,1.15rem)] text-[#dce8e4] font-light leading-[1.54]">
+            {SUSTAINABILITY_CONTENT.lead} {SUSTAINABILITY_CONTENT.story}
+          </p>
+
+          {/* Focus Industry Badges */}
+          <div className="mt-5 max-w-3xl flex flex-wrap items-center justify-center gap-2">
+            {SUSTAINABILITY_CONTENT.industries.map((ind) => (
+              <span
+                key={ind}
+                className="px-3 py-1 rounded-full border border-[#14f884]/30 bg-[#051a12]/80 font-mono-label text-[9px] sm:text-[10.5px] text-[#a9f5cf]"
+              >
+                {ind}
+              </span>
+            ))}
+          </div>
+
+          <p className="mt-4 max-w-[700px] text-[clamp(0.82rem,1.15vw,1rem)] text-[#99b3ab] font-light">
+            {SUSTAINABILITY_CONTENT.closing}
           </p>
 
           <a
-            href="#phenomenon"
-            className="mt-7 sm:mt-9 inline-flex items-center gap-2.5 font-mono-label text-[10.5px] sm:text-[12px] font-semibold text-[#14f884] hover:gap-4 transition-all"
+            href="#services"
+            className="mt-6 inline-flex items-center gap-2.5 font-mono-label text-[10.5px] sm:text-[12px] font-semibold text-[#14f884] hover:gap-4 transition-all"
           >
-            {BRAND_STATEMENT.cta}
+            {SUSTAINABILITY_CONTENT.cta}
             <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>

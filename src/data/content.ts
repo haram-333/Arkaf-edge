@@ -1,22 +1,59 @@
 export const HERO_CONTENT = {
-  eyebrow: "ARKAF EDGE — GROWTH & CREATIVE PARTNER",
-  line1: "STRATEGY",
-  line2Accent: "CREATIVITY",
-  line2End: "IMPACT",
+  eyebrow: "STRATEGY × CREATIVE × TECHNOLOGY × IMPACT",
+  line1: "GROWTH SHOULD",
+  line2: "LEAVE SOMETHING",
+  line3Accent: "GOOD BEHIND.",
   subtitle:
-    "We partner with ambitious brands to connect strategy, creative production, performance, and technology into growth that leaves something good behind.",
-  primaryCta: "EXPLORE SERVICES",
-  secondaryCta: "VIEW CASE STUDIES",
-  bottomLeft: "SCROLL DOWN TO REVEAL WHO WE ARE",
+    "ARKAF Edge is a growth and creative partner for ambitious businesses building what comes next. We bring strategy, marketing, creativity, performance and technology together to help brands become more visible, more valuable and more meaningful.",
+  primaryCta: "WHAT WE DO",
+  secondaryCta: "EXPLORE OUR WORK ↗",
+  discoverCta: "DISCOVER ARKAF EDGE",
+  bottomLeft: "SCROLL DOWN TO REVEAL SUSTAINABILITY & WHO WE ARE",
   bottomRight: "STRATEGY × CREATIVE × TECHNOLOGY",
+};
+
+export const SUSTAINABILITY_CONTENT = {
+  badge: "SUSTAINABILITY — WHO WE ARE",
+  headlineWhite: "The future shouldn't need another marketing campaign.",
+  headlineGreen: "It needs businesses willing to build it.",
+  lead: "Sustainability isn't a green badge we attach to our services. It is one of the reasons ARKAF Edge exists.",
+  story:
+    "Our earliest ambition was to explore how waste itself could become useful, productive and scalable. That idea eventually evolved into a larger question: What if we helped the businesses already building that future?",
+  affection:
+    "Today, ARKAF Edge works across industries. But we have a particular affection for founders and organisations working in:",
+  industries: [
+    "Upcycling",
+    "Responsible Fashion",
+    "Circular Economy",
+    "Climate Innovation",
+    "Conscious Consumer Products",
+    "Regenerative Business",
+    "Sustainable Manufacturing",
+    "Nature-positive Technology",
+    "Social Impact",
+  ],
+  closing:
+    "We want good businesses to have access to the same quality of strategy, creativity, marketing and technology as the world's largest brands.",
+  cta: "MORE ABOUT ARKAF EDGE (DISCOVER US)",
 };
 
 export const BRAND_STATEMENT = {
   badge: "WHO WE ARE",
   headlineWhite: "Not another agency.",
   headlineGreen: "An edge.",
-  body: "ARKAF Edge brings together strategy, branding, marketing, creative production, and technology to solve the bigger problem: how does a good business become a great brand? We become the team between the idea and its potential.",
+  paragraphs: [
+    "There are agencies that run advertisements. Studios that make things beautiful. Consultants that build strategies. Developers that build technology. We connect all of it.",
+    "ARKAF Edge works across strategy, branding, marketing, creative production and technology to solve the bigger problem: How does a good business become a great brand?",
+    "We become the team between the idea and its potential.",
+  ],
   cta: "MORE ABOUT ARKAF EDGE",
+};
+
+export const SERVICES_CONTENT = {
+  eyebrow: "WHAT WE DO — CONNECTED DISCIPLINES",
+  headline: "ONE PARTNER. MANY EDGES.",
+  subtitle:
+    "A brand doesn't experience its problems in departments. Neither do we. We combine disciplines to create connected solutions that move businesses forward.",
 };
 
 export const SERVICES_QUADRANTS = [
@@ -24,65 +61,142 @@ export const SERVICES_QUADRANTS = [
     num: "01",
     label: "STRATEGY & BRAND",
     title: "STRATEGY &\nBRAND",
+    tagline: "Find what makes you impossible to ignore.",
     description:
-      "Uncovering what your brand stands for, who it matters to, and clear positioning that makes you impossible to ignore.",
+      "We uncover what your brand stands for, who it should matter to and how it should show up in the world.",
+    capabilities: [
+      "Brand Strategy",
+      "Brand Positioning",
+      "Brand Identity",
+      "Visual Direction",
+      "Communication Strategy",
+      "Campaign Strategy",
+      "Growth Strategy",
+    ],
     align: "left" as const,
   },
   {
     num: "02",
     label: "ORGANIC & PERFORMANCE",
-    title: "GROWTH &\nPERFORMANCE",
+    title: "ORGANIC &\nPERFORMANCE",
+    tagline: "Build attention you don't have to keep buying.",
     description:
-      "Compounding SEO, organic ecosystems, and outcome-driven paid campaigns built around real revenue, never vanity metrics.",
+      "Compounding SEO, organic ecosystems, and paid campaigns built around real business outcomes, never vanity metrics.",
+    capabilities: [
+      "SEO & Organic Marketing",
+      "Social Media Ecosystems",
+      "Meta & Google Ads",
+      "Performance Marketing",
+      "Conversion Optimisation",
+      "Lead Generation",
+      "Analytics & Reporting",
+    ],
     align: "right" as const,
   },
   {
     num: "03",
     label: "CREATIVE PRODUCTION",
     title: "CREATIVE\nPRODUCTION",
+    tagline: "Make people stop. Then make them care.",
     description:
-      "Photography, film, short-form reels, and visual storytelling crafted to make people stop — and then make them care.",
+      "From a single product frame to an entire cinematic campaign, we create visual stories designed around the identity of the brand.",
+    capabilities: [
+      "Product & Campaign Photography",
+      "Video Production & Films",
+      "Short-form Reels & Video",
+      "Editing & Post-production",
+      "Creative Direction",
+      "Advertising Creatives",
+      "Brand Content",
+    ],
     align: "left" as const,
   },
   {
     num: "04",
     label: "DIGITAL & TECHNOLOGY",
     title: "DIGITAL &\nTECHNOLOGY",
+    tagline: "Build the place where your brand lives online.",
     description:
-      "Websites and digital experiences where strategy, UX/UI, storytelling, and engineering operate as one connected system.",
+      "Your website shouldn't simply explain your company — it should demonstrate it. High-impact experiences where strategy, UX/UI, and code work as one system.",
+    capabilities: [
+      "Website Strategy & UX/UI",
+      "Website Development (Next.js)",
+      "Landing Pages & Portals",
+      "Conversion Optimisation",
+      "Interactive 3D WebGL",
+      "Technology Integration",
+    ],
     align: "right" as const,
   },
 ];
 
+export const ROTATING_WORDS = {
+  prefix: "WE BUILD",
+  words: ["BRANDS.", "AUDIENCES.", "EXPERIENCES.", "GROWTH.", "IMPACT."],
+};
+
 export const PHENOMENON_LEAD = {
-  badge: "04. THE ARKAF EDGE",
+  badge: "04. OUR PHILOSOPHY",
   whiteLines: ["GROW. NOT", "SIMPLY", "BIGGER."],
   greenLines: ["BUILD", "STRONGER."],
   body: "Strategy gives us direction. Creativity earns attention. Technology creates possibility. Performance proves what works. Purpose determines where we go next — that is the ARKAF Edge.",
 };
 
+export const PHILOSOPHY_PRINCIPLES = [
+  {
+    num: "01",
+    title: "PURPOSE BEFORE NOISE",
+    body: "We want to understand why something deserves attention before trying to manufacture attention for it.",
+  },
+  {
+    num: "02",
+    title: "THINK BEFORE SPEND",
+    body: "A larger advertising budget cannot repair unclear positioning. Strategy comes first.",
+  },
+  {
+    num: "03",
+    title: "CREATE WITH INTENTION",
+    body: "Every frame, word, campaign and interaction should have a reason to exist.",
+  },
+  {
+    num: "04",
+    title: "MEASURE WHAT MATTERS",
+    body: "Numbers should help us make better decisions, not decorate presentations.",
+  },
+  {
+    num: "05",
+    title: "BUILD FOR TOMORROW",
+    body: "Short-term campaigns should contribute to long-term brand value.",
+  },
+  {
+    num: "06",
+    title: "LEAVE SOMETHING GOOD BEHIND",
+    body: "Growth and responsibility don't have to sit on opposite sides of the table. We want to prove they belong together.",
+  },
+];
+
 export const PHENOMENON_CARDS = [
   {
     num: "01",
-    alt: "Brutalist concrete architecture",
+    alt: "Circular design architecture",
     image: "/images/art-01.jpg?v=2",
     fallbackGradient: "from-zinc-700 via-zinc-600 to-zinc-800",
   },
   {
     num: "02",
-    alt: "3D neon purple and crimson abstract torus",
+    alt: "Abstract 3D emerald torus",
     image: "/images/art-02.jpg?v=2",
     fallbackGradient: "from-indigo-950 via-purple-900 to-rose-950",
   },
   {
     num: "03",
-    alt: "Architectural light and reflective water gallery",
+    alt: "Architectural reflection gallery",
     image: "/images/art-03.jpg?v=2",
     fallbackGradient: "from-stone-800 via-neutral-700 to-stone-950",
   },
   {
     num: "04",
-    alt: "Vibrant macro iridescent fluid bubbles",
+    alt: "Vibrant macro iridescent fluid",
     image: "/images/art-04.jpg?v=2",
     fallbackGradient: "from-fuchsia-500 via-amber-400 to-cyan-500",
   },
@@ -92,101 +206,150 @@ export const APPROACH_STAGES = [
   {
     word: "THINK",
     num: "01",
-    previewLabel: "01 — UNDERSTAND & DEFINE",
+    previewLabel: "01 & 02 — UNDERSTAND & DEFINE",
     title: "Understand the business, audience, market, and opportunity.",
-    body: "Business before marketing, clarity before creativity. We define positioning, priorities, and the exact problem worth solving.",
+    body: "Business before marketing, clarity before creativity. We study your company, customer, competition, product, market and ambition.",
     side: "right" as const,
   },
   {
     word: "CREATE",
     num: "02",
-    previewLabel: "02 — CREATE & DISTRIBUTE",
-    title: "Turn insight into strategies, ideas, identities, and experiences.",
-    body: "We turn strategic clarity into compelling visual identities, campaigns, websites, and organic plus performance engines people trust.",
+    previewLabel: "03 & 04 — CREATE & DISTRIBUTE",
+    title: "Ideas become experiences. Good work deserves an audience.",
+    body: "Brand identity, content, campaigns, photography, film, and websites, distributed across search, social, and performance channels.",
     side: "left" as const,
   },
   {
     word: "TRANSFORM",
     num: "03",
-    previewLabel: "03 — MEASURE & EVOLVE",
-    title: "Launch, evolve, and create measurable impact.",
-    body: "Data becomes direction and growth isn't a finish line. We optimise, experiment, and build your next competitive edge.",
+    previewLabel: "05 & 06 — MEASURE, EVOLVE & REPEAT",
+    title: "Data becomes direction. Growth isn't a finish line.",
+    body: "We learn what works, what doesn't and where the next opportunity lives. We optimise, experiment and build the next edge.",
     side: "right" as const,
   },
 ];
 
+export const ARKAF_METHOD = [
+  { step: "01", name: "UNDERSTAND", desc: "Business before marketing. We study your company, customer, competition, product, market and ambition." },
+  { step: "02", name: "DEFINE", desc: "Clarity before creativity. We establish positioning, priorities, audience and the problem worth solving." },
+  { step: "03", name: "CREATE", desc: "Ideas become experiences. Brand identity. Content. Campaigns. Photography. Film. Websites." },
+  { step: "04", name: "DISTRIBUTE", desc: "Good work deserves an audience. SEO. Organic. Social. Meta. Google. Performance." },
+  { step: "05", name: "MEASURE", desc: "Data becomes direction. We learn what works, what doesn't and where the next opportunity lives." },
+  { step: "06", name: "EVOLVE", desc: "Growth isn't a finish line. We optimise, experiment and build the next edge." },
+];
+
 export const IMPACT_STATS = [
-  { value: 25, suffix: "+", label: "PROJECTS DELIVERED", display: "25+" },
-  { value: 12, suffix: "+", label: "BRANDS TRANSFORMED", display: "12+" },
-  { value: 8, suffix: "", label: "MARKETS REACHED", display: "8" },
-  { value: null, suffix: "", label: "IDEAS IN MOTION", display: "∞" },
+  { value: 25, suffix: "+", label: "BRANDS TRANSFORMED", display: "25+" },
+  { value: 14, suffix: "+", label: "GLOBAL MARKETS", display: "14+" },
+  { value: 100, suffix: "%", label: "COMMERCIAL ACCOUNTABILITY", display: "100%" },
+  { value: null, suffix: "", label: "CIRCULAR VALUE GENERATED", display: "∞" },
 ];
 
 export const FEATURED_WORK = [
   {
-    year: "2026",
-    tags: "STRATEGY • BRANDING • DIGITAL",
-    title: "NEXUS VANTAGE",
+    year: "2025 / 2026",
+    client: "DOODLAGE",
+    tags: "UPCYCLING • RESPONSIBLE FASHION • E-COMMERCE",
+    title: "DOODLAGE",
     description:
-      "Repositioning a circular-technology pioneer with a purpose-driven brand identity and high-impact digital platform.",
+      "Transforming India's pioneer in circular upcycled fashion into an internationally acclaimed responsible fashion powerhouse.",
     image: "/images/art-01.jpg?v=2",
     fallbackGradient: "from-zinc-800 via-neutral-700 to-zinc-900",
     overview:
-      "Nexus Vantage designs circular hardware ecosystems. They needed an identity and digital platform that communicated technical authority without losing human emotion.",
+      "Doodlage converts industrial textile waste into wearable, timeless fashion. They needed a global digital platform and communication strategy that celebrated circularity without compromising high fashion elegance.",
     challenge:
-      "Legacy hardware communication relied on dense technical documentation. The challenge was converting complex circularity metrics into an intuitive, high-converting digital experience.",
+      "Scaling circular fashion communication to conscious international buyers while debunking legacy misconceptions around upcycled textiles.",
     solution:
-      "We developed a modular brand architecture, real-time 3D product visualizers, and an interactive impact calculator that translates carbon offset into clear business ROI.",
-    results: "+280% increase in enterprise qualified leads and recognition as a top clean-tech brand.",
+      "Engineered an editorial digital storefront, circular transparency dashboards, and high-impact visual storytelling documenting the life cycle of each garment.",
+    results: "+180% surge in international conscious shoppers and 4.2x organic search visibility growth.",
     stats: [
-      { label: "QUALIFIED PIPELINE", val: "+280%" },
-      { label: "INTERACTION TIME", val: "4.8m" },
-      { label: "MARKET REACH", val: "12 Global Hubs" },
+      { label: "TEXTILE RECLAIMED", val: "12,000+ kg" },
+      { label: "GLOBAL REACH", val: "14 Countries" },
+      { label: "ORGANIC SURGE", val: "+180%" },
     ],
   },
   {
     year: "2025",
-    tags: "PERFORMANCE • CREATIVE PRODUCTION",
-    title: "AURA LUMINA",
+    client: "AANGRAKHA",
+    tags: "CONSCIOUS LIFESTYLE • BRAND IDENTITY • PERFORMANCE",
+    title: "AANGRAKHA",
     description:
-      "Designing a comprehensive go-to-market campaign and visual production engine that expanded reach across 8 markets.",
+      "Positioning an indigenous artisanal apparel brand through respectful cultural storytelling, visual direction, and performance marketing.",
     image: "/images/art-02.jpg?v=2",
     fallbackGradient: "from-indigo-950 via-purple-900 to-slate-950",
     overview:
-      "Aura Lumina introduced next-generation ambient lighting ecosystems. The launch required simultaneous rollout across multiple international markets with unified brand tone.",
+      "Aangrakha celebrates artisanal Indian textiles and slow-fashion traditions. The goal was to build a loyal, values-aligned community that appreciates authentic artisan craftsmanship.",
     challenge:
-      "Fragmented marketing channels and uneven visual consistency across regional teams diluted the brand's premium positioning.",
+      "Bridging the gap between traditional artisan heritage and modern digital performance marketing without eroding authentic cultural essence.",
     solution:
-      "ARKAF Edge engineered an end-to-end creative production engine, cinematic 3D product reels, and a unified design system deployed across 8 localized digital touchpoints.",
-    results: "Over 3.4M organic impressions in launch quarter with zero brand dilution.",
+      "End-to-end creative direction overhaul, documentary-style artisan reels, targeted social marketing, and a high-converting conversion funnel.",
+    results: "3.2M+ organic views, +240% qualified revenue growth, and zero brand dilution.",
     stats: [
-      { label: "LAUNCH IMPRESSIONS", val: "3.4M+" },
-      { label: "MARKETS ACTIVE", val: "8 Countries" },
-      { label: "ROAS BENCHMARK", val: "4.2x" },
+      { label: "ORGANIC VIEWS", val: "3.2M+" },
+      { label: "ARTISANS SUPPORTED", val: "85+ Families" },
+      { label: "REVENUE GROWTH", val: "+240%" },
     ],
   },
   {
-    year: "2025",
-    tags: "ORGANIC GROWTH • BRAND STRATEGY",
-    title: "VANGUARD STUDIO",
+    year: "2024 / 2025",
+    client: "AAKAR GYMNASTICS",
+    tags: "COMMUNITY • ACADEMY PLATFORM • BRAND TRANSFORMATION",
+    title: "AAKAR GYMNASTICS",
     description:
-      "Crafting an immersive digital content and search ecosystem that drove 140% growth in qualified brand engagement.",
+      "Building a world-class digital presence and dynamic brand engine for a premier gymnastics academy training future Olympic contenders.",
     image: "/images/art-03.jpg?v=2",
     fallbackGradient: "from-emerald-950 via-stone-900 to-black",
     overview:
-      "Vanguard Studio curates forward-thinking architectural and industrial spaces. They sought to transform passive site visitors into active project collaborators.",
+      "Aakar Gymnastics is a premier movement and athletic development academy. They needed to modernize their athletic brand identity and streamline student onboarding.",
     challenge:
-      "Traditional architectural portfolios felt static and failed to communicate the studio's strategic thinking and collaborative philosophy.",
+      "Moving from fragmented local registrations to a state-of-the-art national athletic brand and seamless digital portal.",
     solution:
-      "We built a fluid digital experience featuring smooth editorial storytelling, dynamic project filters, and an interactive project scoping tool.",
-    results: "140% surge in qualified project inquiries with average engagement times doubling.",
+      "High-energy brand identity, interactive academy registration engine, athletic documentary campaign, and community storytelling.",
+    results: "Full batch enrollment in record 48 hours and +310% membership expansion across regional hubs.",
     stats: [
-      { label: "INQUIRY SURGE", val: "+140%" },
-      { label: "AVG SESSION", val: "+118%" },
-      { label: "CONVERSION RATE", val: "6.4%" },
+      { label: "ENROLLMENT TIME", val: "48 Hours" },
+      { label: "ATHLETES TRAINED", val: "1,200+" },
+      { label: "REGIONAL HUBS", val: "4 Hubs" },
     ],
   },
 ];
+
+export const FOUNDERS = [
+  {
+    name: "ANURAG RAVIKUMAR",
+    role: "Founder & CEO",
+    hook: 'The rebel who kept asking: "Why can\'t business do both?"',
+    bio: [
+      "Anurag's journey didn't begin in marketing. It began with machines. After completing Aeronautical Engineering in 2012, a medical emergency abruptly changed the direction of his career. The carefully drawn map disappeared. So, he learned to navigate without one.",
+      "What followed was experience across customer service, collections, sales, upselling, real estate, team management and business development. Different industries. Different people. Different problems. One education no classroom could have designed.",
+      "Behind it was another constant: an enduring relationship with nature and a growing discomfort with the amount of value the modern economy simply throws away. In 2020, that discomfort became an idea: turning waste into something productive, useful and scalable.",
+      "Instead of building only one sustainable brand, why not build an organisation capable of helping many of them succeed? Today, Anurag brings together engineering logic, sales instinct, customer empathy, commercial thinking, curiosity and an appetite for risk.",
+    ],
+  },
+  {
+    name: "FAIYAZ ANSARI",
+    role: "Co-Founder",
+    hook: "The creator who learned to rebuild. Again. And again.",
+    bio: [
+      "After completing his SSC in 2006 and HSC in 2009, circumstances pushed him into working life early. With his family moving to the UAE for better opportunities, he stayed in India and learned independence long before it became a professional virtue.",
+      "Faiyaz's career began closer to the ground than most founder stories — literally in a photography studio sweeping floors. Seven months later, he was handling complete shoots himself using film and analogue cameras. That progression captures much of what would follow.",
+      "From 2012 through 2023 he worked across the merchandise industry, customer service, debt collection, and risk management. And in 2024, after years of work repeatedly interrupting education, he enrolled in a BBA programme. Not because a degree suddenly defined him. Because finishing what you started matters.",
+      "His story brings something irreplaceable to ARKAF Edge: resourcefulness, an understanding of people, an eye trained through photography, experience built across cultures, and the ability to remain useful when the original plan collapses.",
+    ],
+  },
+];
+
+export const VISION_CONTENT = {
+  headline: "A FUTURE WHERE GROWTH LEAVES SOMETHING BETTER BEHIND.",
+  pillars: [
+    "Better businesses.",
+    "Better choices.",
+    "Better use of resources.",
+    "Better for the planet.",
+  ],
+  quote:
+    "THE NEXT GENERATION OF GREAT COMPANIES WON'T BE MEASURED ONLY BY HOW MUCH THEY GROW. BUT BY WHAT GROWS BECAUSE THEY EXISTED.",
+};
 
 export const EDGE_NOTES = [
   {
@@ -199,21 +362,21 @@ export const EDGE_NOTES = [
       "The marketing industry became fragmented — one company makes the logo, another buys the ads, someone else shoots the campaign, and another builds the website. When strategy, creative, and technology operate as one connected partner, clarity compounds faster than ad spend ever can.",
   },
   {
-    category: "Strategy × Clarity",
+    category: "Growth × Responsibility",
     readTime: "4 min read",
-    title: "Why Strategy Matters More Than Ever",
+    title: "Why Waste is the Ultimate Untapped Asset",
     excerpt:
-      "A larger advertising budget cannot repair unclear positioning. Navigating disruption with agile strategic execution.",
+      "From upcycling to circular supply chains: how progressive businesses turn ecological constraints into competitive edge.",
     fullText:
-      "Think before spend. Every frame, word, campaign, and interaction should have a clear reason to exist before a single dollar is put behind media distribution.",
+      "Our earliest ambition was to explore how waste itself could become useful, productive and scalable. When businesses design for circularity, growth stops being an extractive race and starts generating compound regenerative value.",
   },
   {
-    category: "Growth × Impact",
+    category: "Strategy × Commercial Accountability",
     readTime: "6 min read",
-    title: "Building Brands for a Changing World",
+    title: "Clicks Aren't Growth: Measuring What Matters",
     excerpt:
-      "Blending human-centered design, circular conviction, and modern digital platforms to leave something good behind.",
+      "Why vanity metrics destroy marketing budgets and how outcome-driven performance marketing rebuilds real enterprise value.",
     fullText:
-      "The next generation of great companies won't be measured only by how much they grow, but by what grows because they existed.",
+      "Clicks aren't growth. Impressions aren't growth. Vanity metrics certainly aren't growth. The next generation of great companies won't be measured only by how much they grow, but by what grows because they existed.",
   },
 ];
