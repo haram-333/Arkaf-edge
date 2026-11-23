@@ -26,21 +26,32 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
-    // Expose Lenis anchor scroll smoothly for hash links
+    // Expose lenis instance globally for programmatic button scroll
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
+    // Enhanced smooth scroll handler for all hash anchors
     const onAnchorClick = (e: MouseEvent) => {
       const target = (e.target as HTMLElement | null)?.closest("a[href^='#']");
       if (!target) return;
       const href = target.getAttribute("href");
       if (!href || href === "#") return;
+
       const el = document.querySelector(href);
       if (el) {
         e.preventDefault();
-        lenis.scrollTo(el as HTMLElement, { offset: 0, duration: 1.3 });
+        // Refresh ScrollTrigger to ensure accurate pin offsets
+        ScrollTrigger.refresh();
+        lenis.scrollTo(el as HTMLElement, {
+          offset: 0,
+          duration: 1.3,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        });
       }
     };
     document.addEventListener("click", onAnchorClick);
 
     return () => {
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
       document.removeEventListener("click", onAnchorClick);
       gsap.ticker.remove(tick);
       lenis.destroy();

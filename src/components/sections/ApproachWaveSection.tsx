@@ -93,6 +93,21 @@ export default function ApproachWaveSection() {
     return () => ctx.revert();
   }, []);
 
+  const scrollToStage = (idx: number) => {
+    setActiveStage(idx);
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    const progressTargets = [0.15, 0.50, 0.85];
+    const targetScroll =
+      wrapper.offsetTop + progressTargets[idx] * (wrapper.offsetHeight - window.innerHeight);
+    const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: object) => void } }).__lenis;
+    if (lenis) {
+      lenis.scrollTo(targetScroll, { duration: 1.1 });
+    } else {
+      window.scrollTo({ top: targetScroll, behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="approach"
@@ -124,23 +139,26 @@ export default function ApproachWaveSection() {
           </h2>
         </div>
 
-        {/* Mobile/Tablet: clean non-overlapping vertical stack | Desktop (lg+): centered focal stack + Right/Left/Right floating cards */}
+        {/* Center Stacked Words & Stage Controls */}
         <div className="relative z-20 w-full max-w-[1380px] mx-auto px-5 sm:px-10 flex-1 flex flex-col justify-between lg:justify-center lg:items-center pt-4 pb-5 lg:py-0 lg:pb-8">
-          {/* Center Stacked Words */}
-          <div className="text-center select-none z-10 my-auto lg:my-0">
+          {/* Center Stacked Words (interactive clickable buttons) */}
+          <div className="text-center select-none z-10 my-auto lg:my-0 flex flex-col items-center">
             {APPROACH_STAGES.map((stage, idx) => {
               const isActive = activeStage === idx;
               return (
-                <div
+                <button
                   key={stage.word}
-                  className={`text-[clamp(2rem,5.2vw,4.75rem)] font-black tracking-[-0.03em] leading-[1.06] uppercase transition-all duration-500 ${
+                  type="button"
+                  onClick={() => scrollToStage(idx)}
+                  aria-label={`Jump to stage ${stage.word}`}
+                  className={`block text-[clamp(2rem,5.2vw,4.75rem)] font-black tracking-[-0.03em] leading-[1.06] uppercase transition-all duration-300 cursor-pointer focus:outline-none ${
                     isActive
-                      ? "text-white scale-100 drop-shadow-[0_0_24px_rgba(255,255,255,0.3)]"
-                      : "text-white/25 scale-[0.97]"
+                      ? "text-white scale-100 drop-shadow-[0_0_24px_rgba(20,248,132,0.4)]"
+                      : "text-white/30 hover:text-white/60 scale-[0.97]"
                   }`}
                 >
                   {stage.word}
-                </div>
+                </button>
               );
             })}
 
@@ -152,8 +170,26 @@ export default function ApproachWaveSection() {
             </div>
           </div>
 
-          {/* Mobile/Tablet Docked Card Slot (normal flex flow so it NEVER collides over TRANSFORM!) */}
-          <div className="lg:hidden relative min-h-[215px] w-full max-w-md mx-auto mt-3">
+          {/* Mobile/Tablet Docked Card Slot with Clickable Stage Selector Tabs */}
+          <div className="lg:hidden relative min-h-[245px] w-full max-w-md mx-auto mt-3">
+            {/* Quick selector tabs */}
+            <div className="flex items-center justify-center gap-2 mb-2">
+              {APPROACH_STAGES.map((s, idx) => (
+                <button
+                  key={s.word}
+                  type="button"
+                  onClick={() => scrollToStage(idx)}
+                  className={`px-3 py-1 rounded-full font-mono-label text-[9px] font-bold transition-all cursor-pointer ${
+                    activeStage === idx
+                      ? "bg-[#14f884] text-[#050b09] shadow-[0_0_12px_#14f884]"
+                      : "bg-[#060f0c]/90 text-white/50 border border-white/10 hover:text-white"
+                  }`}
+                >
+                  0{idx + 1} {s.word}
+                </button>
+              ))}
+            </div>
+
             {APPROACH_STAGES.map((stage, idx) => {
               const isActive = activeStage === idx;
               return (
@@ -190,7 +226,7 @@ export default function ApproachWaveSection() {
             })}
           </div>
 
-          {/* Desktop Alternating Floating Cards (Right -> Left -> Right) matching Screenshots 5–7 */}
+          {/* Desktop Alternating Floating Cards (Right -> Left -> Right) */}
           {APPROACH_STAGES.map((stage, idx) => {
             const isActive = activeStage === idx;
             const sideClass =
@@ -201,13 +237,17 @@ export default function ApproachWaveSection() {
             return (
               <div
                 key={stage.num}
-                className={`hidden lg:block absolute top-1/2 -translate-y-1/2 w-[310px] xl:w-[345px] ${sideClass} z-20 transition-all duration-500 ease-out ${
+                onClick={() => scrollToStage(idx)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && scrollToStage(idx)}
+                className={`hidden lg:block absolute top-1/2 -translate-y-1/2 w-[310px] xl:w-[345px] ${sideClass} z-20 cursor-pointer transition-all duration-500 ease-out ${
                   isActive
                     ? "opacity-100 -translate-y-1/2 pointer-events-auto"
                     : "opacity-0 translate-y-[-43%] pointer-events-none"
                 }`}
               >
-                <div className="rounded-[18px] border border-white/10 bg-[#060f0c]/92 backdrop-blur-xl p-5 shadow-[0_24px_60px_rgba(0,0,0,0.68)]">
+                <div className="rounded-[18px] border border-white/10 bg-[#060f0c]/92 backdrop-blur-xl p-5 shadow-[0_24px_60px_rgba(0,0,0,0.68)] hover:border-[#14f884]/60 transition-colors">
                   <div className="relative h-[145px] rounded-[12px] overflow-hidden border border-white/8 mb-4 bg-black">
                     <StageTelemetryGraphic index={idx} />
                     <span className="absolute bottom-2.5 inset-x-0 text-center font-mono-label text-[9px] text-[#14f884]/85">

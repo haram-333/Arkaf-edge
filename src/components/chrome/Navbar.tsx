@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { Menu, X, ArrowUpRight, Sparkles, Sun } from "lucide-react";
+import { Menu, X, ArrowUpRight, Sparkles, Sun, Moon } from "lucide-react";
 
 const NAV_LINKS = [
   { num: "01", label: "Home", href: "#hero" },
@@ -20,6 +20,34 @@ export default function Navbar() {
   const barRef = useRef<HTMLDivElement | null>(null);
   const [isLight, setIsLight] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [themeMode, setThemeMode] = useState<"dark" | "light">("dark");
+
+  // Close menu on Escape key
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = themeMode === "dark" ? "light" : "dark";
+    setThemeMode(next);
+    if (next === "light") {
+      // Smoothly navigate to light section
+      const phen = document.querySelector("#phenomenon") as HTMLElement | null;
+      if (phen) {
+        (window as unknown as { __lenis?: { scrollTo: (target: HTMLElement, opts?: object) => void } }).__lenis?.scrollTo(phen, { duration: 1.2 });
+      }
+    } else {
+      // Smoothly navigate to dark hero
+      const hero = document.querySelector("#hero") as HTMLElement | null;
+      if (hero) {
+        (window as unknown as { __lenis?: { scrollTo: (target: HTMLElement, opts?: object) => void } }).__lenis?.scrollTo(hero, { duration: 1.2 });
+      }
+    }
+  };
 
   useEffect(() => {
     let lastIsLight = false;
@@ -120,17 +148,22 @@ export default function Navbar() {
             START A PROJECT
           </a>
 
-          <a
-            href="#phenomenon"
-            aria-label="Jump to light showcase"
-            className={`w-8 h-8 rounded-full hidden sm:flex items-center justify-center border transition-all duration-300 ${
-              isLight
-                ? "border-[#091412]/15 text-[#06a65a] bg-white/75"
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle theme / light section"
+            className={`w-8 h-8 rounded-full hidden sm:flex items-center justify-center border transition-all duration-300 cursor-pointer ${
+              isLight || themeMode === "light"
+                ? "border-[#091412]/15 text-[#06a65a] bg-white/75 hover:border-[#06a65a]"
                 : "border-white/15 text-[#14f884]/80 bg-[#050b09]/65 hover:border-[#14f884]"
             }`}
           >
-            <Sun className="w-3.5 h-3.5" />
-          </a>
+            {isLight || themeMode === "light" ? (
+              <Moon className="w-3.5 h-3.5" />
+            ) : (
+              <Sun className="w-3.5 h-3.5" />
+            )}
+          </button>
 
           <button
             type="button"

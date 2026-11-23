@@ -1,8 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Sparkles, X, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, X, CheckCircle2, Copy, Check } from "lucide-react";
 import { EDGE_NOTES } from "@/data/content";
+
+const SERVICE_CHIPS = [
+  "Brand Strategy",
+  "Creative & 3D",
+  "Digital Platform",
+  "Performance Growth",
+];
 
 export default function InsightsContactFooter() {
   const insightsRef = useRef<HTMLElement | null>(null);
@@ -14,7 +21,9 @@ export default function InsightsContactFooter() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [brief, setBrief] = useState("");
+  const [selectedService, setSelectedService] = useState<string>("Brand Strategy");
   const [submitted, setSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const el = insightsRef.current;
@@ -33,10 +42,25 @@ export default function InsightsContactFooter() {
     return () => io.disconnect();
   }, []);
 
+  // Close modal on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveNote(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim()) return;
     setSubmitted(true);
+  };
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText("hello@arkafedge.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2400);
   };
 
   return (
@@ -72,7 +96,7 @@ export default function InsightsContactFooter() {
                 style={{
                   transitionDelay: cardsVisible ? `${idx * 110}ms` : "0ms",
                 }}
-                className={`group cursor-pointer rounded-[16px] sm:rounded-[18px] border border-white/30 bg-[#041e1b] p-6 sm:p-7 flex flex-col justify-between min-h-0 md:min-h-[265px] hover:border-[#14f884]/70 hover:-translate-y-1 transition-all duration-700 ease-out ${
+                className={`group cursor-pointer rounded-[16px] sm:rounded-[18px] border border-white/30 bg-[#041e1b] p-6 sm:p-7 flex flex-col justify-between min-h-0 md:min-h-[265px] hover:border-[#14f884]/70 hover:-translate-y-1 transition-all duration-700 ease-out focus:outline-none ${
                   cardsVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-6"
@@ -83,11 +107,9 @@ export default function InsightsContactFooter() {
                     <span>{note.category}</span>
                     <span>{note.readTime}</span>
                   </div>
-                  {/* Measured ~1.85vw (~26px @ 1440px) */}
                   <h3 className="text-[clamp(1.15rem,1.75vw,1.55rem)] font-bold text-white leading-[1.24] group-hover:text-[#14f884] transition-colors">
                     {note.title}
                   </h3>
-                  {/* Measured ~1.12vw (~15px @ 1440px) */}
                   <p className="mt-3.5 text-[clamp(0.8rem,1.08vw,0.94rem)] text-[#99b0aa] font-light leading-[1.58]">
                     {note.excerpt}
                   </p>
@@ -103,21 +125,22 @@ export default function InsightsContactFooter() {
         </div>
       </section>
 
-      {/* Article Reader Modal */}
+      {/* Article Reader Modal with Lenis scroll isolation */}
       {activeNote && (
         <div
-          className="fixed inset-0 z-[90] bg-black/75 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-[95] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
           onClick={() => setActiveNote(null)}
         >
           <div
-            className="max-w-xl w-full rounded-2xl border border-[#14f884]/40 bg-[#041d1a] p-7 sm:p-9 shadow-2xl relative"
+            data-lenis-prevent
+            className="max-w-xl w-full max-h-[85vh] overflow-y-auto rounded-2xl border border-[#14f884]/40 bg-[#041d1a] p-7 sm:p-9 shadow-2xl relative"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setActiveNote(null)}
               aria-label="Close article"
-              className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/75 hover:text-[#14f884] hover:border-[#14f884] cursor-pointer"
+              className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/75 hover:text-[#14f884] hover:border-[#14f884] cursor-pointer transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -130,14 +153,14 @@ export default function InsightsContactFooter() {
             <p className="mt-5 text-sm sm:text-base text-[#c7d6d1] font-light leading-relaxed">
               {activeNote.excerpt}
             </p>
-            <p className="mt-4 text-sm sm:text-base text-[#b8c7c2] font-light leading-relaxed">
+            <p className="mt-4 text-sm sm:text-base text-[#b8c7c2] font-light leading-relaxed pt-4 border-t border-white/10">
               {activeNote.fullText}
             </p>
           </div>
         </div>
       )}
 
-      {/* SECTION 09 — FINAL CTA matching Screenshot 14 exact proportions & clean 3-field form */}
+      {/* SECTION 09 — FINAL CTA matching Screenshot 14 exact proportions & clean interactive form */}
       <section id="contact" className="pb-16 sm:pb-20 pt-2">
         <div className="max-w-[1000px] mx-auto px-5 sm:px-10">
           <div className="rounded-[20px] sm:rounded-[22px] border border-white/30 bg-[#04211d] p-6 sm:p-12 lg:p-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -165,19 +188,38 @@ export default function InsightsContactFooter() {
                 creativity, and purpose come together.
               </p>
 
-              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/15">
+              {/* Email with copy button */}
+              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/15 flex items-center gap-3">
                 <a
                   href="mailto:hello@arkafedge.com"
                   className="font-mono-label text-[11px] text-[#14f884] hover:underline"
                 >
                   hello@arkafedge.com
                 </a>
+                <button
+                  type="button"
+                  onClick={handleCopyEmail}
+                  aria-label="Copy email address"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-white/15 bg-white/5 hover:border-[#14f884] text-[10px] font-mono text-[#a8beb8] hover:text-[#14f884] transition-colors cursor-pointer"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3 h-3 text-[#14f884]" />
+                      <span className="text-[#14f884]">COPIED</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3 h-3" />
+                      <span>COPY</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
-            {/* Right Nested Form Card matching Screenshot 14 exact 3 stacked fields */}
+            {/* Right Nested Form Card matching Screenshot 14 */}
             <div className="lg:col-span-6 rounded-[16px] border border-white/10 bg-[#031a17] p-5 sm:p-8">
-              <h3 className="text-[19px] font-bold text-white mb-6">
+              <h3 className="text-[19px] font-bold text-white mb-4">
                 Start a Conversation
               </h3>
 
@@ -188,7 +230,7 @@ export default function InsightsContactFooter() {
                     Sent to the Edge.
                   </h4>
                   <p className="mt-2 text-sm text-[#b8c7c2] font-light">
-                    Thanks, {name}. We&apos;ll reply soon at {email}.
+                    Thanks, {name}. We&apos;ll reply soon regarding your {selectedService} inquiry.
                   </p>
                   <button
                     type="button"
@@ -205,6 +247,29 @@ export default function InsightsContactFooter() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Selectable Service Chips */}
+                  <div>
+                    <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-2">
+                      INTERESTED SERVICE
+                    </label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {SERVICE_CHIPS.map((chip) => (
+                        <button
+                          key={chip}
+                          type="button"
+                          onClick={() => setSelectedService(chip)}
+                          className={`px-3 py-1 rounded-full font-mono-label text-[9px] font-medium transition-all cursor-pointer ${
+                            selectedService === chip
+                              ? "bg-[#14f884] text-[#050b09] shadow-[0_0_10px_#14f884]"
+                              : "bg-[#051e1b] text-white/60 border border-white/10 hover:text-white"
+                          }`}
+                        >
+                          {chip}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block font-mono-label text-[9.5px] text-[#2fb880] mb-2">
                       NAME

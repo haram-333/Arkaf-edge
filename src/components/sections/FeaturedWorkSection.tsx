@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, X, Sparkles, CheckCircle2 } from "lucide-react";
 import { FEATURED_WORK } from "@/data/content";
 
 export default function FeaturedWorkSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
+  const [activeProject, setActiveProject] = useState<(typeof FEATURED_WORK)[number] | null>(
+    null
+  );
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -24,6 +27,28 @@ export default function FeaturedWorkSection() {
     io.observe(section);
     return () => io.disconnect();
   }, []);
+
+  // Close case study modal on Escape key
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActiveProject(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const handleStartSimilarProject = () => {
+    setActiveProject(null);
+    const contactEl = document.querySelector("#contact") as HTMLElement | null;
+    if (contactEl) {
+      const lenis = (window as unknown as { __lenis?: { scrollTo: (target: HTMLElement, opts?: object) => void } }).__lenis;
+      if (lenis) {
+        lenis.scrollTo(contactEl, { duration: 1.2 });
+      } else {
+        contactEl.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   return (
     <section
@@ -55,13 +80,17 @@ export default function FeaturedWorkSection() {
           </p>
         </div>
 
-        {/* 3 Full-Width Split Horizontal Case Study Cards matching Screenshots 10, 11, 12 */}
+        {/* 3 Full-Width Split Horizontal Case Study Cards */}
         <div className="space-y-6 sm:space-y-9">
           {FEATURED_WORK.map((project, idx) => (
             <article
               key={project.title}
+              onClick={() => setActiveProject(project)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && setActiveProject(project)}
               style={{ transitionDelay: visible ? `${idx * 120}ms` : "0ms" }}
-              className={`group rounded-[18px] sm:rounded-[20px] border border-white/30 bg-[#041e1b] overflow-hidden grid grid-cols-1 lg:grid-cols-12 hover:border-[#14f884]/65 transition-all duration-700 ease-out ${
+              className={`group cursor-pointer rounded-[18px] sm:rounded-[20px] border border-white/30 bg-[#041e1b] overflow-hidden grid grid-cols-1 lg:grid-cols-12 hover:border-[#14f884]/65 transition-all duration-700 ease-out focus:outline-none ${
                 visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-8"
@@ -83,13 +112,13 @@ export default function FeaturedWorkSection() {
                 </span>
               </div>
 
-              {/* Right 44% Minimal Deep Teal Panel matching Screenshots 10–12 */}
+              {/* Right 44% Minimal Deep Teal Panel */}
               <div className="lg:col-span-5 p-6 sm:p-10 flex flex-col justify-between bg-[#041e1b]">
                 <div>
                   <p className="font-mono-label text-[9.5px] sm:text-[10px] text-[#2fb880] mb-2.5 sm:mb-3">
                     {project.tags}
                   </p>
-                  <h3 className="text-[clamp(1.35rem,2.35vw,2.15rem)] font-black tracking-[-0.02em] uppercase text-white leading-[1.08]">
+                  <h3 className="text-[clamp(1.35rem,2.35vw,2.15rem)] font-black tracking-[-0.02em] uppercase text-white leading-[1.08] group-hover:text-[#14f884] transition-colors">
                     {project.title}
                   </h3>
                   <p className="mt-3 sm:mt-4 text-[clamp(0.85rem,1.18vw,1.02rem)] text-[#a8beb8] font-light leading-[1.58]">
@@ -98,19 +127,126 @@ export default function FeaturedWorkSection() {
                 </div>
 
                 <div className="mt-6 sm:mt-10">
-                  <a
-                    href="#contact"
-                    className="inline-flex items-center gap-2 font-mono-label text-[10.5px] sm:text-[11px] font-semibold text-[#14f884] group-hover:gap-3.5 transition-all"
-                  >
+                  <span className="inline-flex items-center gap-2 font-mono-label text-[10.5px] sm:text-[11px] font-semibold text-[#14f884] group-hover:gap-3.5 transition-all">
                     VIEW CASE STUDY
                     <ArrowRight className="w-3.5 h-3.5" />
-                  </a>
+                  </span>
                 </div>
               </div>
             </article>
           ))}
         </div>
       </div>
+
+      {/* Case Study Modal with Complete Architectural Overview & Metrics */}
+      {activeProject && (
+        <div
+          className="fixed inset-0 z-[95] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setActiveProject(null)}
+        >
+          <div
+            data-lenis-prevent
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-2xl w-full max-h-[88vh] overflow-y-auto rounded-[20px] border border-[#14f884]/40 bg-[#041d1a] p-6 sm:p-9 shadow-2xl relative"
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setActiveProject(null)}
+              aria-label="Close case study"
+              className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/75 hover:text-[#14f884] hover:border-[#14f884] cursor-pointer transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Header Tags */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="rounded-full bg-[#14f884]/15 border border-[#14f884]/30 px-3 py-1 font-mono-label text-[9.5px] font-bold text-[#14f884]">
+                {activeProject.year}
+              </span>
+              <span className="font-mono-label text-[9.5px] text-[#2fb880]">
+                {activeProject.tags}
+              </span>
+            </div>
+
+            <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight pr-8">
+              {activeProject.title}
+            </h3>
+
+            {/* Image Preview */}
+            <div className="mt-5 rounded-[14px] overflow-hidden border border-white/10 h-52 sm:h-64">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={activeProject.image}
+                alt={activeProject.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Overview */}
+            <div className="mt-6 space-y-4">
+              <div>
+                <h4 className="font-mono-label text-[10px] text-[#14f884] uppercase mb-1">
+                  The Overview
+                </h4>
+                <p className="text-sm sm:text-base text-[#c7d6d1] font-light leading-relaxed">
+                  {activeProject.overview}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-mono-label text-[10px] text-[#14f884] uppercase mb-1">
+                  The Strategic Challenge
+                </h4>
+                <p className="text-sm sm:text-base text-[#a8beb8] font-light leading-relaxed">
+                  {activeProject.challenge}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-mono-label text-[10px] text-[#14f884] uppercase mb-1">
+                  The Creative &amp; Technical Solution
+                </h4>
+                <p className="text-sm sm:text-base text-[#a8beb8] font-light leading-relaxed">
+                  {activeProject.solution}
+                </p>
+              </div>
+            </div>
+
+            {/* Metrics Grid */}
+            <div className="mt-6 grid grid-cols-3 gap-3 pt-5 border-t border-white/12">
+              {activeProject.stats.map((s) => (
+                <div
+                  key={s.label}
+                  className="rounded-xl border border-white/10 bg-[#031513] p-3 text-center"
+                >
+                  <span className="block text-lg sm:text-xl font-black text-[#14f884] neon-text-glow leading-none">
+                    {s.val}
+                  </span>
+                  <span className="mt-1 block font-mono-label text-[8px] sm:text-[9px] text-[#8db5a8]">
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Modal Bottom CTA */}
+            <div className="mt-7 pt-4 border-t border-white/12 flex items-center justify-between gap-4">
+              <span className="font-mono-label text-[10px] text-[#8db5a8]">
+                READY FOR SIMILAR MEASURABLE IMPACT?
+              </span>
+              <button
+                type="button"
+                onClick={handleStartSimilarProject}
+                className="inline-flex items-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10.5px] font-bold px-5 py-2.5 neon-box-glow hover:scale-[1.02] cursor-pointer transition-transform"
+              >
+                START A PROJECT
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

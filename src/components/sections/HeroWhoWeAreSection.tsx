@@ -175,7 +175,7 @@ export default function HeroWhoWeAreSection() {
           </p>
 
           <a
-            href="#services"
+            href="#phenomenon"
             className="mt-7 sm:mt-9 inline-flex items-center gap-2.5 font-mono-label text-[10.5px] sm:text-[12px] font-semibold text-[#14f884] hover:gap-4 transition-all"
           >
             {BRAND_STATEMENT.cta}

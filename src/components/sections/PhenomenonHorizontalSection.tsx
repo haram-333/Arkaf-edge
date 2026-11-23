@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { PHENOMENON_LEAD, PHENOMENON_CARDS } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -68,6 +69,17 @@ export default function PhenomenonHorizontalSection() {
     return () => ctx.revert();
   }, []);
 
+  const stepTrack = (direction: 1 | -1) => {
+    const step = window.innerWidth < 640 ? 320 : 480;
+    const target = window.scrollY + direction * step * 1.6;
+    const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: object) => void } }).__lenis;
+    if (lenis) {
+      lenis.scrollTo(target, { duration: 0.9 });
+    } else {
+      window.scrollBy({ top: direction * step * 1.6, behavior: "smooth" });
+    }
+  };
+
   return (
     <section
       id="phenomenon"
@@ -86,11 +98,31 @@ export default function PhenomenonHorizontalSection() {
         </span>
       </div>
 
-      {/* Top Eyebrow positioned cleanly below fixed navbar */}
-      <div className="relative z-10 px-4 sm:px-10 pt-16 sm:pt-20 pb-3 sm:pb-4">
+      {/* Top Header Row with Eyebrow and Slider Navigation Controls */}
+      <div className="relative z-10 px-4 sm:px-10 pt-16 sm:pt-20 pb-3 sm:pb-4 flex items-center justify-between">
         <div className="inline-flex items-center gap-2 font-mono-label text-[10px] sm:text-[10.5px] font-semibold text-[#091412]/80">
           <span className="w-2 h-2 rounded-full bg-[#14f884]" />
           <span>04. THE ARKAF EDGE — PHENOMENON</span>
+        </div>
+
+        {/* Prev / Next Track Stepper Buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => stepTrack(-1)}
+            aria-label="Previous artwork"
+            className="w-8 h-8 rounded-full border border-[#091412]/20 bg-white/80 hover:bg-[#091412] hover:text-[#14f884] flex items-center justify-center transition-all cursor-pointer shadow-sm"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => stepTrack(1)}
+            aria-label="Next artwork"
+            className="w-8 h-8 rounded-full border border-[#091412]/20 bg-white/80 hover:bg-[#091412] hover:text-[#14f884] flex items-center justify-center transition-all cursor-pointer shadow-sm"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
 

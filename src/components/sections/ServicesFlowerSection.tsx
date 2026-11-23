@@ -19,10 +19,10 @@ export default function ServicesFlowerSection() {
     if (!wrapper) return;
 
     const thresholds = [
-      { start: 0.10, end: 0.26 },
-      { start: 0.28, end: 0.44 },
-      { start: 0.46, end: 0.62 },
-      { start: 0.64, end: 0.80 },
+      { start: 0.00, end: 0.24 },
+      { start: 0.25, end: 0.46 },
+      { start: 0.48, end: 0.68 },
+      { start: 0.70, end: 0.88 },
     ];
 
     const ctx = gsap.context(() => {
@@ -36,17 +36,22 @@ export default function ServicesFlowerSection() {
           progressRef.current = p;
 
           // Mobile active step 0..3
-          if (p < 0.28) setMobileActive(0);
-          else if (p < 0.52) setMobileActive(1);
-          else if (p < 0.76) setMobileActive(2);
+          if (p < 0.25) setMobileActive(0);
+          else if (p < 0.50) setMobileActive(1);
+          else if (p < 0.75) setMobileActive(2);
           else setMobileActive(3);
 
-          // Desktop staggered 2x2 quadrants
+          // Desktop staggered 2x2 quadrants - Quadrant 0 stays comfortably visible from top
           cardRefs.current.forEach((el, idx) => {
             if (!el) return;
             const { start, end } = thresholds[idx];
-            const t = Math.max(0, Math.min(1, (p - start) / (end - start)));
-            const eased = 1 - Math.pow(1 - t, 3);
+            let eased = 0;
+            if (idx === 0) {
+              eased = p < 0.25 ? 1 : Math.max(0.2, 1 - (p - 0.25) / 0.22);
+            } else {
+              const t = Math.max(0, Math.min(1, (p - start) / (end - start)));
+              eased = 1 - Math.pow(1 - t, 3);
+            }
             el.style.opacity = String(eased);
             el.style.transform = `translate3d(0, ${((1 - eased) * 22).toFixed(1)}px, 0)`;
           });
@@ -58,6 +63,21 @@ export default function ServicesFlowerSection() {
 
     return () => ctx.revert();
   }, []);
+
+  const scrollToQuadrant = (idx: number) => {
+    setMobileActive(idx);
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    const progressTargets = [0.05, 0.35, 0.58, 0.82];
+    const targetScroll =
+      wrapper.offsetTop + progressTargets[idx] * (wrapper.offsetHeight - window.innerHeight);
+    const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: object) => void } }).__lenis;
+    if (lenis) {
+      lenis.scrollTo(targetScroll, { duration: 1.1 });
+    } else {
+      window.scrollTo({ top: targetScroll, behavior: "smooth" });
+    }
+  };
 
   return (
     <section
@@ -78,7 +98,7 @@ export default function ServicesFlowerSection() {
           }}
         />
 
-        {/* MOBILE VIEW (<768px): Single clean docked glass card at bottom so flower blooms unobstructed above */}
+        {/* MOBILE VIEW (<768px): Single clean docked glass card at bottom with clickable dots */}
         <div className="relative z-10 w-full px-4 pb-6 md:hidden">
           <div className="relative min-h-[168px]">
             {SERVICES_QUADRANTS.map((item, idx) => {
@@ -99,14 +119,18 @@ export default function ServicesFlowerSection() {
                         {item.num} — {item.label}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1.5">
+                    {/* Clickable pagination dots */}
+                    <div className="flex items-center gap-2">
                       {[0, 1, 2, 3].map((d) => (
-                        <span
+                        <button
                           key={d}
-                          className={`h-1 rounded-full transition-all duration-300 ${
+                          type="button"
+                          onClick={() => scrollToQuadrant(d)}
+                          aria-label={`Show service 0${d + 1}`}
+                          className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                             mobileActive === d
-                              ? "w-5 bg-[#14f884]"
-                              : "w-1.5 bg-white/25"
+                              ? "w-6 bg-[#14f884]"
+                              : "w-2 bg-white/30 hover:bg-white/60"
                           }`}
                         />
                       ))}
@@ -135,8 +159,12 @@ export default function ServicesFlowerSection() {
                   ref={(el) => {
                     cardRefs.current[idx] = el;
                   }}
-                  style={{ opacity: 0, transform: "translate3d(0, 22px, 0)" }}
-                  className={`will-change-transform max-w-[360px] ${
+                  onClick={() => scrollToQuadrant(idx)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && scrollToQuadrant(idx)}
+                  style={{ opacity: idx === 0 ? 1 : 0, transform: "translate3d(0, 0, 0)" }}
+                  className={`will-change-transform max-w-[360px] cursor-pointer group transition-transform duration-300 hover:scale-[1.02] ${
                     isRight ? "ml-auto text-right" : "mr-auto text-left"
                   }`}
                 >
@@ -151,7 +179,7 @@ export default function ServicesFlowerSection() {
                     </span>
                   </div>
 
-                  <h3 className="text-[clamp(1.45rem,2.55vw,2.3rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line">
+                  <h3 className="text-[clamp(1.45rem,2.55vw,2.3rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
                     {item.title}
                   </h3>
 

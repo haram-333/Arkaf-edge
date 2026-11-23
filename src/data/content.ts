@@ -131,6 +131,18 @@ export const FEATURED_WORK = [
       "Repositioning a circular-technology pioneer with a purpose-driven brand identity and high-impact digital platform.",
     image: "/images/art-01.jpg?v=2",
     fallbackGradient: "from-zinc-800 via-neutral-700 to-zinc-900",
+    overview:
+      "Nexus Vantage designs circular hardware ecosystems. They needed an identity and digital platform that communicated technical authority without losing human emotion.",
+    challenge:
+      "Legacy hardware communication relied on dense technical documentation. The challenge was converting complex circularity metrics into an intuitive, high-converting digital experience.",
+    solution:
+      "We developed a modular brand architecture, real-time 3D product visualizers, and an interactive impact calculator that translates carbon offset into clear business ROI.",
+    results: "+280% increase in enterprise qualified leads and recognition as a top clean-tech brand.",
+    stats: [
+      { label: "QUALIFIED PIPELINE", val: "+280%" },
+      { label: "INTERACTION TIME", val: "4.8m" },
+      { label: "MARKET REACH", val: "12 Global Hubs" },
+    ],
   },
   {
     year: "2025",
@@ -140,6 +152,18 @@ export const FEATURED_WORK = [
       "Designing a comprehensive go-to-market campaign and visual production engine that expanded reach across 8 markets.",
     image: "/images/art-02.jpg?v=2",
     fallbackGradient: "from-indigo-950 via-purple-900 to-slate-950",
+    overview:
+      "Aura Lumina introduced next-generation ambient lighting ecosystems. The launch required simultaneous rollout across multiple international markets with unified brand tone.",
+    challenge:
+      "Fragmented marketing channels and uneven visual consistency across regional teams diluted the brand's premium positioning.",
+    solution:
+      "ARKAF Edge engineered an end-to-end creative production engine, cinematic 3D product reels, and a unified design system deployed across 8 localized digital touchpoints.",
+    results: "Over 3.4M organic impressions in launch quarter with zero brand dilution.",
+    stats: [
+      { label: "LAUNCH IMPRESSIONS", val: "3.4M+" },
+      { label: "MARKETS ACTIVE", val: "8 Countries" },
+      { label: "ROAS BENCHMARK", val: "4.2x" },
+    ],
   },
   {
     year: "2025",
@@ -149,6 +173,18 @@ export const FEATURED_WORK = [
       "Crafting an immersive digital content and search ecosystem that drove 140% growth in qualified brand engagement.",
     image: "/images/art-03.jpg?v=2",
     fallbackGradient: "from-emerald-950 via-stone-900 to-black",
+    overview:
+      "Vanguard Studio curates forward-thinking architectural and industrial spaces. They sought to transform passive site visitors into active project collaborators.",
+    challenge:
+      "Traditional architectural portfolios felt static and failed to communicate the studio's strategic thinking and collaborative philosophy.",
+    solution:
+      "We built a fluid digital experience featuring smooth editorial storytelling, dynamic project filters, and an interactive project scoping tool.",
+    results: "140% surge in qualified project inquiries with average engagement times doubling.",
+    stats: [
+      { label: "INQUIRY SURGE", val: "+140%" },
+      { label: "AVG SESSION", val: "+118%" },
+      { label: "CONVERSION RATE", val: "6.4%" },
+    ],
   },
 ];
 
