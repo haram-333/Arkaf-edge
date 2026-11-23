@@ -151,50 +151,52 @@ export default function HeroWhoWeAreSection() {
           </div>
         </div>
 
-        {/* STAGE 2 — SUSTAINABILITY / WHO WE ARE LAYER from revised docx */}
+        {/* STAGE 2 — SUSTAINABILITY / WHO WE ARE LAYER (calibrated to fit all viewport heights without clipping) */}
         <div
           ref={whoLayerRef}
           style={{ opacity: 0, pointerEvents: "none" }}
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-5 sm:px-12 will-change-transform"
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 pt-20 sm:pt-24 pb-8 sm:pb-12 will-change-transform"
         >
-          <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[10px] sm:text-[11px] font-bold px-3.5 sm:px-4 py-1.5 mb-4 sm:mb-6 shadow-[0_0_26px_rgba(169,245,207,0.38)]">
-            {SUSTAINABILITY_CONTENT.badge}
-          </span>
-
-          <h2 className="text-[clamp(1.85rem,4.4vw,3.95rem)] font-black tracking-[-0.03em] leading-[1.08] max-w-4xl">
-            <span className="block text-white">{SUSTAINABILITY_CONTENT.headlineWhite}</span>
-            <span className="block text-[#14f884] neon-text-glow">
-              {SUSTAINABILITY_CONTENT.headlineGreen}
+          <div className="w-full max-w-3xl mx-auto flex flex-col items-center justify-center my-auto">
+            <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[9px] sm:text-[10px] font-bold px-3 py-1 mb-2.5 sm:mb-3 shadow-[0_0_24px_rgba(169,245,207,0.38)]">
+              {SUSTAINABILITY_CONTENT.badge}
             </span>
-          </h2>
 
-          <p className="mt-4 sm:mt-5 max-w-[760px] text-[clamp(0.88rem,1.35vw,1.15rem)] text-[#dce8e4] font-light leading-[1.54]">
-            {SUSTAINABILITY_CONTENT.lead} {SUSTAINABILITY_CONTENT.story}
-          </p>
-
-          {/* Focus Industry Badges */}
-          <div className="mt-5 max-w-3xl flex flex-wrap items-center justify-center gap-2">
-            {SUSTAINABILITY_CONTENT.industries.map((ind) => (
-              <span
-                key={ind}
-                className="px-3 py-1 rounded-full border border-[#14f884]/30 bg-[#051a12]/80 font-mono-label text-[9px] sm:text-[10.5px] text-[#a9f5cf]"
-              >
-                {ind}
+            <h2 className="text-[clamp(1.45rem,3.2vw,2.65rem)] font-black tracking-[-0.03em] leading-[1.1] max-w-3xl">
+              <span className="block text-white">{SUSTAINABILITY_CONTENT.headlineWhite}</span>
+              <span className="block text-[#14f884] neon-text-glow">
+                {SUSTAINABILITY_CONTENT.headlineGreen}
               </span>
-            ))}
+            </h2>
+
+            <p className="mt-2.5 sm:mt-3 max-w-[680px] text-[clamp(0.8rem,1.05vw,0.92rem)] text-[#dce8e4] font-light leading-[1.48]">
+              {SUSTAINABILITY_CONTENT.lead} {SUSTAINABILITY_CONTENT.story}
+            </p>
+
+            {/* Focus Industry Badges */}
+            <div className="mt-3 sm:mt-3.5 max-w-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+              {SUSTAINABILITY_CONTENT.industries.map((ind) => (
+                <span
+                  key={ind}
+                  className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-[#14f884]/30 bg-[#051a12]/85 font-mono-label text-[8.5px] sm:text-[9.5px] text-[#a9f5cf]"
+                >
+                  {ind}
+                </span>
+              ))}
+            </div>
+
+            <p className="mt-2.5 sm:mt-3 max-w-[620px] text-[clamp(0.78rem,0.95vw,0.86rem)] text-[#99b3ab] font-light leading-[1.42]">
+              {SUSTAINABILITY_CONTENT.closing}
+            </p>
+
+            <a
+              href="#services"
+              className="mt-3.5 sm:mt-4 inline-flex items-center gap-2 font-mono-label text-[10px] sm:text-[11px] font-semibold text-[#14f884] hover:gap-3.5 transition-all"
+            >
+              {SUSTAINABILITY_CONTENT.cta}
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
           </div>
-
-          <p className="mt-4 max-w-[700px] text-[clamp(0.82rem,1.15vw,1rem)] text-[#99b3ab] font-light">
-            {SUSTAINABILITY_CONTENT.closing}
-          </p>
-
-          <a
-            href="#services"
-            className="mt-6 inline-flex items-center gap-2.5 font-mono-label text-[10.5px] sm:text-[12px] font-semibold text-[#14f884] hover:gap-4 transition-all"
-          >
-            {SUSTAINABILITY_CONTENT.cta}
-            <ArrowRight className="w-3.5 h-3.5" />
-          </a>
         </div>
       </div>
     </section>

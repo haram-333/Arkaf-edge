@@ -13,16 +13,24 @@ export default function ServicesFlowerSection() {
   const progressRef = useRef<number>(0);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [mobileActive, setMobileActive] = useState(0);
+  const [mobileVisible, setMobileVisible] = useState(false);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
+    // Sequence:
+    // 0.00 -> 0.20: Flower blooms into full glory in center (all boxes hidden)
+    // 0.20 -> 0.36: Box 01 appears & stays
+    // 0.36 -> 0.52: Box 02 appears & stays
+    // 0.52 -> 0.68: Box 03 appears & stays
+    // 0.68 -> 0.84: Box 04 appears & stays
+    // 0.84 -> 1.00: All 4 boxes fully visible (opacity 1.0, none faded!)
     const thresholds = [
-      { start: 0.00, end: 0.24 },
-      { start: 0.25, end: 0.46 },
-      { start: 0.48, end: 0.68 },
-      { start: 0.70, end: 0.88 },
+      { start: 0.20, end: 0.36 },
+      { start: 0.36, end: 0.52 },
+      { start: 0.52, end: 0.68 },
+      { start: 0.68, end: 0.84 },
     ];
 
     const ctx = gsap.context(() => {
@@ -35,25 +43,34 @@ export default function ServicesFlowerSection() {
           const p = self.progress;
           progressRef.current = p;
 
-          // Mobile active step 0..3
-          if (p < 0.25) setMobileActive(0);
-          else if (p < 0.50) setMobileActive(1);
-          else if (p < 0.75) setMobileActive(2);
-          else setMobileActive(3);
+          // Mobile view: flower appears first, then cards step through
+          if (p < 0.20) {
+            setMobileVisible(false);
+          } else {
+            setMobileVisible(true);
+            if (p < 0.38) setMobileActive(0);
+            else if (p < 0.56) setMobileActive(1);
+            else if (p < 0.74) setMobileActive(2);
+            else setMobileActive(3);
+          }
 
-          // Desktop staggered 2x2 quadrants - Quadrant 0 stays comfortably visible from top
+          // Desktop: Flower blooms first, then boxes appear sequentially.
+          // Once a box is revealed, it STAYS at opacity 1.0 and NEVER fades out!
           cardRefs.current.forEach((el, idx) => {
             if (!el) return;
             const { start, end } = thresholds[idx];
             let eased = 0;
-            if (idx === 0) {
-              eased = p < 0.25 ? 1 : Math.max(0.2, 1 - (p - 0.25) / 0.22);
-            } else {
-              const t = Math.max(0, Math.min(1, (p - start) / (end - start)));
+            if (p >= end) {
+              eased = 1; // Locked fully visible!
+            } else if (p > start) {
+              const t = (p - start) / (end - start);
               eased = 1 - Math.pow(1 - t, 3);
+            } else {
+              eased = 0;
             }
             el.style.opacity = String(eased);
-            el.style.transform = `translate3d(0, ${((1 - eased) * 22).toFixed(1)}px, 0)`;
+            el.style.transform = `translate3d(0, ${((1 - eased) * 16).toFixed(1)}px, 0)`;
+            el.style.pointerEvents = eased > 0.4 ? "auto" : "none";
           });
         },
       });
@@ -66,9 +83,10 @@ export default function ServicesFlowerSection() {
 
   const scrollToQuadrant = (idx: number) => {
     setMobileActive(idx);
+    setMobileVisible(true);
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
-    const progressTargets = [0.05, 0.35, 0.58, 0.82];
+    const progressTargets = [0.28, 0.45, 0.62, 0.88];
     const targetScroll =
       wrapper.offsetTop + progressTargets[idx] * (wrapper.offsetHeight - window.innerHeight);
     const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: object) => void } }).__lenis;
@@ -83,9 +101,9 @@ export default function ServicesFlowerSection() {
     <section
       id="services"
       ref={wrapperRef}
-      className="relative h-[320vh] md:h-[380vh] bg-black"
+      className="relative h-[340vh] md:h-[400vh] bg-black"
     >
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black flex items-end md:items-center">
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-black flex flex-col justify-between">
         {/* Centered 3D Translucent Emerald Glass Gerbera Daisy */}
         <GlassFlowerCanvas progressRef={progressRef} />
 
@@ -94,19 +112,19 @@ export default function ServicesFlowerSection() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(circle at 50% 45%, transparent 22%, rgba(0,0,0,0.42) 56%, rgba(0,0,0,0.82) 100%)",
+              "radial-gradient(circle at 50% 50%, transparent 26%, rgba(0,0,0,0.48) 58%, rgba(0,0,0,0.88) 100%)",
           }}
         />
 
-        {/* MOBILE VIEW (<768px): Single clean docked glass card at bottom with clickable dots */}
-        <div className="relative z-10 w-full px-4 pb-6 md:hidden">
-          <div className="relative min-h-[168px]">
+        {/* MOBILE VIEW (<768px): Docked glass card at bottom with flower blooming above */}
+        <div className="relative z-10 w-full px-4 pb-6 md:hidden mt-auto">
+          <div className="relative min-h-[160px]">
             {SERVICES_QUADRANTS.map((item, idx) => {
-              const active = mobileActive === idx;
+              const active = mobileVisible && mobileActive === idx;
               return (
                 <div
                   key={item.num}
-                  className={`absolute inset-x-0 bottom-0 rounded-2xl border border-white/15 bg-black/78 backdrop-blur-md p-5 transition-all duration-400 ease-out ${
+                  className={`absolute inset-x-0 bottom-0 rounded-2xl border border-white/15 bg-black/82 backdrop-blur-md p-4 transition-all duration-400 ease-out ${
                     active
                       ? "opacity-100 translate-y-0 pointer-events-auto"
                       : "opacity-0 translate-y-4 pointer-events-none"
@@ -136,13 +154,13 @@ export default function ServicesFlowerSection() {
                       ))}
                     </div>
                   </div>
-                  <p className="font-mono-label text-[9.5px] text-[#14f884] mb-1">
+                  <p className="font-mono-label text-[9px] text-[#14f884] mb-0.5">
                     {item.tagline}
                   </p>
-                  <h3 className="text-xl font-black tracking-[-0.02em] text-white uppercase leading-[1.08]">
+                  <h3 className="text-lg font-black tracking-[-0.02em] text-white uppercase leading-snug">
                     {item.title.replace("\n", " ")}
                   </h3>
-                  <p className="mt-2 text-xs text-[#b8c7c2] font-light leading-relaxed">
+                  <p className="mt-1.5 text-xs text-[#b8c7c2] font-light leading-relaxed">
                     {item.description}
                   </p>
                 </div>
@@ -151,62 +169,189 @@ export default function ServicesFlowerSection() {
           </div>
         </div>
 
-        {/* DESKTOP VIEW (md+): Exact 2x2 Quadrant Grid matching Screenshot 3 */}
-        <div className="hidden md:block relative z-10 w-full max-w-[1380px] mx-auto px-10 lg:px-16 py-20">
-          <div className="grid grid-cols-2 gap-y-20 lg:gap-y-24 gap-x-[36%] lg:gap-x-[40%]">
-            {SERVICES_QUADRANTS.map((item, idx) => {
-              const isRight = item.align === "right";
-              return (
-                <div
-                  key={item.num}
-                  ref={(el) => {
-                    cardRefs.current[idx] = el;
-                  }}
-                  onClick={() => scrollToQuadrant(idx)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && scrollToQuadrant(idx)}
-                  style={{ opacity: idx === 0 ? 1 : 0, transform: "translate3d(0, 0, 0)" }}
-                  className={`will-change-transform max-w-[370px] cursor-pointer group transition-transform duration-300 hover:scale-[1.02] ${
-                    isRight ? "ml-auto text-right" : "mr-auto text-left"
-                  }`}
-                >
-                  <div
-                    className={`inline-flex items-center gap-2 font-mono-label text-[10px] sm:text-[11px] text-[#14f884] mb-2 ${
-                      isRight ? "flex-row-reverse" : ""
-                    }`}
+        {/* DESKTOP VIEW (md+):
+            Two clean horizontal rows (Top: 01 & 02, Bottom: 03 & 04)
+            - Top row is placed at pt-24 sm:pt-28 (100px+ from top) so it is NEVER behind the navbar!
+            - Bottom row is placed at pb-8 sm:pb-10 so it NEVER touches the bottom screen edge!
+            - The flower blooms freely in the center clearing.
+        */}
+        <div className="hidden md:flex relative z-10 w-full max-w-[1360px] mx-auto px-8 lg:px-14 h-full flex-col justify-between pt-24 sm:pt-28 pb-8 sm:pb-10 pointer-events-none">
+          {/* Top Row: Box 01 (Strategy & Brand) & Box 02 (Organic & Performance) */}
+          <div className="grid grid-cols-2 gap-x-[36%] lg:gap-x-[40%]">
+            {/* Box 01: Top Left */}
+            <div
+              ref={(el) => {
+                cardRefs.current[0] = el;
+              }}
+              onClick={() => scrollToQuadrant(0)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && scrollToQuadrant(0)}
+              style={{ opacity: 0, transform: "translate3d(0, 16px, 0)" }}
+              className="will-change-transform max-w-[360px] mr-auto text-left cursor-pointer group transition-transform duration-300 hover:scale-[1.02] focus:outline-none"
+            >
+              <div className="inline-flex items-center gap-2 font-mono-label text-[9.5px] sm:text-[10.5px] text-[#14f884] mb-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] shadow-[0_0_8px_#14f884]" />
+                <span>
+                  {SERVICES_QUADRANTS[0].num} — {SERVICES_QUADRANTS[0].label}
+                </span>
+              </div>
+
+              <p className="font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884]/90 mb-0.5">
+                {SERVICES_QUADRANTS[0].tagline}
+              </p>
+
+              <h3 className="text-[clamp(1.25rem,2.1vw,1.95rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
+                {SERVICES_QUADRANTS[0].title}
+              </h3>
+
+              <p className="mt-2 text-[clamp(0.78rem,0.98vw,0.88rem)] text-[#b8c7c2] font-light leading-[1.46]">
+                {SERVICES_QUADRANTS[0].description}
+              </p>
+
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {SERVICES_QUADRANTS[0].capabilities.slice(0, 4).map((c) => (
+                  <span
+                    key={c}
+                    className="px-2 py-0.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[8px] sm:text-[8.5px] text-[#9dbcb0]"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] shadow-[0_0_8px_#14f884]" />
-                    <span>
-                      {item.num} — {item.label}
-                    </span>
-                  </div>
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-                  <p className="font-mono-label text-[10px] text-[#14f884]/90 mb-1">
-                    {item.tagline}
-                  </p>
+            {/* Box 02: Top Right */}
+            <div
+              ref={(el) => {
+                cardRefs.current[1] = el;
+              }}
+              onClick={() => scrollToQuadrant(1)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && scrollToQuadrant(1)}
+              style={{ opacity: 0, transform: "translate3d(0, 16px, 0)" }}
+              className="will-change-transform max-w-[360px] ml-auto text-right cursor-pointer group transition-transform duration-300 hover:scale-[1.02] focus:outline-none"
+            >
+              <div className="inline-flex items-center gap-2 font-mono-label text-[9.5px] sm:text-[10.5px] text-[#14f884] mb-1.5 flex-row-reverse">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] shadow-[0_0_8px_#14f884]" />
+                <span>
+                  {SERVICES_QUADRANTS[1].num} — {SERVICES_QUADRANTS[1].label}
+                </span>
+              </div>
 
-                  <h3 className="text-[clamp(1.4rem,2.4vw,2.2rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
-                    {item.title}
-                  </h3>
+              <p className="font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884]/90 mb-0.5">
+                {SERVICES_QUADRANTS[1].tagline}
+              </p>
 
-                  <p className="mt-2.5 text-[clamp(0.82rem,1.18vw,1.02rem)] text-[#b8c7c2] font-light leading-[1.52]">
-                    {item.description}
-                  </p>
+              <h3 className="text-[clamp(1.25rem,2.1vw,1.95rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
+                {SERVICES_QUADRANTS[1].title}
+              </h3>
 
-                  <div className={`mt-3 flex flex-wrap gap-1.5 ${isRight ? "justify-end" : "justify-start"}`}>
-                    {item.capabilities.slice(0, 4).map((c) => (
-                      <span
-                        key={c}
-                        className="px-2.5 py-0.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[8.5px] text-[#9dbcb0]"
-                      >
-                        {c}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+              <p className="mt-2 text-[clamp(0.78rem,0.98vw,0.88rem)] text-[#b8c7c2] font-light leading-[1.46]">
+                {SERVICES_QUADRANTS[1].description}
+              </p>
+
+              <div className="mt-2.5 flex flex-wrap gap-1.5 justify-end">
+                {SERVICES_QUADRANTS[1].capabilities.slice(0, 4).map((c) => (
+                  <span
+                    key={c}
+                    className="px-2 py-0.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[8px] sm:text-[8.5px] text-[#9dbcb0]"
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Row: Box 03 (Creative Production) & Box 04 (Digital & Technology) */}
+          <div className="grid grid-cols-2 gap-x-[36%] lg:gap-x-[40%]">
+            {/* Box 03: Bottom Left */}
+            <div
+              ref={(el) => {
+                cardRefs.current[2] = el;
+              }}
+              onClick={() => scrollToQuadrant(2)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && scrollToQuadrant(2)}
+              style={{ opacity: 0, transform: "translate3d(0, 16px, 0)" }}
+              className="will-change-transform max-w-[360px] mr-auto text-left cursor-pointer group transition-transform duration-300 hover:scale-[1.02] focus:outline-none"
+            >
+              <div className="inline-flex items-center gap-2 font-mono-label text-[9.5px] sm:text-[10.5px] text-[#14f884] mb-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] shadow-[0_0_8px_#14f884]" />
+                <span>
+                  {SERVICES_QUADRANTS[2].num} — {SERVICES_QUADRANTS[2].label}
+                </span>
+              </div>
+
+              <p className="font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884]/90 mb-0.5">
+                {SERVICES_QUADRANTS[2].tagline}
+              </p>
+
+              <h3 className="text-[clamp(1.25rem,2.1vw,1.95rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
+                {SERVICES_QUADRANTS[2].title}
+              </h3>
+
+              <p className="mt-2 text-[clamp(0.78rem,0.98vw,0.88rem)] text-[#b8c7c2] font-light leading-[1.46]">
+                {SERVICES_QUADRANTS[2].description}
+              </p>
+
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {SERVICES_QUADRANTS[2].capabilities.slice(0, 4).map((c) => (
+                  <span
+                    key={c}
+                    className="px-2 py-0.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[8px] sm:text-[8.5px] text-[#9dbcb0]"
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Box 04: Bottom Right */}
+            <div
+              ref={(el) => {
+                cardRefs.current[3] = el;
+              }}
+              onClick={() => scrollToQuadrant(3)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && scrollToQuadrant(3)}
+              style={{ opacity: 0, transform: "translate3d(0, 16px, 0)" }}
+              className="will-change-transform max-w-[360px] ml-auto text-right cursor-pointer group transition-transform duration-300 hover:scale-[1.02] focus:outline-none"
+            >
+              <div className="inline-flex items-center gap-2 font-mono-label text-[9.5px] sm:text-[10.5px] text-[#14f884] mb-1.5 flex-row-reverse">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] shadow-[0_0_8px_#14f884]" />
+                <span>
+                  {SERVICES_QUADRANTS[3].num} — {SERVICES_QUADRANTS[3].label}
+                </span>
+              </div>
+
+              <p className="font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884]/90 mb-0.5">
+                {SERVICES_QUADRANTS[3].tagline}
+              </p>
+
+              <h3 className="text-[clamp(1.25rem,2.1vw,1.95rem)] font-black tracking-[-0.02em] text-white uppercase leading-[1.06] whitespace-pre-line group-hover:text-[#14f884] transition-colors">
+                {SERVICES_QUADRANTS[3].title}
+              </h3>
+
+              <p className="mt-2 text-[clamp(0.78rem,0.98vw,0.88rem)] text-[#b8c7c2] font-light leading-[1.46]">
+                {SERVICES_QUADRANTS[3].description}
+              </p>
+
+              <div className="mt-2.5 flex flex-wrap gap-1.5 justify-end">
+                {SERVICES_QUADRANTS[3].capabilities.slice(0, 4).map((c) => (
+                  <span
+                    key={c}
+                    className="px-2 py-0.5 rounded-full border border-white/10 bg-white/5 font-mono-label text-[8px] sm:text-[8.5px] text-[#9dbcb0]"
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

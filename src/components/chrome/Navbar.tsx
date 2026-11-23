@@ -19,6 +19,7 @@ const NAV_LINKS = [
 export default function Navbar() {
   const barRef = useRef<HTMLDivElement | null>(null);
   const [isLight, setIsLight] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeMode, setThemeMode] = useState<"dark" | "light">("dark");
 
@@ -51,6 +52,7 @@ export default function Navbar() {
 
   useEffect(() => {
     let lastIsLight = false;
+    let lastScrolled = false;
     let frameCounter = 0;
 
     // GPU-composited scaleX synced directly to GSAP ticker (same frame as Lenis, zero React re-renders)
@@ -62,6 +64,12 @@ export default function Navbar() {
 
       if (barRef.current) {
         barRef.current.style.transform = `scaleX(${pct})`;
+      }
+
+      const scrolled = window.scrollY > 20;
+      if (scrolled !== lastScrolled) {
+        lastScrolled = scrolled;
+        setIsScrolled(scrolled);
       }
 
       frameCounter++;
@@ -104,12 +112,14 @@ export default function Navbar() {
         />
       </div>
 
-      {/* Compact Fixed Navbar matching exact reference proportions */}
+      {/* Compact Fixed Navbar with frosted glass background for crystal-clear readability */}
       <header
-        className={`fixed top-0 left-0 right-0 z-[60] px-4 sm:px-9 py-3.5 sm:py-4 flex items-center justify-between transition-colors duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-[60] px-4 sm:px-9 py-3 sm:py-3.5 flex items-center justify-between transition-all duration-300 ${
           isLight
-            ? "bg-[#f1f5f4]/88 backdrop-blur-md"
-            : "bg-transparent"
+            ? "bg-[#f1f5f4]/94 backdrop-blur-md border-b border-[#091412]/10 shadow-sm"
+            : isScrolled
+            ? "bg-[#050b09]/90 backdrop-blur-md border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.55)]"
+            : "bg-[#050b09]/60 backdrop-blur-sm border-b border-transparent"
         }`}
       >
         {/* Brand Mark: tight ARKAFEDGE. lockup + glowing #17f888 A box */}
