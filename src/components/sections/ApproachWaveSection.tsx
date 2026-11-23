@@ -171,18 +171,18 @@ export default function ApproachWaveSection() {
           </div>
 
           {/* Mobile/Tablet Docked Card Slot with Clickable Stage Selector Tabs */}
-          <div className="lg:hidden relative min-h-[245px] w-full max-w-md mx-auto mt-3">
-            {/* Quick selector tabs */}
-            <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="lg:hidden w-full max-w-md mx-auto mt-2 flex flex-col items-center">
+            {/* Quick selector tabs cleanly separated ABOVE the card */}
+            <div className="flex items-center justify-center gap-2 mb-2.5 z-30">
               {APPROACH_STAGES.map((s, idx) => (
                 <button
                   key={s.word}
                   type="button"
                   onClick={() => scrollToStage(idx)}
-                  className={`px-3 py-1 rounded-full font-mono-label text-[9px] font-bold transition-all cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-full font-mono-label text-[9.5px] font-bold transition-all cursor-pointer ${
                     activeStage === idx
-                      ? "bg-[#14f884] text-[#050b09] shadow-[0_0_12px_#14f884]"
-                      : "bg-[#060f0c]/90 text-white/50 border border-white/10 hover:text-white"
+                      ? "bg-[#14f884] text-[#050b09] shadow-[0_0_14px_rgba(20,248,132,0.85)] scale-105"
+                      : "bg-[#060f0c]/90 text-white/60 border border-white/15 hover:text-white hover:border-[#14f884]/40"
                   }`}
                 >
                   0{idx + 1} {s.word}
@@ -190,40 +190,43 @@ export default function ApproachWaveSection() {
               ))}
             </div>
 
-            {APPROACH_STAGES.map((stage, idx) => {
-              const isActive = activeStage === idx;
-              return (
-                <div
-                  key={stage.num}
-                  className={`absolute inset-x-0 bottom-0 transition-all duration-500 ease-out ${
-                    isActive
-                      ? "opacity-100 translate-y-0 pointer-events-auto"
-                      : "opacity-0 translate-y-4 pointer-events-none"
-                  }`}
-                >
-                  <div className="rounded-[16px] border border-white/12 bg-[#060f0c]/92 backdrop-blur-xl p-4 shadow-[0_18px_40px_rgba(0,0,0,0.65)]">
-                    <div className="relative h-[78px] rounded-[10px] overflow-hidden border border-white/8 mb-3 bg-black">
-                      <StageTelemetryGraphic index={idx} />
-                      <span className="absolute bottom-1.5 inset-x-0 text-center font-mono-label text-[8.5px] text-[#14f884]/85">
-                        {stage.previewLabel}
-                      </span>
+            {/* Docked Card Slot */}
+            <div className="relative w-full min-h-[260px] sm:min-h-[240px]">
+              {APPROACH_STAGES.map((stage, idx) => {
+                const isActive = activeStage === idx;
+                return (
+                  <div
+                    key={stage.num}
+                    className={`absolute inset-x-0 top-0 transition-all duration-500 ease-out ${
+                      isActive
+                        ? "opacity-100 translate-y-0 pointer-events-auto"
+                        : "opacity-0 translate-y-4 pointer-events-none"
+                    }`}
+                  >
+                    <div className="rounded-[16px] border border-white/12 bg-[#060f0c]/95 backdrop-blur-xl p-4 shadow-[0_18px_40px_rgba(0,0,0,0.65)]">
+                      <div className="relative h-[82px] rounded-[10px] overflow-hidden border border-white/8 mb-3 bg-black">
+                        <StageTelemetryGraphic index={idx} />
+                        <span className="absolute bottom-1.5 inset-x-0 text-center font-mono-label text-[8.5px] text-[#14f884]/85">
+                          {stage.previewLabel}
+                        </span>
+                      </div>
+                      <div className="inline-flex items-center gap-1.5 font-mono-label text-[9px] text-[#14f884] mb-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
+                        <span>
+                          {stage.num} — {stage.word}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-white leading-snug">
+                        {stage.title}
+                      </h3>
+                      <p className="mt-1.5 text-xs text-[#a9bfb8] font-light leading-relaxed">
+                        {stage.body}
+                      </p>
                     </div>
-                    <div className="inline-flex items-center gap-1.5 font-mono-label text-[9px] text-[#14f884] mb-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-                      <span>
-                        {stage.num} — {stage.word}
-                      </span>
-                    </div>
-                    <h3 className="text-sm font-bold text-white leading-snug">
-                      {stage.title}
-                    </h3>
-                    <p className="mt-1.5 text-xs text-[#a9bfb8] font-light leading-relaxed">
-                      {stage.body}
-                    </p>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {/* Desktop Alternating Floating Cards (Right -> Left -> Right) */}
