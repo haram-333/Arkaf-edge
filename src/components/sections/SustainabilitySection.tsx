@@ -124,9 +124,8 @@ export default function SustainabilitySection() {
 
       // 2. MASTER TIMELINE:
       // Controls entrance fade at top: 0, zoom-out, blur clearing, creeping fog entrance,
-      // and complete text reveal. ALL reveals finish by p = 0.43, leaving a perfectly balanced
-      // static hold zone (0.43 -> 0.77, ~145vh of scroll) where everything is 100%
-      // revealed and completely still before #services arrives to slide it up.
+      // and complete text reveal. ALL reveals finish by p = 0.49, leaving a crisp ~1-second
+      // hold window (~50vh) before #services arrives to slide it up smoothly.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -148,30 +147,30 @@ export default function SustainabilitySection() {
                 p >= 0.18 && (!rect || rect.top >= h) ? "auto" : "none";
             }
 
-            if ((p >= 0.76 || p < 0.18) && activeHotspotRef.current !== null) {
+            if ((p >= 0.65 || p < 0.18) && activeHotspotRef.current !== null) {
               setActiveHotspot(null);
             }
           },
         },
       });
 
-      // --- PHASE 1: STAGE SOFTLY FADES IN AT TOP 0 (0.00 -> 0.10) ---
+      // --- PHASE 1: STAGE SOFTLY FADES IN AT TOP 0 (0.00 -> 0.12) ---
       tl.fromTo(
         fixedStage,
         { opacity: 0 },
-        { opacity: 1, ease: "power2.out", duration: 0.10 },
+        { opacity: 1, ease: "power2.out", duration: 0.12 },
         0
       );
 
-      // --- PHASE 2: CINEMATIC ZOOM OUT & DIRECT BLUR CLEARING (0.08 -> 0.25) ---
+      // --- PHASE 2: CINEMATIC ZOOM OUT & DIRECT BLUR CLEARING (0.08 -> 0.28) ---
       tl.fromTo(
         bgImage,
         { scale: 1.35, filter: "blur(12px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.17 },
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.20 },
         0.08
       );
 
-      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.18 -> 0.36) ---
+      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.18 -> 0.38) ---
       // Rises up from floor (y: 75 -> 0), scales, diffuses from blur(12px) -> blur(0px)
       if (fogVideo) {
         tl.fromTo(
@@ -188,20 +187,20 @@ export default function SustainabilitySection() {
             scale: 1.0,
             filter: "blur(0px)",
             ease: "power2.out",
-            duration: 0.18,
+            duration: 0.20,
           },
           0.18
         );
       }
 
-      // --- PHASE 4: FULL GSAP TEXT REVEAL & SENSOR NODES (0.24 -> 0.43) ---
-      // Everything finishes revealing by 0.43 — well before the exit slide at ~0.77!
+      // --- PHASE 4: FULL GSAP TEXT REVEAL & SENSOR NODES (0.26 -> 0.49) ---
+      // Everything finishes revealing by 0.49 — completely revealed before exit starts at 0.67!
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 18 },
           { opacity: 1, y: 0, ease: "power3.out", duration: 0.08 },
-          0.24
+          0.26
         );
       }
 
@@ -212,11 +211,20 @@ export default function SustainabilitySection() {
           {
             yPercent: 0,
             opacity: 1,
-            stagger: 0.03,
+            stagger: 0.025,
             ease: "power3.out",
             duration: 0.10,
           },
-          0.26
+          0.30
+        );
+      }
+
+      if (activePins.length > 0) {
+        tl.fromTo(
+          activePins,
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, stagger: 0.025, ease: "back.out(2)", duration: 0.09 },
+          0.32
         );
       }
 
@@ -225,7 +233,7 @@ export default function SustainabilitySection() {
           subtext,
           { opacity: 0, y: 14 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.30
+          0.36
         );
       }
 
@@ -234,16 +242,7 @@ export default function SustainabilitySection() {
           cta,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
-          0.33
-        );
-      }
-
-      if (activePins.length > 0) {
-        tl.fromTo(
-          activePins,
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, stagger: 0.03, ease: "back.out(2)", duration: 0.09 },
-          0.28
+          0.39
         );
       }
 
@@ -251,14 +250,14 @@ export default function SustainabilitySection() {
         tl.fromTo(
           pills,
           { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.34
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
+          0.42
         );
       }
 
-      // --- PHASE 5: BALANCED STATIC INTERACTIVE EXPLORATION HOLD (0.43 -> 1.00) ---
-      // Perfectly calibrated hold zone (~145vh) where text, fog, hotspots are 100% revealed & static!
-      tl.to({}, { duration: 0.57 }, 0.43);
+      // --- PHASE 5: CRISP 1-SECOND EXPLORATION HOLD (0.49 -> 1.00) ---
+      // Holds statically for ~50vh until #services arrives at 0.67 to slide it up!
+      tl.to({}, { duration: 0.51 }, 0.49);
     }, container);
 
     return () => {
@@ -271,7 +270,7 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative z-20 w-full h-[330vh] bg-transparent"
+      className="relative z-20 w-full h-[200vh] bg-transparent"
     >
       {/* =====================================================================
           FIXED VIEWPORT STAGE:
