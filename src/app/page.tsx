@@ -2,7 +2,6 @@ import SmoothScroll from "@/components/chrome/SmoothScroll";
 import Navbar from "@/components/chrome/Navbar";
 import CustomCursor from "@/components/chrome/CustomCursor";
 import HeroWhoWeAreSection from "@/components/sections/HeroWhoWeAreSection";
-import SustainabilitySection from "@/components/sections/SustainabilitySection";
 import ServicesFlowerSection from "@/components/sections/ServicesFlowerSection";
 import PhenomenonHorizontalSection from "@/components/sections/PhenomenonHorizontalSection";
 import ApproachWaveSection from "@/components/sections/ApproachWaveSection";
@@ -17,7 +16,6 @@ export default function HomePage() {
       <CustomCursor />
       <main>
         <HeroWhoWeAreSection />
-        <SustainabilitySection />
         <ServicesFlowerSection />
         <PhenomenonHorizontalSection />
         <ApproachWaveSection />
