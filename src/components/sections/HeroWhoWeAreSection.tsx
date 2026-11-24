@@ -184,8 +184,12 @@ export default function HeroWhoWeAreSection() {
               {SUSTAINABILITY_CONTENT.lead} {SUSTAINABILITY_CONTENT.story}
             </p>
 
+            <p className="mt-2 max-w-[640px] text-[clamp(0.76rem,0.95vw,0.86rem)] text-[#a9f5cf]/90 font-medium leading-[1.4]">
+              {SUSTAINABILITY_CONTENT.affection}
+            </p>
+
             {/* Focus Industry Badges */}
-            <div className="mt-3 sm:mt-3.5 max-w-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
+            <div className="mt-2.5 sm:mt-3 max-w-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
               {SUSTAINABILITY_CONTENT.industries.map((ind) => (
                 <span
                   key={ind}
@@ -200,13 +204,16 @@ export default function HeroWhoWeAreSection() {
               {SUSTAINABILITY_CONTENT.closing}
             </p>
 
-            <a
-              href="#services"
-              className="mt-3.5 sm:mt-4 inline-flex items-center gap-2 font-mono-label text-[10px] sm:text-[11px] font-semibold text-[#14f884] hover:gap-3.5 transition-all"
-            >
-              {SUSTAINABILITY_CONTENT.cta}
-              <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+            {/* Clear, Prominent Primary Pill CTA Button */}
+            <div className="mt-4 sm:mt-5 pointer-events-auto">
+              <a
+                href="#services"
+                className="inline-flex items-center justify-center gap-2.5 rounded-full border border-[#14f884] bg-[#14f884] px-6 sm:px-8 py-3 sm:py-3.5 font-mono-label text-[10.5px] sm:text-[11.5px] font-bold text-[#050b09] shadow-[0_0_24px_rgba(20,248,132,0.45)] hover:bg-[#a9f5cf] hover:shadow-[0_0_36px_rgba(20,248,132,0.75)] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+              >
+                <span>{SUSTAINABILITY_CONTENT.cta}</span>
+                <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
