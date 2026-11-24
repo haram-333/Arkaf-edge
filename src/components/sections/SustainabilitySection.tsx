@@ -352,16 +352,16 @@ export default function SustainabilitySection() {
                     </svg>
                   </button>
 
-                  {/* Inline Tag beside dot (matches Alethia screenshot reference) */}
+                  {/* Inline Tag beside dot with Liquid Glass pill */}
                   <div
                     onClick={() => setActiveHotspot(isActive ? null : spot.id)}
-                    className="hidden sm:inline-block cursor-pointer select-none font-mono-label text-[8px] uppercase tracking-wider font-bold text-[#c6f19d] drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)] bg-black/60 backdrop-blur-md px-2 py-0.5 rounded border border-[#c6f19d]/30 whitespace-nowrap hover:border-[#c6f19d] transition-colors"
+                    className="hidden sm:inline-block cursor-pointer select-none font-mono-label text-[8px] uppercase tracking-wider font-bold text-[#c6f19d] liquid-glass-pill px-2.5 py-1 rounded-full whitespace-nowrap hover:text-[#14f884] hover:scale-105 transition-all"
                   >
                     {spot.metric}
                   </div>
                 </div>
 
-                {/* Tooltip Capsule (Reveals on Hover / Tap) */}
+                {/* Tooltip Capsule with Liquid Glass Surface */}
                 <div
                   className={`absolute z-40 transition-all duration-300 ease-out pointer-events-none ${
                     isActive
@@ -375,7 +375,7 @@ export default function SustainabilitySection() {
                       : "bottom-12 sm:bottom-14 left-1/2 -translate-x-1/2"
                   }`}
                 >
-                  <div className="flex items-center gap-2.5 rounded-2xl bg-black/90 border border-[#c6f19d]/60 backdrop-blur-md px-3.5 py-2.5 shadow-[0_12px_32px_rgba(0,0,0,0.85)] min-w-[200px] max-w-[260px]">
+                  <div className="flex items-center gap-2.5 rounded-2xl liquid-glass px-3.5 py-2.5 min-w-[210px] max-w-[270px]">
                     <div className="w-2 h-2 rounded-full bg-[#14f884] shrink-0 animate-pulse" />
                     <div className="text-left">
                       <span className="block font-mono-label text-[7.5px] text-[#14f884] font-bold tracking-wider uppercase">
@@ -447,12 +447,15 @@ export default function SustainabilitySection() {
                   <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
                 </a>
 
-                <a
-                  href="#work"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-md text-white px-4 sm:px-5 py-2.5 sm:py-3 font-mono-label text-[9.5px] sm:text-[10.5px] font-medium hover:border-[#14f884] hover:text-[#14f884] transition-all cursor-pointer"
-                >
-                  <span>CIRCULAR WORK ↗</span>
-                </a>
+                <div className="liquid-glass-btn-wrap">
+                  <a
+                    href="#work"
+                    className="liquid-glass-btn px-4 sm:px-5 py-2.5 sm:py-3 font-mono-label text-[9.5px] sm:text-[10.5px] font-medium text-white hover:text-[#14f884]"
+                  >
+                    <span className="liquid-glass-btn-shine" />
+                    <span className="relative z-10">CIRCULAR WORK ↗</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -472,7 +475,7 @@ export default function SustainabilitySection() {
               {SUSTAINABILITY_CONTENT.industries.map((ind) => (
                 <span
                   key={ind}
-                  className="px-2.5 py-1 rounded-full border border-white/15 bg-black/60 backdrop-blur-md font-mono-label text-[8px] sm:text-[9px] text-[#d4ede4] hover:border-[#14f884]/60 hover:text-[#14f884] transition-colors"
+                  className="px-2.5 py-1 rounded-full liquid-glass-pill font-mono-label text-[8px] sm:text-[9px] text-[#d4ede4] hover:text-[#14f884] transition-colors"
                 >
                   {ind}
                 </span>

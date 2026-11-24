@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, JetBrains_Mono } from "next/font/google";
+import LiquidGlassFilter from "@/components/chrome/LiquidGlassFilter";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -33,6 +34,7 @@ export default function RootLayout({
       className={`${poppins.variable} ${jetbrainsMono.variable} dark`}
     >
       <body className="bg-[#050b09] text-white antialiased selection:bg-[#14f884] selection:text-[#050b09] overflow-x-clip">
+        <LiquidGlassFilter />
         {children}
       </body>
     </html>

@@ -109,8 +109,8 @@ export default function HeroWhoWeAreSection() {
           className="relative z-10 w-full max-w-[1160px] mx-auto px-5 sm:px-14 pt-20 pb-6 sm:pb-8 flex flex-col justify-between h-full will-change-transform"
         >
           <div className="my-auto">
-            {/* Eyebrow pill matching screenshot 1 */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#14f884]/40 bg-[#050b09]/70 backdrop-blur-sm px-3.5 sm:px-4 py-1.5 mb-5 sm:mb-8">
+            {/* Eyebrow pill matching screenshot 1 with Liquid Glass */}
+            <div className="inline-flex items-center gap-2 rounded-full liquid-glass-pill px-3.5 sm:px-4 py-1.5 mb-5 sm:mb-8">
               <Sparkles className="w-3 h-3 text-[#14f884] shrink-0" />
               <span className="font-mono-label text-[9px] sm:text-[11px] text-[#c7f5dd]">
                 {HERO_CONTENT.eyebrow}
@@ -146,22 +146,30 @@ export default function HeroWhoWeAreSection() {
                 <ArrowRight className="w-3.5 h-3.5" />
               </a>
 
-              {/* 2. Discover ARKAF Edge */}
-              <a
-                href="#who-we-are"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#14f884]/40 bg-[#051a12]/75 backdrop-blur-sm text-[#c7f5dd] hover:text-[#14f884] hover:border-[#14f884] font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4 transition-all hover:scale-[1.03] active:scale-[0.99]"
-              >
-                {HERO_CONTENT.discoverCta}
-                <ArrowRight className="w-3.5 h-3.5 text-[#14f884]" />
-              </a>
+              {/* 2. Discover ARKAF Edge (Liquid Glass Specular Button) */}
+              <div className="liquid-glass-btn-wrap">
+                <a
+                  href="#who-we-are"
+                  className="liquid-glass-btn text-[#c7f5dd] hover:text-[#14f884] font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4"
+                >
+                  <span className="liquid-glass-btn-shine" />
+                  <span className="relative z-10 flex items-center gap-2">
+                    {HERO_CONTENT.discoverCta}
+                    <ArrowRight className="w-3.5 h-3.5 text-[#14f884]" />
+                  </span>
+                </a>
+              </div>
 
-              {/* 3. Explore Our Work */}
-              <a
-                href="#work"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-[#050b09]/55 backdrop-blur-sm text-white font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4 hover:border-[#14f884] hover:text-[#14f884] transition-all hover:scale-[1.03] active:scale-[0.99]"
-              >
-                {HERO_CONTENT.secondaryCta}
-              </a>
+              {/* 3. Explore Our Work (Liquid Glass Specular Button) */}
+              <div className="liquid-glass-btn-wrap">
+                <a
+                  href="#work"
+                  className="liquid-glass-btn text-white hover:text-[#14f884] font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4"
+                >
+                  <span className="liquid-glass-btn-shine" />
+                  <span className="relative z-10">{HERO_CONTENT.secondaryCta}</span>
+                </a>
+              </div>
             </div>
           </div>
 

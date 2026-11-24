@@ -112,12 +112,10 @@ export default function Navbar() {
         />
       </div>
 
-      {/* Compact Fixed Navbar with frosted glass blur background (never colored) */}
+      {/* Liquid Glass Navbar with chromatic dispersion & caustic depth */}
       <header
         className={`fixed top-0 left-0 right-0 z-[60] px-4 sm:px-9 py-3 sm:py-3.5 flex items-center justify-between transition-all duration-300 ${
-          isLight
-            ? "bg-white/40 backdrop-blur-md border-b border-black/10 shadow-sm"
-            : "bg-black/20 backdrop-blur-md border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.25)]"
+          isLight ? "liquid-glass-nav-light" : "liquid-glass-nav"
         }`}
       >
         {/* Brand Mark: tight ARKAFEDGE. lockup + glowing #17f888 A box */}
@@ -142,29 +140,24 @@ export default function Navbar() {
           </span>
         </a>
 
-        {/* Right Controls matching reference screenshot */}
+        {/* Right Controls with Liquid Glass styling */}
         <div className="flex items-center gap-2.5">
-          <a
-            href="#contact"
-            className={`hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-mono-label text-[9.5px] font-semibold transition-all duration-300 ${
-              isLight
-                ? "border border-[#06a65a]/45 bg-white/80 text-[#06a65a] hover:bg-[#091412] hover:text-[#14f884]"
-                : "border border-[#14f884]/45 bg-black/20 backdrop-blur-md text-[#14f884] hover:bg-[#14f884] hover:text-[#050b09]"
-            }`}
-          >
-            <Sparkles className="w-3 h-3" />
-            START A PROJECT
-          </a>
+          <div className="hidden sm:inline-flex liquid-glass-btn-wrap">
+            <a
+              href="#contact"
+              className="liquid-glass-btn px-4 py-1.5 font-mono-label text-[9.5px] font-bold text-[#14f884]"
+            >
+              <span className="liquid-glass-btn-shine" />
+              <Sparkles className="w-3 h-3 text-[#14f884] shrink-0" />
+              <span className="relative z-10">START A PROJECT</span>
+            </a>
+          </div>
 
           <button
             type="button"
             onClick={toggleTheme}
             aria-label="Toggle theme / light section"
-            className={`w-8 h-8 rounded-full hidden sm:flex items-center justify-center border transition-all duration-300 cursor-pointer ${
-              isLight || themeMode === "light"
-                ? "border-[#091412]/15 text-[#06a65a] bg-white/75 hover:border-[#06a65a]"
-                : "border-white/15 text-[#14f884]/80 bg-black/20 backdrop-blur-md hover:border-[#14f884]"
-            }`}
+            className="w-8 h-8 rounded-full hidden sm:flex items-center justify-center liquid-glass-pill text-[#14f884] transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95"
           >
             {isLight || themeMode === "light" ? (
               <Moon className="w-3.5 h-3.5" />
@@ -177,14 +170,10 @@ export default function Navbar() {
             type="button"
             onClick={() => setMenuOpen((o) => !o)}
             aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
-            className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 cursor-pointer ${
-              isLight
-                ? "border-[#091412]/20 text-[#091412] bg-white/80 hover:border-[#06a65a]"
-                : "border-white/15 text-white bg-[#050b09]/65 backdrop-blur-md hover:border-[#14f884] hover:text-[#14f884]"
-            }`}
+            className="w-8 h-8 rounded-full flex items-center justify-center liquid-glass-pill text-white transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95"
           >
             {menuOpen ? (
-              <X className="w-3.5 h-3.5" />
+              <X className="w-3.5 h-3.5 text-[#14f884]" />
             ) : (
               <Menu className="w-3.5 h-3.5" />
             )}
