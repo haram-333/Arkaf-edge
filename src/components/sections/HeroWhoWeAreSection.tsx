@@ -120,21 +120,32 @@ export default function HeroWhoWeAreSection() {
               {HERO_CONTENT.subtitle}
             </p>
 
-            {/* Exact Dual Pill CTAs matching Screenshot 1 */}
-            <div className="mt-7 sm:mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
+            {/* The 3 Hero CTAs from Website Written Content docx */}
+            <div className="mt-7 sm:mt-9 flex flex-wrap items-center gap-3 sm:gap-3.5">
+              {/* 1. What We Do */}
               <a
                 href="#services"
-                className="inline-flex items-center justify-center gap-2.5 sm:gap-3 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10.5px] sm:text-[12px] font-bold px-6 sm:px-8 py-3.5 sm:py-4 neon-box-glow hover:scale-[1.03] active:scale-[0.99] transition-transform"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10px] sm:text-[11.5px] font-bold px-5 sm:px-6 py-3.5 sm:py-4 neon-box-glow hover:scale-[1.03] active:scale-[0.99] transition-transform"
               >
                 {HERO_CONTENT.primaryCta}
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </a>
+
+              {/* 2. Discover ARKAF Edge */}
+              <a
+                href="#who-we-are"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#14f884]/40 bg-[#051a12]/75 backdrop-blur-sm text-[#c7f5dd] hover:text-[#14f884] hover:border-[#14f884] font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4 transition-all hover:scale-[1.03] active:scale-[0.99]"
+              >
+                {HERO_CONTENT.discoverCta}
+                <ArrowRight className="w-3.5 h-3.5 text-[#14f884]" />
+              </a>
+
+              {/* 3. Explore Our Work */}
               <a
                 href="#work"
-                className="inline-flex items-center justify-center gap-2.5 sm:gap-3 rounded-full border border-white/30 bg-[#050b09]/55 backdrop-blur-sm text-white font-mono-label text-[10.5px] sm:text-[12px] font-semibold px-6 sm:px-8 py-3.5 sm:py-4 hover:border-[#14f884] hover:text-[#14f884] transition-colors"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-[#050b09]/55 backdrop-blur-sm text-white font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4 hover:border-[#14f884] hover:text-[#14f884] transition-all hover:scale-[1.03] active:scale-[0.99]"
               >
                 {HERO_CONTENT.secondaryCta}
-                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </a>
             </div>
           </div>
