@@ -10,148 +10,135 @@ import { IMPACT_STATS, FOUNDERS, VISION_CONTENT } from "@/data/content";
 gsap.registerPlugin(ScrollTrigger);
 
 // ============================================================================
-// ASYMMETRICAL SHAPES & VISUAL ARTIFACTS (True Alethia Style)
-// Notice each element has a completely unique geometric archetype:
-// 1. Isometric 3D Topographic Contour (pure transparent wireframe, no box!)
-// 2. Turbine Blueprint with detached floating pill tag
-// 3. Compact Telemetry Sparkline chip (CLIMAVUE style)
-// 4. Foliage photo tile with micro bar chart
-// 5. Analogue Film Studio vertical card with aperture iris
-// 6. Dual overlapping metric line graph
-// 7. Compact High-Contrast Solid Lime Badge (Alethia Carbon Balance style)
-// 8. Geometric persistence stone chip
+// ASYMMETRIC ARTIFACTS
+// Starts snug around center -> SPREADS OUTWARD on scroll!
+// Safe maximum bounds: max |Y| <= 150px (Zero clipping on any display!)
 // ============================================================================
 const ASYMMETRIC_ARTIFACTS = [
-  // 1. TOP-LEFT: Aeronautical Turbine Blueprint + Detached Pill Tag
+  // 1. TOP-LEFT: Aeronautical Turbine Schematic + Detached Floating Pill
   {
     id: "aero-turbine",
-    type: "turbine",
-    baseX: -340, // calibrated pixels relative to center
-    baseY: -135,
-    driftX: -22,
-    driftY: -12,
+    startX: -175,
+    startY: -95,
+    spreadX: -160,
+    spreadY: -45,
     rotation: -3,
     render: () => (
-      <div className="relative flex items-center gap-2.5">
-        <div className="w-[220px] rounded-2xl border border-white/20 bg-[#051c17]/95 p-3.5 shadow-2xl backdrop-blur-md">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold">
+      <div className="relative flex items-center gap-2">
+        <div className="w-[205px] rounded-2xl border border-white/20 bg-[#051c17]/95 p-3 shadow-2xl backdrop-blur-md">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
               [AERONAUTICAL 2012]
             </span>
             <div className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
           </div>
           {/* Turbine Schematic Graphic */}
-          <div className="relative h-12 w-full rounded-lg bg-black/60 border border-white/10 mb-2 overflow-hidden flex items-center justify-center">
-            <svg viewBox="0 0 160 48" className="w-full h-full stroke-[#14f884]/60 fill-none">
-              <circle cx="80" cy="24" r="18" strokeWidth="1" strokeDasharray="2 3" />
-              <circle cx="80" cy="24" r="10" strokeWidth="1.2" />
-              <circle cx="80" cy="24" r="3" fill="#14f884" />
-              <line x1="20" y1="24" x2="140" y2="24" strokeWidth="0.8" strokeOpacity="0.4" />
-              <line x1="80" y1="4" x2="80" y2="44" strokeWidth="0.8" strokeOpacity="0.4" />
-              <path d="M 68 12 L 92 36 M 68 36 L 92 12" strokeWidth="0.8" strokeOpacity="0.5" />
+          <div className="relative h-10 w-full rounded-lg bg-black/60 border border-white/10 mb-1.5 overflow-hidden flex items-center justify-center">
+            <svg viewBox="0 0 160 40" className="w-full h-full stroke-[#14f884]/60 fill-none">
+              <circle cx="80" cy="20" r="15" strokeWidth="1" strokeDasharray="2 3" />
+              <circle cx="80" cy="20" r="8" strokeWidth="1.2" />
+              <circle cx="80" cy="20" r="2.5" fill="#14f884" />
+              <line x1="20" y1="20" x2="140" y2="20" strokeWidth="0.8" strokeOpacity="0.4" />
+              <line x1="80" y1="2" x2="80" y2="38" strokeWidth="0.8" strokeOpacity="0.4" />
+              <path d="M 68 8 L 92 32 M 68 32 L 92 8" strokeWidth="0.8" strokeOpacity="0.5" />
             </svg>
-            <span className="absolute bottom-1 right-2 font-mono-label text-[7.5px] text-[#14f884]/80">
+            <span className="absolute bottom-1 right-2 font-mono-label text-[7px] text-[#14f884]/80">
               MACH-LOGIC
             </span>
           </div>
-          <p className="text-[11px] font-bold text-white leading-tight">Navigating Without a Map</p>
-          <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">Medical detour built on-ground resilience.</p>
+          <p className="text-[10.5px] font-bold text-white leading-tight">Navigating Without a Map</p>
+          <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">Medical detour built on-ground resilience.</p>
         </div>
-        {/* Detached floating pill (Alethia style) */}
-        <span className="shrink-0 px-2.5 py-1 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8.5px] font-black shadow-[0_0_14px_rgba(20,248,132,0.45)]">
+        {/* Detached pill */}
+        <span className="shrink-0 px-2 py-0.5 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8px] font-black shadow-[0_0_12px_rgba(20,248,132,0.45)]">
           LOGIC
         </span>
       </div>
     ),
   },
 
-  // 2. TOP-CENTER: Slim Telemetry Data Chip (CLIMAVUE style with mini sparkline)
+  // 2. TOP-CENTER: Slim Telemetry Data Chip (CLIMAVUE style with equalizer bars)
   {
     id: "climavue-pill",
-    type: "telemetry",
-    baseX: -90,
-    baseY: -160,
-    driftX: -8,
-    driftY: -14,
+    startX: -30,
+    startY: -115,
+    spreadX: -45,
+    spreadY: -50,
     rotation: 1.5,
     render: () => (
-      <div className="w-[230px] rounded-xl border border-white/20 bg-black/85 backdrop-blur-md px-3.5 py-2.5 shadow-xl flex items-center justify-between gap-2.5">
+      <div className="w-[215px] rounded-xl border border-white/20 bg-black/85 backdrop-blur-md px-3 py-2 shadow-xl flex items-center justify-between gap-2">
         <div>
           <div className="flex items-center gap-1.5 mb-0.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-            <span className="font-mono-label text-[8px] text-[#14f884] uppercase">CORE QUESTION</span>
+            <span className="font-mono-label text-[7.5px] text-[#14f884] uppercase">CORE QUESTION</span>
           </div>
-          <p className="text-[11px] font-bold text-white">&ldquo;Why can&apos;t business do both?&rdquo;</p>
+          <p className="text-[10.5px] font-bold text-white leading-tight">&ldquo;Why can&apos;t business do both?&rdquo;</p>
         </div>
-        {/* Mini vertical equalizer bars */}
-        <div className="flex items-end gap-1 h-5 shrink-0 px-1.5 py-1 rounded bg-[#05261e] border border-[#14f884]/30">
+        <div className="flex items-end gap-0.5 h-4 shrink-0 px-1 py-0.5 rounded bg-[#05261e] border border-[#14f884]/30">
+          <span className="w-1 h-1.5 rounded-sm bg-[#14f884]" />
+          <span className="w-1 h-3 rounded-sm bg-[#14f884]" />
           <span className="w-1 h-2 rounded-sm bg-[#14f884]" />
           <span className="w-1 h-3.5 rounded-sm bg-[#14f884]" />
-          <span className="w-1 h-2.5 rounded-sm bg-[#14f884]" />
-          <span className="w-1 h-4 rounded-sm bg-[#14f884]" />
         </div>
       </div>
     ),
   },
 
-  // 3. TOP-RIGHT: Foliage Photo Tile + Micro Bar Chart Badge
+  // 3. TOP-RIGHT: Nature / Foliage Graphic Tile + Micro Chart
   {
     id: "foliage-tile",
-    type: "photo",
-    baseX: 330,
-    baseY: -130,
-    driftX: 20,
-    driftY: -12,
+    startX: 170,
+    startY: -95,
+    spreadX: 155,
+    spreadY: -45,
     rotation: 3,
     render: () => (
-      <div className="w-[210px] rounded-2xl border border-white/20 bg-[#05221b] p-3 shadow-2xl overflow-hidden relative">
-        <div className="relative h-14 w-full rounded-xl overflow-hidden mb-2">
+      <div className="w-[195px] rounded-2xl border border-white/20 bg-[#05221b] p-2.5 shadow-2xl overflow-hidden relative">
+        <div className="relative h-12 w-full rounded-xl overflow-hidden mb-1.5">
           <Image
             src="/images/art-01.jpg"
             alt="Circularity"
             fill
             className="object-cover opacity-60"
-            sizes="210px"
+            sizes="195px"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#05221b] via-transparent to-transparent" />
-          <span className="absolute top-1.5 right-1.5 font-mono-label text-[7.5px] font-bold px-1.5 py-0.5 rounded bg-black/80 text-[#14f884] border border-[#14f884]/30">
+          <span className="absolute top-1 right-1 font-mono-label text-[7px] font-bold px-1.5 py-0.5 rounded bg-black/80 text-[#14f884] border border-[#14f884]/30">
             2020 • VALUE
           </span>
         </div>
-        <p className="text-[11px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
-        <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">Repurposing discard into commercial treasure.</p>
+        <p className="text-[10.5px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
+        <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">Repurposing discard into commercial treasure.</p>
       </div>
     ),
   },
 
-  // 4. MID-LEFT: 3D Topographical Contour Model (PURE WIREFRAME — NO RECTANGLE BOX!)
+  // 4. MID-LEFT: 3D Topographical Contour Model (PURE WIREFRAME, NO BOX!)
   {
     id: "topo-contour",
-    type: "wireframe",
-    baseX: -370,
-    baseY: 10,
-    driftX: -22,
-    driftY: 2,
+    startX: -200,
+    startY: 0,
+    spreadX: -160,
+    spreadY: 5,
     rotation: -2,
     render: () => (
-      <div className="w-[190px] p-2 flex flex-col items-start select-none">
-        {/* Isometric Contour Elevation Curves */}
-        <div className="relative w-full h-16 flex items-center justify-center">
-          <svg viewBox="0 0 160 64" className="w-full h-full stroke-[#14f884] fill-none opacity-80">
-            <ellipse cx="80" cy="32" rx="72" ry="26" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
-            <ellipse cx="80" cy="31" rx="55" ry="20" strokeWidth="1" strokeOpacity="0.5" />
-            <ellipse cx="80" cy="30" rx="38" ry="14" strokeWidth="1.2" strokeOpacity="0.75" />
-            <ellipse cx="80" cy="28" rx="22" ry="8" strokeWidth="1.4" strokeOpacity="0.95" />
-            <ellipse cx="80" cy="26" rx="10" ry="4" fill="#14f884" fillOpacity="0.3" strokeWidth="1.5" />
+      <div className="w-[175px] p-1.5 flex flex-col items-start select-none">
+        <div className="relative w-full h-14 flex items-center justify-center">
+          <svg viewBox="0 0 160 56" className="w-full h-full stroke-[#14f884] fill-none opacity-80">
+            <ellipse cx="80" cy="28" rx="70" ry="22" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
+            <ellipse cx="80" cy="27" rx="52" ry="17" strokeWidth="1" strokeOpacity="0.5" />
+            <ellipse cx="80" cy="26" rx="36" ry="12" strokeWidth="1.2" strokeOpacity="0.75" />
+            <ellipse cx="80" cy="24" rx="20" ry="7" strokeWidth="1.4" strokeOpacity="0.95" />
+            <ellipse cx="80" cy="22" rx="9" ry="3.5" fill="#14f884" fillOpacity="0.35" strokeWidth="1.5" />
           </svg>
         </div>
-        <div className="mt-1 flex items-center gap-1.5">
-          <span className="font-mono-label text-[8.5px] text-[#14f884] font-bold uppercase">
+        <div className="mt-0.5 flex items-center gap-1.5">
+          <span className="font-mono-label text-[8px] text-[#14f884] font-bold uppercase">
             [GROUND REALITY]
           </span>
-          <span className="font-mono-label text-[8px] text-white/50">8 SECTORS</span>
+          <span className="font-mono-label text-[7.5px] text-white/50">8 SECTORS</span>
         </div>
-        <p className="text-[10px] text-[#c7d6d1] font-medium leading-snug">
+        <p className="text-[9.5px] text-[#c7d6d1] font-medium leading-snug">
           Collections • Real Estate • BD • Risk
         </p>
       </div>
@@ -161,27 +148,25 @@ const ASYMMETRIC_ARTIFACTS = [
   // 5. MID-RIGHT: Analogue Film Studio Card (Aperture Iris Aesthetic)
   {
     id: "film-studio",
-    type: "studio",
-    baseX: 350,
-    baseY: 15,
-    driftX: 22,
-    driftY: 4,
+    startX: 200,
+    startY: 5,
+    spreadX: 155,
+    spreadY: 10,
     rotation: 2.5,
     render: () => (
-      <div className="w-[200px] rounded-2xl border border-white/20 bg-[#051d18]/95 p-3.5 shadow-2xl backdrop-blur-md">
-        <div className="flex items-center justify-between mb-2">
-          <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold">
+      <div className="w-[190px] rounded-2xl border border-white/20 bg-[#051d18]/95 p-3 shadow-2xl backdrop-blur-md">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
             [STUDIO FLOOR 2009]
           </span>
-          {/* Camera Aperture Icon */}
-          <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 stroke-[#14f884] fill-none">
+          <svg viewBox="0 0 20 20" className="w-3 h-3 stroke-[#14f884] fill-none">
             <circle cx="10" cy="10" r="8" strokeWidth="1.2" />
             <path d="M 6 4 L 14 6 M 16 7 L 14 15 M 13 16 L 5 14 M 4 13 L 6 5" strokeWidth="1" />
           </svg>
         </div>
-        <p className="text-[11px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
-        <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">
-          7 months from sweeping studio floors to running full film shoots.
+        <p className="text-[10.5px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
+        <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">
+          7 months from sweeping floors to running complete film shoots.
         </p>
       </div>
     ),
@@ -190,28 +175,27 @@ const ASYMMETRIC_ARTIFACTS = [
   // 6. BOTTOM-LEFT: Dual Sparkline Telemetry Chip
   {
     id: "metric-line",
-    type: "dual-metric",
-    baseX: -310,
-    baseY: 140, // safely inside safe zone!
-    driftX: -18,
-    driftY: 14,
+    startX: -165,
+    startY: 95,
+    spreadX: -135,
+    spreadY: 45,
     rotation: -2,
     render: () => (
-      <div className="w-[210px] rounded-2xl border border-white/15 bg-[#05211b]/95 p-3 shadow-xl flex flex-col justify-between">
-        <div className="flex items-center justify-between mb-1">
-          <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
+      <div className="w-[195px] rounded-2xl border border-white/15 bg-[#05211b]/95 p-2.5 shadow-xl flex flex-col justify-between">
+        <div className="flex items-center justify-between mb-0.5">
+          <span className="font-mono-label text-[7.5px] text-[#14f884] font-semibold">
             THE SHARED PURPOSE
           </span>
-          <span className="font-mono-label text-[8px] text-white/50 px-1.5 py-0.5 rounded bg-white/5">
+          <span className="font-mono-label text-[7.5px] text-white/50 px-1 py-0.2 rounded bg-white/5">
             14+ YRS
           </span>
         </div>
-        <p className="text-[10.5px] font-bold text-white leading-tight">
+        <p className="text-[10px] font-bold text-white leading-tight">
           &ldquo;Help good businesses get seen.&rdquo;
         </p>
-        <div className="mt-2 h-4 w-full flex items-center">
-          <svg viewBox="0 0 120 16" className="w-full h-full stroke-[#14f884] fill-none">
-            <polyline points="0,14 30,10 60,12 90,4 120,2" strokeWidth="1.4" />
+        <div className="mt-1.5 h-3.5 w-full flex items-center">
+          <svg viewBox="0 0 120 14" className="w-full h-full stroke-[#14f884] fill-none">
+            <polyline points="0,12 30,9 60,11 90,3 120,2" strokeWidth="1.4" />
             <circle cx="120" cy="2" r="2" fill="#14f884" />
           </svg>
         </div>
@@ -219,30 +203,29 @@ const ASYMMETRIC_ARTIFACTS = [
     ),
   },
 
-  // 7. BOTTOM-CENTER: High-Contrast Solid Lime Badge (Alethia Carbon Balance style!)
-  // Placed at Y: 145px (ZERO clipping, comfortably above bottom edge!)
+  // 7. BOTTOM-CENTER: Solid Lime Badge (Alethia Carbon Balance style)
+  // Max Y stays at 145px (Zero clipping!)
   {
     id: "solid-lime-bba",
-    type: "solid-lime",
-    baseX: 30,
-    baseY: 145, // perfectly safe inside viewport!
-    driftX: 5,
-    driftY: 14,
+    startX: 15,
+    startY: 105,
+    spreadX: 25,
+    spreadY: 40,
     rotation: 2,
     render: () => (
-      <div className="w-[210px] rounded-xl bg-[#c6f19d] text-[#051f10] p-3 shadow-[0_10px_30px_rgba(198,241,157,0.35)] border border-[#c6f19d]">
-        <div className="flex items-center justify-between mb-1">
-          <span className="font-mono-label text-[8px] font-bold uppercase tracking-wider text-[#051f10]/80">
+      <div className="w-[195px] rounded-xl bg-[#c6f19d] text-[#051f10] p-2.5 shadow-[0_8px_24px_rgba(198,241,157,0.3)] border border-[#c6f19d]">
+        <div className="flex items-center justify-between mb-0.5">
+          <span className="font-mono-label text-[7.5px] font-bold uppercase tracking-wider text-[#051f10]/80">
             BBA 2024 • RESILIENCE
           </span>
-          <span className="font-mono-label text-[7.5px] font-black px-1.5 py-0.5 rounded bg-[#051f10] text-[#c6f19d]">
+          <span className="font-mono-label text-[7px] font-black px-1.5 py-0.2 rounded bg-[#051f10] text-[#c6f19d]">
             NO EXCUSES
           </span>
         </div>
-        <p className="text-[11.5px] font-black leading-tight text-[#051f10]">
+        <p className="text-[11px] font-black leading-tight text-[#051f10]">
           Finish What You Started
         </p>
-        <p className="text-[9.5px] text-[#051f10]/80 leading-snug mt-0.5">
+        <p className="text-[9px] text-[#051f10]/80 leading-snug mt-0.5">
           Completing education because follow-through matters.
         </p>
       </div>
@@ -252,26 +235,25 @@ const ASYMMETRIC_ARTIFACTS = [
   // 8. BOTTOM-RIGHT: Minimal Monospace Persistence Pill
   {
     id: "persistence-pill",
-    type: "pill",
-    baseX: 320,
-    baseY: 140, // safely inside safe zone!
-    driftX: 18,
-    driftY: 14,
+    startX: 175,
+    startY: 95,
+    spreadX: 140,
+    spreadY: 45,
     rotation: -2,
     render: () => (
-      <div className="w-[200px] rounded-full border border-white/20 bg-[#051e17]/95 px-4 py-2.5 shadow-xl flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="w-[185px] rounded-full border border-white/20 bg-[#051e17]/95 px-3.5 py-2 shadow-xl flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
           <div>
-            <span className="block font-mono-label text-[7.5px] text-[#14f884] uppercase">
+            <span className="block font-mono-label text-[7px] text-[#14f884] uppercase">
               [THE EDGE]
             </span>
-            <span className="block text-[10.5px] font-bold text-white leading-tight">
+            <span className="block text-[10px] font-bold text-white leading-tight">
               &ldquo;Keep moving.&rdquo;
             </span>
           </div>
         </div>
-        <span className="font-mono-label text-[8px] text-[#14f884]/80">GRIT</span>
+        <span className="font-mono-label text-[7.5px] text-[#14f884]/80">GRIT</span>
       </div>
     ),
   },
@@ -317,8 +299,7 @@ export default function ImpactFoundersSection() {
     return () => io.disconnect();
   }, []);
 
-  // GSAP ScrollTrigger: Immediate, responsive, smooth spread outward within safe bounds!
-  // NO CLIPPING: Cards stay safely inside viewport bounds at all times!
+  // GSAP: Modern Appearance Animation + Scroll-Driven SPREAD OUT from center to perimeter!
   useEffect(() => {
     const track = spreadTrackRef.current;
     const sticky = spreadStickyRef.current;
@@ -326,32 +307,60 @@ export default function ImpactFoundersSection() {
     if (!track || !sticky) return;
 
     const ctx = gsap.context(() => {
+      // 1. MODERN ENTRANCE ANIMATION: Blossoms into view when section appears!
+      gsap.from(centerText, {
+        scrollTrigger: {
+          trigger: track,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+        opacity: 0,
+        y: 45,
+        scale: 0.94,
+        duration: 0.9,
+        ease: "power3.out",
+      });
+
+      gsap.from(tileRefs.current, {
+        scrollTrigger: {
+          trigger: track,
+          start: "top 70%",
+          toggleActions: "play none none reverse",
+        },
+        opacity: 0,
+        scale: 0.65,
+        stagger: 0.05,
+        duration: 0.8,
+        ease: "back.out(1.4)",
+      });
+
+      // 2. SCROLL SPREAD: Starts snug around center -> SPREADS OUTWARD across screen as you scroll!
       ScrollTrigger.create({
         trigger: track,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.4, // ultra responsive buttery scrub
+        scrub: 0.4,
         onUpdate: (self) => {
           const p = self.progress;
-          const spreadFactor = gsap.parseEase("power1.out")(p);
+          const easeProgress = gsap.parseEase("power2.out")(p);
 
           tileRefs.current.forEach((el, idx) => {
             if (!el) return;
             const item = ASYMMETRIC_ARTIFACTS[idx];
             if (!item) return;
 
-            // Base position is strictly outside center and comfortably inside viewport!
-            const currentX = item.baseX + item.driftX * spreadFactor;
-            const currentY = item.baseY + item.driftY * spreadFactor;
-            const currentRot = item.rotation * (1 + spreadFactor * 0.35);
-            const currentScale = 0.98 + spreadFactor * 0.05;
+            // Spreads from startX/startY outward by spreadX/spreadY!
+            const currentX = item.startX + item.spreadX * easeProgress;
+            const currentY = item.startY + item.spreadY * easeProgress;
+            const currentRot = item.rotation * (1 + easeProgress * 0.4);
+            const currentScale = 0.95 + easeProgress * 0.08;
 
             el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) scale(${currentScale.toFixed(2)}) rotate(${currentRot.toFixed(1)}deg)`;
           });
 
-          // Subtle breathing scale on center text
+          // Subtle breathing effect on center text
           if (centerText) {
-            const textScale = 1 + spreadFactor * 0.02;
+            const textScale = 1 + easeProgress * 0.02;
             centerText.style.transform = `scale(${textScale.toFixed(3)})`;
           }
         },
@@ -415,11 +424,10 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
-          PART 2: SCROLL-DRIVEN SPREAD-OUT FOUNDERS SHOWCASE (Alethia Solves style)
-          - Tight scroll height (125vh) -> ZERO empty gap!
-          - Asymmetrical, diverse artifacts: wireframe contour, telemetry chip,
-            turbine schematic, foliage tile, film camera card, solid lime badge!
-          - ZERO CLIPPING: Everything stays strictly inside viewport boundaries!
+          PART 2: SPREAD-OUT FOUNDERS SHOWCASE (Alethia Solves style)
+          - Artifacts start snug around center -> SPREAD OUTWARD dynamically!
+          - Asymmetric shapes (wireframe contour, turbine schematic, telemetry pill, etc.)
+          - Zero clipping (max |Y| <= 150px)
       ========================================================================= */}
       <div
         ref={spreadTrackRef}
@@ -438,7 +446,7 @@ export default function ImpactFoundersSection() {
             }}
           />
 
-          {/* Centered Primary Headline & Subtitle (Always 100% unobstructed & readable!) */}
+          {/* Centered Primary Headline & Subtitle */}
           <div
             ref={centerTextRef}
             className="relative z-20 max-w-lg mx-auto px-5 text-center select-none pointer-events-none transition-transform duration-200"
@@ -453,13 +461,9 @@ export default function ImpactFoundersSection() {
             <p className="mt-3 text-[clamp(0.8rem,1.05vw,0.95rem)] text-[#d4e4df] font-light leading-relaxed max-w-md mx-auto">
               We weren&apos;t born in a boardroom. We were built through detours. Two different journeys arrived at one shared idea: build something meaningful and help others build theirs.
             </p>
-            <div className="mt-3.5 inline-flex items-center gap-2 font-mono-label text-[8.5px] text-[#14f884]/80">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
-              <span>SCROLL TO SPREAD DETOURS &amp; FOUNDATIONS</span>
-            </div>
           </div>
 
-          {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS IN VIEWPORT SAFE ZONE */}
+          {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS SPREADING OUTWARD */}
           <div className="absolute inset-0 z-10 pointer-events-none hidden md:flex items-center justify-center">
             {ASYMMETRIC_ARTIFACTS.map((item, idx) => (
               <div
@@ -469,8 +473,7 @@ export default function ImpactFoundersSection() {
                 }}
                 className="absolute will-change-transform transition-all"
                 style={{
-                  // Initial resting position is ALREADY spread outside center text, inside safe zone!
-                  transform: `translate3d(${item.baseX}px, ${item.baseY}px, 0) scale(0.98) rotate(${item.rotation}deg)`,
+                  transform: `translate3d(${item.startX}px, ${item.startY}px, 0) scale(0.95) rotate(${item.rotation}deg)`,
                 }}
               >
                 {item.render()}
@@ -494,29 +497,24 @@ export default function ImpactFoundersSection() {
 
       {/* =========================================================================
           PART 3: INTERACTIVE FOUNDER CARDS (Images 2, 4, 3 style)
+          - STRICT FIXED HEIGHT: h-[540px] sm:h-[580px] (ZERO height jump on hover!)
+          - Unhovered preview and hovered milestones cross-fade inside the same container!
           - Luxurious unhurried 1.0s circular expansion growing from arrow button
-          - Covers card with vibrant lime color (#c6f19d)
-          - Flips text to deep dark black
-          - Gracefully unfolds extended real-world story points from docx!
+          - Clean header without patronizing explanatory subtext!
       ========================================================================= */}
       <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-10 sm:py-16">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
-          <div>
-            <div className="inline-flex items-center gap-2 font-mono-label text-[10px] text-[#14f884] mb-2 uppercase">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>THE LEADERSHIP BEHIND THE EDGE</span>
-            </div>
-            <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tight">
-              <span className="text-white">HOVER CARDS TO </span>
-              <span className="text-[#14f884] neon-text-glow">REVEAL THE JOURNEY.</span>
-            </h3>
+        <div className="mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-2 font-mono-label text-[10px] text-[#14f884] mb-2 uppercase">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>THE LEADERSHIP BEHIND THE EDGE</span>
           </div>
-          <p className="max-w-md text-xs sm:text-sm text-[#a8beb8] font-light">
-            Notice how the color originates directly from the arrow button, floods the card in a smooth wave, and reveals the grounded grit behind each founder.
-          </p>
+          <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tight">
+            <span className="text-white">HOVER CARDS TO </span>
+            <span className="text-[#14f884] neon-text-glow">REVEAL THE JOURNEY.</span>
+          </h3>
         </div>
 
-        {/* 2 Wide Interactive Cards */}
+        {/* 2 Wide Interactive Cards with STRICT FIXED HEIGHT (Zero layout shift on hover!) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {FOUNDERS.map((founder) => {
             const isHovered = hoveredFounder === founder.name;
@@ -530,7 +528,7 @@ export default function ImpactFoundersSection() {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && setActiveFounder(founder)}
-                className="group relative rounded-[24px] border border-white/20 bg-[#051e17] overflow-hidden p-7 sm:p-9 flex flex-col justify-between min-h-[460px] sm:min-h-[520px] transition-all duration-500 shadow-2xl cursor-pointer select-none focus:outline-none"
+                className="group relative rounded-[24px] border border-white/20 bg-[#051e17] overflow-hidden p-7 sm:p-9 h-[540px] sm:h-[580px] flex flex-col justify-between transition-all duration-500 shadow-2xl cursor-pointer select-none focus:outline-none"
               >
                 {/* Visual Background Photography Layer */}
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -585,8 +583,8 @@ export default function ImpactFoundersSection() {
                   </div>
                 </div>
 
-                {/* Card Bottom: Names, Hook & REVEALED EXTENDED CONTENT */}
-                <div className="relative z-20 mt-auto pt-6">
+                {/* Card Bottom: Strictly contained within fixed height (ZERO HEIGHT TWITCH!) */}
+                <div className="relative z-20 mt-auto">
                   <h4
                     className={`text-2xl sm:text-3xl font-black uppercase tracking-tight transition-colors duration-500 ${
                       isHovered ? "text-[#051f10]" : "text-white"
@@ -596,48 +594,63 @@ export default function ImpactFoundersSection() {
                   </h4>
 
                   <p
-                    className={`mt-1.5 font-mono-label text-[11px] sm:text-[12px] italic transition-colors duration-500 ${
+                    className={`mt-1 font-mono-label text-[11px] sm:text-[12px] italic transition-colors duration-500 ${
                       isHovered ? "text-[#0b3322] font-semibold" : "text-[#c7f5dd]/90"
                     }`}
                   >
                     &ldquo;{founder.hook}&rdquo;
                   </p>
 
-                  {/* Default unhovered short excerpt */}
-                  <p
-                    className={`mt-3 text-xs sm:text-sm font-light leading-relaxed transition-opacity duration-300 ${
-                      isHovered ? "opacity-0 h-0 overflow-hidden" : "opacity-90 text-[#a8beb8]"
-                    }`}
-                  >
-                    {founder.preview}
-                  </p>
-
-                  {/* REVEALED CONTENT ON HOVER:
-                      Gracefully unfolds with slight delay (delay-200 duration-700) after the circle wave covers the card! */}
-                  <div
-                    className={`overflow-hidden transition-all duration-700 delay-200 ease-out ${
-                      isHovered
-                        ? "max-h-[380px] opacity-100 mt-4 pt-4 border-t border-[#051f10]/20"
-                        : "max-h-0 opacity-0 mt-0 pt-0"
-                    }`}
-                  >
-                    <div className="space-y-2 text-[11.5px] sm:text-[12.5px] text-[#051f10] font-medium leading-relaxed">
-                      {founder.revealedHighlights.map((hl, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#051f10] shrink-0 mt-1.5" />
-                          <span>{hl}</span>
-                        </div>
-                      ))}
+                  {/* FIXED-HEIGHT CROSSFADE CONTAINER (h-[240px] - NEVER EXPANDS CARD!) */}
+                  <div className="relative h-[240px] mt-3">
+                    {/* LAYER 1: Unhovered Excerpt Preview */}
+                    <div
+                      className={`absolute inset-0 flex flex-col justify-between transition-all duration-500 ${
+                        isHovered
+                          ? "opacity-0 -translate-y-3 pointer-events-none"
+                          : "opacity-100 translate-y-0 pointer-events-auto"
+                      }`}
+                    >
+                      <p className="text-xs sm:text-sm font-light leading-relaxed text-[#a8beb8]">
+                        {founder.preview}
+                      </p>
+                      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                        <span className="font-mono-label text-[10px] text-[#14f884] flex items-center gap-1.5">
+                          Hover to reveal key milestones
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </span>
+                        <span className="font-mono-label text-[9px] text-white/40 uppercase">
+                          PROFILE
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-[#051f10]/15 flex items-center justify-between">
-                      <span className="font-mono-label text-[10.5px] sm:text-[11px] font-bold text-[#051f10] uppercase tracking-wider underline underline-offset-4 inline-flex items-center gap-1.5 hover:gap-2 transition-all">
-                        READ FULL BIOGRAPHY &amp; INTERVIEW
-                        <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
-                      </span>
-                      <span className="font-mono-label text-[9px] text-[#051f10]/70 uppercase">
-                        CLICK TO OPEN
-                      </span>
+                    {/* LAYER 2: Hovered Revealed Milestones + Read Bio Button */}
+                    <div
+                      className={`absolute inset-0 flex flex-col justify-between transition-all duration-700 delay-150 ${
+                        isHovered
+                          ? "opacity-100 translate-y-0 pointer-events-auto"
+                          : "opacity-0 translate-y-3 pointer-events-none"
+                      }`}
+                    >
+                      <div className="space-y-1.5 text-[11px] sm:text-[12px] text-[#051f10] font-medium leading-relaxed">
+                        {founder.revealedHighlights.map((hl, i) => (
+                          <div key={i} className="flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#051f10] shrink-0 mt-1.5" />
+                            <span>{hl}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="pt-3 border-t border-[#051f10]/15 flex items-center justify-between">
+                        <span className="font-mono-label text-[10.5px] sm:text-[11px] font-bold text-[#051f10] uppercase tracking-wider underline underline-offset-4 inline-flex items-center gap-1.5 hover:gap-2 transition-all">
+                          READ FULL BIOGRAPHY &amp; INTERVIEW
+                          <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                        </span>
+                        <span className="font-mono-label text-[9px] text-[#051f10]/70 uppercase">
+                          CLICK TO OPEN
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
