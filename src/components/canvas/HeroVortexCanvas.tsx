@@ -64,13 +64,23 @@ const VERTEX_SHADER = `
 
     float layerPresence = mix(1.0, 0.36 + aLayer * 0.45, calmSpace);
 
-    vAlpha = nearFade * farFade * (0.32 + 0.68 * coreMask) * layerPresence * fadeOut;
+    // Text readability protection: screen-space elliptical corridor clearing in center
+    vec2 ndc = gl_Position.xy / max(gl_Position.w, 0.001);
+    float centerDist = length(vec2(ndc.x / 0.70, ndc.y / 0.52));
+    float whoPhase = smoothstep(0.28, 0.55, uProgress);
+    float clearingCorridor = mix(0.72, 0.96, whoPhase);
+    float sideMask = smoothstep(clearingCorridor * 0.75, clearingCorridor * 1.30, centerDist);
+
+    // Leaves strictly stay on the sides (fade to 0 in center text area to protect readability)
+    float textProtection = (aLeafType < 0.5) ? sideMask : (0.35 + 0.65 * sideMask);
+
+    vAlpha = nearFade * farFade * (0.32 + 0.68 * coreMask) * layerPresence * fadeOut * textProtection;
     vGlow = smoothstep(2.2, 6.5, radialDist) * 0.5 + 0.5 * sin(uTime * 1.5 + aPhase * 3.0) * 0.5 + 0.3;
 
-    // Refined point size: leaves are visible and graceful, ambient specks remain delicate
-    float baseLeafScale = (aLeafType < 0.075) ? 1.65 : 0.75;
+    // Refined point size: leaves are visible and graceful on sides, ambient specks remain delicate
+    float baseLeafScale = (aLeafType < 0.5) ? 1.75 : 0.75;
     float sizeScale = aSize * uPixelRatio * baseLeafScale * (19.0 / max(depth, 1.5));
-    gl_PointSize = clamp(sizeScale, 1.5, 32.0);
+    gl_PointSize = clamp(sizeScale, 1.5, 34.0);
   }
 `;
 
@@ -83,8 +93,8 @@ const FRAGMENT_SHADER = `
   void main() {
     vec2 uv = gl_PointCoord - vec2(0.5);
 
-    // TYPE 1: Sparse, elegant fluttering botanical leaves (~7.5% of particles)
-    if (vLeafType < 0.075) {
+    // TYPE 1: Balanced fluttering botanical leaves on sides (~22% of particles)
+    if (vLeafType < 0.5) {
       float ca = cos(vAngle);
       float sa = sin(vAngle);
       vec2 p = mat2(ca, -sa, sa, ca) * uv;
@@ -166,9 +176,9 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
     renderer.setClearColor(0x050b09, 1);
     container.appendChild(renderer.domElement);
 
-    // Calm, cinematic particle density (spacious and airy, never a crowded blizzard)
+    // Balanced leaf density placed on the flanks/sides, keeping the center 100% clear for text
     const isMobile = window.innerWidth < 768;
-    const COUNT = isMobile ? 1800 : 3600;
+    const COUNT = isMobile ? 2600 : 4800;
     const positions = new Float32Array(COUNT * 3);
     const sizes = new Float32Array(COUNT);
     const phases = new Float32Array(COUNT);
@@ -180,26 +190,37 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
     for (let i = 0; i < COUNT; i++) {
       const layer = Math.random();
       layers[i] = layer;
-      const theta = Math.random() * Math.PI * 2;
-      // 70% concentrated along vortex tunnel rings, 30% wide cosmic emerald nebula
+
+      // ~22% are leaves (balanced, satisfying presence)
+      const isLeaf = Math.random() < 0.22;
+      leafTypes[i] = isLeaf ? 0.0 : 1.0;
+
+      // Distribute leaves predominantly along the left and right flanks (sides, not center!)
+      let theta: number;
+      if (isLeaf) {
+        // 50% left flank, 50% right flank
+        const side = Math.random() < 0.5 ? 0.0 : Math.PI;
+        theta = side + (Math.random() - 0.5) * (Math.PI * 0.72);
+      } else {
+        theta = Math.random() * Math.PI * 2;
+      }
+
       const isRing = layer < 0.72;
-      const baseR = isRing
-        ? 1.75 + Math.pow(Math.random(), 1.65) * 6.8
-        : 3.5 + Math.random() * 14.0;
+      const baseR = isLeaf
+        ? 3.4 + Math.pow(Math.random(), 1.3) * 8.6  // Leaves hug outer radius, keeping center clean
+        : (isRing ? 1.75 + Math.pow(Math.random(), 1.65) * 6.8 : 3.5 + Math.random() * 14.0);
       const r = baseR + (Math.random() - 0.5) * 0.9;
       radii[i] = r;
 
       positions[i * 3] = Math.cos(theta) * r;
-      positions[i * 3 + 1] = Math.sin(theta) * r * (isRing ? 0.92 : 0.75);
+      positions[i * 3 + 1] = Math.sin(theta) * r * (isRing ? 0.88 : 0.72);
       positions[i * 3 + 2] = -Math.random() * 68.0 + 16.0;
 
-      const isLeaf = Math.random() < 0.075; // Only ~7.5% are leaves: scattered, delicate, and sparse
-      leafTypes[i] = isLeaf ? 0.0 : 1.0;
       sizes[i] = isLeaf
-        ? 1.4 + Math.random() * 2.2
+        ? 1.5 + Math.random() * 2.4
         : 0.5 + Math.random() * 1.4;
       phases[i] = Math.random() * Math.PI * 2;
-      rotSpeeds[i] = (Math.random() - 0.5) * 1.1; // Gentle fluttering speed
+      rotSpeeds[i] = (Math.random() - 0.5) * 1.2; // Natural fluttering speed
     }
 
     const geometry = new THREE.BufferGeometry();
