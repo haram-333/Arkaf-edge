@@ -4,141 +4,276 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, ArrowUpRight, Sparkles, X, UserCheck, Compass, Camera, Lightbulb } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Sparkles, X } from "lucide-react";
 import { IMPACT_STATS, FOUNDERS, VISION_CONTENT } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Asymmetric, non-uniform spread items inspired by Alethia Solves / Trust (Image 1)
-// Notice each item has distinct sizes, themes, tags, and starting perimeter positions (NEVER covering center text!)
-const ASYMMETRIC_SPREAD_ITEMS = [
-  // 1. Top-Left: Engineering Blueprint Card (Anurag)
+// ============================================================================
+// ASYMMETRICAL SHAPES & VISUAL ARTIFACTS (True Alethia Style)
+// Notice each element has a completely unique geometric archetype:
+// 1. Isometric 3D Topographic Contour (pure transparent wireframe, no box!)
+// 2. Turbine Blueprint with detached floating pill tag
+// 3. Compact Telemetry Sparkline chip (CLIMAVUE style)
+// 4. Foliage photo tile with micro bar chart
+// 5. Analogue Film Studio vertical card with aperture iris
+// 6. Dual overlapping metric line graph
+// 7. Compact High-Contrast Solid Lime Badge (Alethia Carbon Balance style)
+// 8. Geometric persistence stone chip
+// ============================================================================
+const ASYMMETRIC_ARTIFACTS = [
+  // 1. TOP-LEFT: Aeronautical Turbine Blueprint + Detached Pill Tag
   {
-    id: "anurag-roots",
-    type: "blueprint",
-    baseX: -36, // % of half-screen
-    baseY: -28,
-    driftX: -10,
-    driftY: -8,
-    rotation: -3.5,
-    widthClass: "w-[240px] sm:w-[275px]",
-    badge: "[AERONAUTICAL 2012]",
-    title: "Navigating Without a Map",
-    subtitle: "When a sudden medical detour wiped the map, he learned to build on the ground.",
-    tag: "ENGINEERING LOGIC",
-    theme: "dark-blueprint",
+    id: "aero-turbine",
+    type: "turbine",
+    baseX: -340, // calibrated pixels relative to center
+    baseY: -135,
+    driftX: -22,
+    driftY: -12,
+    rotation: -3,
+    render: () => (
+      <div className="relative flex items-center gap-2.5">
+        <div className="w-[220px] rounded-2xl border border-white/20 bg-[#051c17]/95 p-3.5 shadow-2xl backdrop-blur-md">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold">
+              [AERONAUTICAL 2012]
+            </span>
+            <div className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
+          </div>
+          {/* Turbine Schematic Graphic */}
+          <div className="relative h-12 w-full rounded-lg bg-black/60 border border-white/10 mb-2 overflow-hidden flex items-center justify-center">
+            <svg viewBox="0 0 160 48" className="w-full h-full stroke-[#14f884]/60 fill-none">
+              <circle cx="80" cy="24" r="18" strokeWidth="1" strokeDasharray="2 3" />
+              <circle cx="80" cy="24" r="10" strokeWidth="1.2" />
+              <circle cx="80" cy="24" r="3" fill="#14f884" />
+              <line x1="20" y1="24" x2="140" y2="24" strokeWidth="0.8" strokeOpacity="0.4" />
+              <line x1="80" y1="4" x2="80" y2="44" strokeWidth="0.8" strokeOpacity="0.4" />
+              <path d="M 68 12 L 92 36 M 68 36 L 92 12" strokeWidth="0.8" strokeOpacity="0.5" />
+            </svg>
+            <span className="absolute bottom-1 right-2 font-mono-label text-[7.5px] text-[#14f884]/80">
+              MACH-LOGIC
+            </span>
+          </div>
+          <p className="text-[11px] font-bold text-white leading-tight">Navigating Without a Map</p>
+          <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">Medical detour built on-ground resilience.</p>
+        </div>
+        {/* Detached floating pill (Alethia style) */}
+        <span className="shrink-0 px-2.5 py-1 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8.5px] font-black shadow-[0_0_14px_rgba(20,248,132,0.45)]">
+          LOGIC
+        </span>
+      </div>
+    ),
   },
-  // 2. Top-Center: Slim Horizontal Telemetry Pill (Alethia CLIMAVUE style)
+
+  // 2. TOP-CENTER: Slim Telemetry Data Chip (CLIMAVUE style with mini sparkline)
   {
-    id: "philosophy",
-    type: "pill",
-    baseX: -8,
-    baseY: -42,
-    driftX: -2,
-    driftY: -10,
+    id: "climavue-pill",
+    type: "telemetry",
+    baseX: -90,
+    baseY: -160,
+    driftX: -8,
+    driftY: -14,
     rotation: 1.5,
-    widthClass: "w-[250px] sm:w-[285px]",
-    badge: "CORE PHILOSOPHY",
-    title: '"Why can\'t business do both?"',
-    subtitle: "Commercial growth × Planetary responsibility.",
-    tag: "IMPACT × VALUE",
-    theme: "lime-pill",
+    render: () => (
+      <div className="w-[230px] rounded-xl border border-white/20 bg-black/85 backdrop-blur-md px-3.5 py-2.5 shadow-xl flex items-center justify-between gap-2.5">
+        <div>
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
+            <span className="font-mono-label text-[8px] text-[#14f884] uppercase">CORE QUESTION</span>
+          </div>
+          <p className="text-[11px] font-bold text-white">&ldquo;Why can&apos;t business do both?&rdquo;</p>
+        </div>
+        {/* Mini vertical equalizer bars */}
+        <div className="flex items-end gap-1 h-5 shrink-0 px-1.5 py-1 rounded bg-[#05261e] border border-[#14f884]/30">
+          <span className="w-1 h-2 rounded-sm bg-[#14f884]" />
+          <span className="w-1 h-3.5 rounded-sm bg-[#14f884]" />
+          <span className="w-1 h-2.5 rounded-sm bg-[#14f884]" />
+          <span className="w-1 h-4 rounded-sm bg-[#14f884]" />
+        </div>
+      </div>
+    ),
   },
-  // 3. Top-Right: Nature / Foliage Photo Tile (2020 Epiphany)
+
+  // 3. TOP-RIGHT: Foliage Photo Tile + Micro Bar Chart Badge
   {
-    id: "epiphany-2020",
-    type: "photo-card",
-    baseX: 35,
-    baseY: -29,
-    driftX: 11,
-    driftY: -8,
+    id: "foliage-tile",
+    type: "photo",
+    baseX: 330,
+    baseY: -130,
+    driftX: 20,
+    driftY: -12,
     rotation: 3,
-    widthClass: "w-[245px] sm:w-[280px]",
-    badge: "2020 • TURNING POINT",
-    title: "Waste Into Scalable Value",
-    subtitle: "Exploring how waste itself could become productive, scalable and circular.",
-    tag: "CIRCULARITY",
-    theme: "photo-green",
+    render: () => (
+      <div className="w-[210px] rounded-2xl border border-white/20 bg-[#05221b] p-3 shadow-2xl overflow-hidden relative">
+        <div className="relative h-14 w-full rounded-xl overflow-hidden mb-2">
+          <Image
+            src="/images/art-01.jpg"
+            alt="Circularity"
+            fill
+            className="object-cover opacity-60"
+            sizes="210px"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#05221b] via-transparent to-transparent" />
+          <span className="absolute top-1.5 right-1.5 font-mono-label text-[7.5px] font-bold px-1.5 py-0.5 rounded bg-black/80 text-[#14f884] border border-[#14f884]/30">
+            2020 • VALUE
+          </span>
+        </div>
+        <p className="text-[11px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
+        <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">Repurposing discard into commercial treasure.</p>
+      </div>
+    ),
   },
-  // 4. Mid-Left: Wireframe Topography Contour Sketch
+
+  // 4. MID-LEFT: 3D Topographical Contour Model (PURE WIREFRAME — NO RECTANGLE BOX!)
   {
-    id: "frontline-ground",
-    type: "contour",
-    baseX: -42,
-    baseY: 2,
-    driftX: -12,
+    id: "topo-contour",
+    type: "wireframe",
+    baseX: -370,
+    baseY: 10,
+    driftX: -22,
     driftY: 2,
     rotation: -2,
-    widthClass: "w-[220px] sm:w-[250px]",
-    badge: "[GROUND REALITY]",
-    title: "8 Frontline Industries",
-    subtitle: "Collections • Upselling • Real Estate • BD • Risk Management",
-    tag: "14+ YRS EXPERIENCE",
-    theme: "contour-dark",
+    render: () => (
+      <div className="w-[190px] p-2 flex flex-col items-start select-none">
+        {/* Isometric Contour Elevation Curves */}
+        <div className="relative w-full h-16 flex items-center justify-center">
+          <svg viewBox="0 0 160 64" className="w-full h-full stroke-[#14f884] fill-none opacity-80">
+            <ellipse cx="80" cy="32" rx="72" ry="26" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
+            <ellipse cx="80" cy="31" rx="55" ry="20" strokeWidth="1" strokeOpacity="0.5" />
+            <ellipse cx="80" cy="30" rx="38" ry="14" strokeWidth="1.2" strokeOpacity="0.75" />
+            <ellipse cx="80" cy="28" rx="22" ry="8" strokeWidth="1.4" strokeOpacity="0.95" />
+            <ellipse cx="80" cy="26" rx="10" ry="4" fill="#14f884" fillOpacity="0.3" strokeWidth="1.5" />
+          </svg>
+        </div>
+        <div className="mt-1 flex items-center gap-1.5">
+          <span className="font-mono-label text-[8.5px] text-[#14f884] font-bold uppercase">
+            [GROUND REALITY]
+          </span>
+          <span className="font-mono-label text-[8px] text-white/50">8 SECTORS</span>
+        </div>
+        <p className="text-[10px] text-[#c7d6d1] font-medium leading-snug">
+          Collections • Real Estate • BD • Risk
+        </p>
+      </div>
+    ),
   },
-  // 5. Mid-Right: Studio & Analogue Photography Craft (Faiyaz)
+
+  // 5. MID-RIGHT: Analogue Film Studio Card (Aperture Iris Aesthetic)
   {
-    id: "faiyaz-craft",
-    type: "studio-card",
-    baseX: 38,
-    baseY: 4,
-    driftX: 12,
+    id: "film-studio",
+    type: "studio",
+    baseX: 350,
+    baseY: 15,
+    driftX: 22,
     driftY: 4,
-    rotation: 3,
-    widthClass: "w-[235px] sm:w-[265px]",
-    badge: "[STUDIO FLOOR • 2009]",
-    title: "Swept Floors to Full Shoots",
-    subtitle: "Mastering complete analogue film shoots in 7 months from the ground up.",
-    tag: "VISUAL CRAFT",
-    theme: "dark-studio",
+    rotation: 2.5,
+    render: () => (
+      <div className="w-[200px] rounded-2xl border border-white/20 bg-[#051d18]/95 p-3.5 shadow-2xl backdrop-blur-md">
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold">
+            [STUDIO FLOOR 2009]
+          </span>
+          {/* Camera Aperture Icon */}
+          <svg viewBox="0 0 20 20" className="w-3.5 h-3.5 stroke-[#14f884] fill-none">
+            <circle cx="10" cy="10" r="8" strokeWidth="1.2" />
+            <path d="M 6 4 L 14 6 M 16 7 L 14 15 M 13 16 L 5 14 M 4 13 L 6 5" strokeWidth="1" />
+          </svg>
+        </div>
+        <p className="text-[11px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
+        <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">
+          7 months from sweeping studio floors to running full film shoots.
+        </p>
+      </div>
+    ),
   },
-  // 6. Bottom-Left: Dual Metric Chip & Purpose Tag
+
+  // 6. BOTTOM-LEFT: Dual Sparkline Telemetry Chip
   {
-    id: "mission-edge",
-    type: "metric-chip",
-    baseX: -34,
-    baseY: 34,
-    driftX: -10,
-    driftY: 10,
-    rotation: -2.5,
-    widthClass: "w-[240px] sm:w-[270px]",
-    badge: "THE SHARED PURPOSE",
-    title: '"Help good businesses get seen."',
-    subtitle: "Giving ethical brands the strategic caliber of global market leaders.",
-    tag: "ARKAF EDGE",
-    theme: "emerald-glass",
-  },
-  // 7. Bottom-Center-Right: High-Contrast Solid Lime Card (Alethia Carbon Balance style!)
-  {
-    id: "resilience-bba",
-    type: "solid-lime",
-    baseX: 4,
-    baseY: 40,
-    driftX: 2,
-    driftY: 12,
-    rotation: 2,
-    widthClass: "w-[250px] sm:w-[280px]",
-    badge: "BBA 2024 • RESILIENCE",
-    title: "Finish What You Started",
-    subtitle: "Completing interrupted education while operating companies. Follow-through matters.",
-    tag: "NO EXCUSES",
-    theme: "solid-lime",
-  },
-  // 8. Bottom-Right: Philosophy / Persistence Pill
-  {
-    id: "closing-truth",
-    type: "pill",
-    baseX: 36,
-    baseY: 35,
-    driftX: 10,
-    driftY: 10,
+    id: "metric-line",
+    type: "dual-metric",
+    baseX: -310,
+    baseY: 140, // safely inside safe zone!
+    driftX: -18,
+    driftY: 14,
     rotation: -2,
-    widthClass: "w-[230px] sm:w-[260px]",
-    badge: "[THE EDGE]",
-    title: '"Keep moving."',
-    subtitle: "Neither building a business nor a life is ever a straight line.",
-    tag: "PERSISTENCE",
-    theme: "dark-accent",
+    render: () => (
+      <div className="w-[210px] rounded-2xl border border-white/15 bg-[#05211b]/95 p-3 shadow-xl flex flex-col justify-between">
+        <div className="flex items-center justify-between mb-1">
+          <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
+            THE SHARED PURPOSE
+          </span>
+          <span className="font-mono-label text-[8px] text-white/50 px-1.5 py-0.5 rounded bg-white/5">
+            14+ YRS
+          </span>
+        </div>
+        <p className="text-[10.5px] font-bold text-white leading-tight">
+          &ldquo;Help good businesses get seen.&rdquo;
+        </p>
+        <div className="mt-2 h-4 w-full flex items-center">
+          <svg viewBox="0 0 120 16" className="w-full h-full stroke-[#14f884] fill-none">
+            <polyline points="0,14 30,10 60,12 90,4 120,2" strokeWidth="1.4" />
+            <circle cx="120" cy="2" r="2" fill="#14f884" />
+          </svg>
+        </div>
+      </div>
+    ),
+  },
+
+  // 7. BOTTOM-CENTER: High-Contrast Solid Lime Badge (Alethia Carbon Balance style!)
+  // Placed at Y: 145px (ZERO clipping, comfortably above bottom edge!)
+  {
+    id: "solid-lime-bba",
+    type: "solid-lime",
+    baseX: 30,
+    baseY: 145, // perfectly safe inside viewport!
+    driftX: 5,
+    driftY: 14,
+    rotation: 2,
+    render: () => (
+      <div className="w-[210px] rounded-xl bg-[#c6f19d] text-[#051f10] p-3 shadow-[0_10px_30px_rgba(198,241,157,0.35)] border border-[#c6f19d]">
+        <div className="flex items-center justify-between mb-1">
+          <span className="font-mono-label text-[8px] font-bold uppercase tracking-wider text-[#051f10]/80">
+            BBA 2024 • RESILIENCE
+          </span>
+          <span className="font-mono-label text-[7.5px] font-black px-1.5 py-0.5 rounded bg-[#051f10] text-[#c6f19d]">
+            NO EXCUSES
+          </span>
+        </div>
+        <p className="text-[11.5px] font-black leading-tight text-[#051f10]">
+          Finish What You Started
+        </p>
+        <p className="text-[9.5px] text-[#051f10]/80 leading-snug mt-0.5">
+          Completing education because follow-through matters.
+        </p>
+      </div>
+    ),
+  },
+
+  // 8. BOTTOM-RIGHT: Minimal Monospace Persistence Pill
+  {
+    id: "persistence-pill",
+    type: "pill",
+    baseX: 320,
+    baseY: 140, // safely inside safe zone!
+    driftX: 18,
+    driftY: 14,
+    rotation: -2,
+    render: () => (
+      <div className="w-[200px] rounded-full border border-white/20 bg-[#051e17]/95 px-4 py-2.5 shadow-xl flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
+          <div>
+            <span className="block font-mono-label text-[7.5px] text-[#14f884] uppercase">
+              [THE EDGE]
+            </span>
+            <span className="block text-[10.5px] font-bold text-white leading-tight">
+              &ldquo;Keep moving.&rdquo;
+            </span>
+          </div>
+        </div>
+        <span className="font-mono-label text-[8px] text-[#14f884]/80">GRIT</span>
+      </div>
+    ),
   },
 ];
 
@@ -182,8 +317,8 @@ export default function ImpactFoundersSection() {
     return () => io.disconnect();
   }, []);
 
-  // GSAP ScrollTrigger: Immediate, responsive spread outward from perimeter positions!
-  // CRITICAL FIX: Cards start ALREADY on perimeter (no overlapping center text!) and spread IMMEDIATELY on scroll!
+  // GSAP ScrollTrigger: Immediate, responsive, smooth spread outward within safe bounds!
+  // NO CLIPPING: Cards stay safely inside viewport bounds at all times!
   useEffect(() => {
     const track = spreadTrackRef.current;
     const sticky = spreadStickyRef.current;
@@ -195,27 +330,23 @@ export default function ImpactFoundersSection() {
         trigger: track,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.5, // buttery smooth scrub response
+        scrub: 0.4, // ultra responsive buttery scrub
         onUpdate: (self) => {
           const p = self.progress;
-
-          // Immediate spread: 0 to 1 scrubs smoothly without dead buffer
           const spreadFactor = gsap.parseEase("power1.out")(p);
 
           tileRefs.current.forEach((el, idx) => {
             if (!el) return;
-            const item = ASYMMETRIC_SPREAD_ITEMS[idx];
+            const item = ASYMMETRIC_ARTIFACTS[idx];
             if (!item) return;
 
-            // Base position is already outside center!
-            // On scroll, it drifts further outward by driftX / driftY multipliers
-            const currentX = item.baseX * 8.2 + item.driftX * spreadFactor * 9.0;
-            const currentY = item.baseY * 6.2 + item.driftY * spreadFactor * 7.5;
-            const currentRot = item.rotation * (1 + spreadFactor * 0.4);
-            const currentScale = 0.96 + spreadFactor * 0.08;
+            // Base position is strictly outside center and comfortably inside viewport!
+            const currentX = item.baseX + item.driftX * spreadFactor;
+            const currentY = item.baseY + item.driftY * spreadFactor;
+            const currentRot = item.rotation * (1 + spreadFactor * 0.35);
+            const currentScale = 0.98 + spreadFactor * 0.05;
 
             el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) scale(${currentScale.toFixed(2)}) rotate(${currentRot.toFixed(1)}deg)`;
-            el.style.opacity = "1";
           });
 
           // Subtle breathing scale on center text
@@ -247,14 +378,14 @@ export default function ImpactFoundersSection() {
     >
       {/* =========================================================================
           PART 1: IMPACT & NUMBERS COUNTER
-          Compact padding (NO big gap between stats and founders!)
+          Compact padding (NO big gap!)
       ========================================================================= */}
-      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pt-12 sm:pt-16 pb-8 sm:pb-10">
-        <div className="text-center mb-8 sm:mb-10">
-          <p className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] mb-2 sm:mb-2.5">
+      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pt-10 sm:pt-14 pb-6 sm:pb-8">
+        <div className="text-center mb-6 sm:mb-8">
+          <p className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] mb-1.5 sm:mb-2">
             06. IMPACT &amp; NUMBERS
           </p>
-          <h2 className="text-[clamp(1.75rem,3.4vw,3rem)] font-black tracking-[-0.025em] uppercase leading-tight">
+          <h2 className="text-[clamp(1.75rem,3.4vw,2.9rem)] font-black tracking-[-0.025em] uppercase leading-tight">
             <span className="text-white">MEASURED BY </span>
             <span className="text-[#14f884] neon-text-glow">RESULTS.</span>
           </h2>
@@ -265,17 +396,17 @@ export default function ImpactFoundersSection() {
           {IMPACT_STATS.map((stat, idx) => (
             <div
               key={stat.label}
-              className="rounded-[16px] border border-white/20 bg-[#05211e]/90 backdrop-blur-sm py-5 sm:py-7 px-3 sm:px-4 text-center hover:border-[#14f884]/60 transition-colors shadow-lg"
+              className="rounded-[16px] border border-white/20 bg-[#05211e]/90 backdrop-blur-sm py-4 sm:py-6 px-3 sm:px-4 text-center hover:border-[#14f884]/60 transition-colors shadow-lg"
             >
               <span
                 ref={(el) => {
                   numberRefs.current[idx] = el;
                 }}
-                className="block text-[clamp(1.9rem,3.8vw,3.25rem)] font-black text-[#14f884] neon-text-glow tracking-tight leading-none"
+                className="block text-[clamp(1.85rem,3.6vw,3.1rem)] font-black text-[#14f884] neon-text-glow tracking-tight leading-none"
               >
                 {stat.display}
               </span>
-              <span className="mt-2 block font-mono-label text-[8.5px] sm:text-[9.5px] text-[#c7d6d1]">
+              <span className="mt-1.5 block font-mono-label text-[8.5px] sm:text-[9.5px] text-[#c7d6d1]">
                 {stat.label}
               </span>
             </div>
@@ -285,13 +416,14 @@ export default function ImpactFoundersSection() {
 
       {/* =========================================================================
           PART 2: SCROLL-DRIVEN SPREAD-OUT FOUNDERS SHOWCASE (Alethia Solves style)
-          - Compact track height (140vh) to ELIMINATE any empty gap!
-          - Asymmetric cards of different sizes & styles!
-          - Cards ALREADY resting outside the center text, spreading IMMEDIATELY!
+          - Tight scroll height (125vh) -> ZERO empty gap!
+          - Asymmetrical, diverse artifacts: wireframe contour, telemetry chip,
+            turbine schematic, foliage tile, film camera card, solid lime badge!
+          - ZERO CLIPPING: Everything stays strictly inside viewport boundaries!
       ========================================================================= */}
       <div
         ref={spreadTrackRef}
-        className="relative h-[140vh] w-full border-t border-white/10"
+        className="relative h-[125vh] w-full border-t border-white/10"
       >
         <div
           ref={spreadStickyRef}
@@ -309,116 +441,51 @@ export default function ImpactFoundersSection() {
           {/* Centered Primary Headline & Subtitle (Always 100% unobstructed & readable!) */}
           <div
             ref={centerTextRef}
-            className="relative z-20 max-w-xl mx-auto px-6 text-center select-none pointer-events-none transition-transform duration-200"
+            className="relative z-20 max-w-lg mx-auto px-5 text-center select-none pointer-events-none transition-transform duration-200"
           >
-            <span className="inline-block rounded-full border border-[#14f884]/35 bg-[#072924]/90 px-3.5 py-1 font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884] mb-3 shadow-[0_0_16px_rgba(20,248,132,0.2)]">
+            <span className="inline-block rounded-full border border-[#14f884]/35 bg-[#072924]/90 px-3.5 py-1 font-mono-label text-[9px] sm:text-[10px] text-[#14f884] mb-2.5 shadow-[0_0_16px_rgba(20,248,132,0.2)]">
               ABOUT &amp; LEADERSHIP
             </span>
-            <h2 className="text-[clamp(1.85rem,4.2vw,3.4rem)] font-black uppercase tracking-tight leading-[1.05]">
+            <h2 className="text-[clamp(1.75rem,3.8vw,3.1rem)] font-black uppercase tracking-tight leading-[1.05]">
               <span className="block text-white">TWO JOURNEYS.</span>
               <span className="block text-[#14f884] neon-text-glow">ONE EDGE.</span>
             </h2>
-            <p className="mt-3.5 text-[clamp(0.82rem,1.1vw,0.98rem)] text-[#d4e4df] font-light leading-relaxed max-w-lg mx-auto">
+            <p className="mt-3 text-[clamp(0.8rem,1.05vw,0.95rem)] text-[#d4e4df] font-light leading-relaxed max-w-md mx-auto">
               We weren&apos;t born in a boardroom. We were built through detours. Two different journeys arrived at one shared idea: build something meaningful and help others build theirs.
             </p>
-            <div className="mt-4 inline-flex items-center gap-2 font-mono-label text-[9px] text-[#14f884]/80">
+            <div className="mt-3.5 inline-flex items-center gap-2 font-mono-label text-[8.5px] text-[#14f884]/80">
               <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
               <span>SCROLL TO SPREAD DETOURS &amp; FOUNDATIONS</span>
             </div>
           </div>
 
-          {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRIC FLOATING SPREAD TILES */}
+          {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS IN VIEWPORT SAFE ZONE */}
           <div className="absolute inset-0 z-10 pointer-events-none hidden md:flex items-center justify-center">
-            {ASYMMETRIC_SPREAD_ITEMS.map((item, idx) => {
-              const isSolidLime = item.theme === "solid-lime";
-              const isLimePill = item.theme === "lime-pill";
-              const isBlueprint = item.theme === "dark-blueprint";
-              const isPhoto = item.theme === "photo-green";
-              const isContour = item.theme === "contour-dark";
-
-              return (
-                <div
-                  key={item.id}
-                  ref={(el) => {
-                    tileRefs.current[idx] = el;
-                  }}
-                  className={`absolute ${item.widthClass} rounded-[18px] p-4 sm:p-4.5 shadow-2xl backdrop-blur-md will-change-transform border transition-all ${
-                    isSolidLime
-                      ? "bg-[#c6f19d] text-[#051f10] border-[#c6f19d] shadow-[0_12px_32px_rgba(198,241,157,0.25)]"
-                      : isLimePill
-                      ? "bg-[#06241c]/95 text-[#c6f19d] border-[#14f884]/45 rounded-full px-5 py-2.5"
-                      : isBlueprint
-                      ? "bg-[#051c18]/92 text-[#dce8e3] border-white/20"
-                      : isPhoto
-                      ? "bg-[#04201b]/95 text-[#e5f5ee] border-[#14f884]/35"
-                      : isContour
-                      ? "bg-[#051a16]/90 text-[#d0e0db] border-white/15"
-                      : "bg-[#062c23]/95 text-[#e5f5ee] border-[#14f884]/40"
-                  }`}
-                  style={{
-                    // Rendered on perimeter from the start!
-                    transform: `translate3d(${(item.baseX * 8.2).toFixed(1)}px, ${(item.baseY * 6.2).toFixed(1)}px, 0) scale(0.96) rotate(${item.rotation}deg)`,
-                    opacity: 1,
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span
-                      className={`font-mono-label text-[8.5px] uppercase tracking-wider font-semibold ${
-                        isSolidLime ? "text-[#051f10]/80" : "text-[#14f884]"
-                      }`}
-                    >
-                      {item.badge}
-                    </span>
-                    <span
-                      className={`font-mono-label text-[8.5px] font-bold px-2 py-0.5 rounded-full ${
-                        isSolidLime
-                          ? "bg-[#051f10] text-[#c6f19d]"
-                          : "bg-[#14f884]/15 text-[#14f884] border border-[#14f884]/30"
-                      }`}
-                    >
-                      {item.tag}
-                    </span>
-                  </div>
-
-                  <h4
-                    className={`font-black tracking-tight text-[12.5px] sm:text-[13.5px] leading-snug ${
-                      isSolidLime ? "text-[#051f10]" : "text-white"
-                    }`}
-                  >
-                    {item.title}
-                  </h4>
-
-                  {item.subtitle && (
-                    <p
-                      className={`mt-1 text-[10px] sm:text-[10.5px] leading-relaxed line-clamp-2 ${
-                        isSolidLime ? "text-[#051f10]/80" : "text-[#9cb5ad]"
-                      }`}
-                    >
-                      {item.subtitle}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
+            {ASYMMETRIC_ARTIFACTS.map((item, idx) => (
+              <div
+                key={item.id}
+                ref={(el) => {
+                  tileRefs.current[idx] = el;
+                }}
+                className="absolute will-change-transform transition-all"
+                style={{
+                  // Initial resting position is ALREADY spread outside center text, inside safe zone!
+                  transform: `translate3d(${item.baseX}px, ${item.baseY}px, 0) scale(0.98) rotate(${item.rotation}deg)`,
+                }}
+              >
+                {item.render()}
+              </div>
+            ))}
           </div>
 
           {/* MOBILE VIEW (<768px): Clean horizontal swipe pill carousel */}
           <div className="absolute bottom-6 inset-x-4 md:hidden z-20 flex gap-2.5 overflow-x-auto pb-2 pointer-events-auto">
-            {ASYMMETRIC_SPREAD_ITEMS.slice(0, 5).map((item) => (
+            {ASYMMETRIC_ARTIFACTS.slice(0, 5).map((item) => (
               <div
                 key={item.id}
-                className="shrink-0 w-56 rounded-xl border border-white/20 bg-[#05211e]/90 p-3"
+                className="shrink-0 w-52 rounded-xl border border-white/20 bg-[#05211e]/90 p-3"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-mono-label text-[8px] text-[#14f884]">
-                    {item.badge}
-                  </span>
-                  <span className="font-mono-label text-[8px] text-[#a9f5cf]">
-                    {item.tag}
-                  </span>
-                </div>
-                <p className="text-xs font-bold text-white line-clamp-1">{item.title}</p>
-                <p className="text-[10px] text-[#9cb5ad] line-clamp-1 mt-0.5">{item.subtitle}</p>
+                {item.render()}
               </div>
             ))}
           </div>
@@ -427,12 +494,12 @@ export default function ImpactFoundersSection() {
 
       {/* =========================================================================
           PART 3: INTERACTIVE FOUNDER CARDS (Images 2, 4, 3 style)
-          - Smooth, gradual, luxurious circular growth from arrow button (1.0s duration!)
-          - Fills card with vibrant lime color (#c6f19d)
-          - Flips text to crisp dark black
+          - Luxurious unhurried 1.0s circular expansion growing from arrow button
+          - Covers card with vibrant lime color (#c6f19d)
+          - Flips text to deep dark black
           - Gracefully unfolds extended real-world story points from docx!
       ========================================================================= */}
-      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-12 sm:py-18">
+      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-10 sm:py-16">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10">
           <div>
             <div className="inline-flex items-center gap-2 font-mono-label text-[10px] text-[#14f884] mb-2 uppercase">
@@ -583,7 +650,7 @@ export default function ImpactFoundersSection() {
       {/* =========================================================================
           PART 4: OUR VISION BANNER (From docx)
       ========================================================================= */}
-      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pb-14 sm:pb-20">
+      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pb-12 sm:pb-16">
         <div className="rounded-[22px] border border-[#14f884]/35 bg-[#031c19] p-7 sm:p-12 text-center relative overflow-hidden shadow-2xl">
           <div
             className="pointer-events-none absolute inset-0 opacity-25"
