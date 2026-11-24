@@ -124,8 +124,8 @@ export default function SustainabilitySection() {
 
       // 2. MASTER TIMELINE:
       // Controls entrance fade at top: 0, zoom-out, blur clearing, creeping fog entrance,
-      // and complete text reveal. ALL reveals finish by p = 0.42, leaving a massive
-      // static hold zone (0.42 -> 0.81, over 200vh of scroll) where everything is 100%
+      // and complete text reveal. ALL reveals finish by p = 0.43, leaving a perfectly balanced
+      // static hold zone (0.43 -> 0.77, ~145vh of scroll) where everything is 100%
       // revealed and completely still before #services arrives to slide it up.
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -148,7 +148,7 @@ export default function SustainabilitySection() {
                 p >= 0.18 && (!rect || rect.top >= h) ? "auto" : "none";
             }
 
-            if ((p >= 0.80 || p < 0.18) && activeHotspotRef.current !== null) {
+            if ((p >= 0.76 || p < 0.18) && activeHotspotRef.current !== null) {
               setActiveHotspot(null);
             }
           },
@@ -163,11 +163,11 @@ export default function SustainabilitySection() {
         0
       );
 
-      // --- PHASE 2: CINEMATIC ZOOM OUT & DIRECT BLUR CLEARING (0.08 -> 0.24) ---
+      // --- PHASE 2: CINEMATIC ZOOM OUT & DIRECT BLUR CLEARING (0.08 -> 0.25) ---
       tl.fromTo(
         bgImage,
         { scale: 1.35, filter: "blur(12px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.16 },
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.17 },
         0.08
       );
 
@@ -194,8 +194,8 @@ export default function SustainabilitySection() {
         );
       }
 
-      // --- PHASE 4: FULL GSAP TEXT REVEAL & SENSOR NODES (0.24 -> 0.42) ---
-      // Everything finishes revealing by 0.42 — WAY before the exit slide at ~0.81!
+      // --- PHASE 4: FULL GSAP TEXT REVEAL & SENSOR NODES (0.24 -> 0.43) ---
+      // Everything finishes revealing by 0.43 — well before the exit slide at ~0.77!
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
@@ -256,9 +256,9 @@ export default function SustainabilitySection() {
         );
       }
 
-      // --- PHASE 5: MASSIVE STATIC INTERACTIVE EXPLORATION HOLD (0.42 -> 1.00) ---
-      // Over 200vh of pure scroll where text, fog, hotspots are 100% revealed & static!
-      tl.to({}, { duration: 0.58 }, 0.42);
+      // --- PHASE 5: BALANCED STATIC INTERACTIVE EXPLORATION HOLD (0.43 -> 1.00) ---
+      // Perfectly calibrated hold zone (~145vh) where text, fog, hotspots are 100% revealed & static!
+      tl.to({}, { duration: 0.57 }, 0.43);
     }, container);
 
     return () => {
@@ -271,7 +271,7 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative z-20 w-full h-[420vh] bg-transparent"
+      className="relative z-20 w-full h-[330vh] bg-transparent"
     >
       {/* =====================================================================
           FIXED VIEWPORT STAGE:
