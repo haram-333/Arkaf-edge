@@ -44,35 +44,38 @@ const GLASS_FRAG = `
     // Crisp Fresnel glass rim glow
     float ndotv = clamp(abs(dot(N, V)), 0.0, 1.0);
     float fresnel = pow(1.0 - ndotv, 2.35);
-    float edgeHighlight = pow(1.0 - ndotv, 4.5);
+    float edgeHighlight = pow(1.0 - ndotv, 4.2);
 
-    // Dual glossy specular reflections (liquid-chrome feel)
+    // Dual glossy specular reflections (soft crystalline glass, strictly non-blinding)
     vec3 H1 = normalize(L1 + V);
     vec3 H2 = normalize(L2 + V);
-    float spec1 = pow(max(dot(N, H1), 0.0), 42.0);
-    float spec2 = pow(max(dot(N, H2), 0.0), 22.0);
+    float spec1 = pow(max(dot(N, H1), 0.0), 38.0);
+    float spec2 = pow(max(dot(N, H2), 0.0), 20.0);
 
     // Subtle lengthwise fluted glass veining along petals
     float vein = pow(abs(sin(vUv.x * 3.14159 * 4.0)), 6.0) * 0.22;
 
-    // Color palette matching pixel-sampled #14f884 emerald glass on #000000
-    vec3 darkGlass = vec3(0.008, 0.055, 0.042);
-    vec3 midTeal = vec3(0.03, 0.42, 0.28);
-    vec3 neonEmerald = vec3(0.08, 0.97, 0.52);
-    vec3 brightMint = vec3(0.76, 1.0, 0.90);
+    // Soothing, rich botanical emerald palette — NO blinding white wash
+    vec3 darkForestGlass = vec3(0.008, 0.065, 0.045);
+    vec3 deepJade = vec3(0.025, 0.45, 0.28);
+    vec3 vibrantEmerald = vec3(0.08, 0.96, 0.50);
+    vec3 softEmeraldHighlight = vec3(0.18, 0.92, 0.58);
 
     // Traveling subtle caustic shimmer along petals
     float shimmer = 0.88 + 0.12 * sin(uTime * 1.4 + vTip * 6.0);
 
-    vec3 col = darkGlass;
-    col += midTeal * (fresnel * 0.9 + vein * 0.55) * (0.45 + 0.55 * vTip);
-    col += neonEmerald * (fresnel * 1.25 + spec2 * 0.65 + vein * 0.4) * shimmer;
-    col += brightMint * (edgeHighlight * 0.95 + spec1 * 1.15);
+    vec3 col = darkForestGlass;
+    col += deepJade * (fresnel * 0.85 + vein * 0.45) * (0.45 + 0.55 * vTip);
+    col += vibrantEmerald * (fresnel * 1.15 + spec2 * 0.45 + vein * 0.35) * shimmer;
+    col += softEmeraldHighlight * (edgeHighlight * 0.38 + spec1 * 0.32);
 
     // Scale overall luminance tightly with scroll illumination progress
     col *= uGlow;
 
-    float alpha = clamp(0.18 + fresnel * 0.82 + spec1 * 0.65, 0.0, 1.0) * clamp(uGlow * 1.25, 0.0, 1.0);
+    // Soft photographic tone curve to mathematically prevent harsh white blowout
+    col = col / (1.0 + col * 0.32);
+
+    float alpha = clamp(0.22 + fresnel * 0.78 + spec1 * 0.45, 0.0, 1.0) * clamp(uGlow * 1.15, 0.0, 1.0);
     gl_FragColor = vec4(col, alpha);
   }
 `;
@@ -90,13 +93,14 @@ const SEED_FRAG = `
     vec3 L = normalize(vec3(0.4, 0.9, 0.7));
     float fresnel = pow(1.0 - max(dot(N, V), 0.0), 2.0);
     float diff = max(dot(N, L), 0.0);
-    float spec = pow(max(dot(N, normalize(L + V)), 0.0), 36.0);
+    float spec = pow(max(dot(N, normalize(L + V)), 0.0), 32.0);
 
-    vec3 base = vec3(0.01, 0.09, 0.06);
-    vec3 emerald = vec3(0.08, 0.97, 0.52);
-    vec3 mint = vec3(0.85, 1.0, 0.93);
+    vec3 base = vec3(0.015, 0.09, 0.06);
+    vec3 emerald = vec3(0.07, 0.92, 0.48);
+    vec3 softLime = vec3(0.28, 0.90, 0.54);
 
-    vec3 col = (base + emerald * (diff * 0.55 + fresnel * 1.1) + mint * spec * 1.1) * uGlow;
+    vec3 col = (base + emerald * (diff * 0.48 + fresnel * 0.85) + softLime * spec * 0.32) * uGlow;
+    col = col / (1.0 + col * 0.28);
     gl_FragColor = vec4(col, 1.0);
   }
 `;
@@ -162,7 +166,7 @@ export default function GlassFlowerCanvas({ progressRef }: GlassFlowerCanvasProp
     container.appendChild(renderer.domElement);
 
     const sharedUniforms = {
-      uGlow: { value: 0.12 },
+      uGlow: { value: 0.78 },
       uTime: { value: 0 },
       uLightDir: { value: new THREE.Vector3(0.55, 0.9, 0.75) },
     };
@@ -351,9 +355,9 @@ export default function GlassFlowerCanvas({ progressRef }: GlassFlowerCanvasProp
       pointer.x += (pointer.tx - pointer.x) * ptrLerp;
       pointer.y += (pointer.ty - pointer.y) * ptrLerp;
 
-      // Eased bloom & emerald rim illumination curve matching frames f0304 -> f0416
-      const bloom = 1 - Math.pow(1 - Math.min(p * 1.15, 1), 2.4);
-      const glowCurve = 0.07 + Math.pow(Math.min(p * 1.3, 1), 0.82) * 1.22;
+      // Flower is already radiantly visible upon entering section (no long black screen!)
+      const bloom = Math.min(1.0, 0.42 + (1.0 - Math.pow(1.0 - Math.min(p * 1.5, 1.0), 2.2)) * 0.58);
+      const glowCurve = 0.78 + Math.min(p * 0.65, 0.42);
 
       sharedUniforms.uTime.value = t * 0.65;
       sharedUniforms.uGlow.value = glowCurve;

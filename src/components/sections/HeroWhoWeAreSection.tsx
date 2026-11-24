@@ -40,18 +40,18 @@ export default function HeroWhoWeAreSection() {
           heroEl.style.filter = `blur(${heroBlur.toFixed(1)}px)`;
           heroEl.style.pointerEvents = heroOpacity > 0.25 ? "auto" : "none";
 
-          // 0.42 -> 0.60 fade in | 0.60 -> 0.78 hold | 0.78 -> 0.94 fade to pure #000000
+          // 0.38 -> 0.54 fade in | 0.54 -> 0.82 hold | 0.82 -> 0.98 seamless transition
           let whoOpacity = 0;
           let whoY = 28;
-          if (p >= 0.42 && p < 0.60) {
-            const t = (p - 0.42) / 0.18;
+          if (p >= 0.38 && p < 0.54) {
+            const t = (p - 0.38) / 0.16;
             whoOpacity = t;
             whoY = (1 - t) * 28;
-          } else if (p >= 0.60 && p <= 0.78) {
+          } else if (p >= 0.54 && p <= 0.82) {
             whoOpacity = 1;
             whoY = 0;
-          } else if (p > 0.78 && p <= 0.94) {
-            const t = (p - 0.78) / 0.16;
+          } else if (p > 0.82 && p <= 0.98) {
+            const t = (p - 0.82) / 0.16;
             whoOpacity = 1 - t;
             whoY = -t * 22;
           }
@@ -71,7 +71,7 @@ export default function HeroWhoWeAreSection() {
     <section
       id="hero"
       ref={wrapperRef}
-      className="relative h-[320vh] bg-[#050b09]"
+      className="relative h-[250vh] bg-[#050b09]"
     >
       <div id="who-we-are" className="absolute top-[56%] left-0 h-1 w-1" />
 

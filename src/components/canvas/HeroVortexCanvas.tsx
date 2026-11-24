@@ -16,34 +16,42 @@ const VERTEX_SHADER = `
   attribute float aPhase;
   attribute float aRadius;
   attribute float aLayer;
+  attribute float aLeafType;
+  attribute float aRotSpeed;
   varying float vAlpha;
   varying float vGlow;
+  varying float vAngle;
+  varying float vLeafType;
 
   void main() {
     vec3 pos = position;
 
-    // Decoupled time & scroll rotation (never multiply uTime * uProgress, which whips faster the longer the page is open!)
-    float angle = uTime * (0.055 + aLayer * 0.035) + uProgress * 0.45 + aPhase + pos.z * 0.022;
+    // Decoupled time & scroll rotation for organic drifting leaf stream
+    float angle = uTime * (0.045 + aLayer * 0.03) + uProgress * 0.42 + aPhase + pos.z * 0.02;
     float c = cos(angle);
     float s = sin(angle);
     vec2 rotated = mat2(c, -s, s, c) * pos.xy;
+
+    // Dynamic leaf tumble rotation angle in 2D point coordinate space
+    vAngle = aPhase * 6.28318 + uTime * (0.55 + aRotSpeed * 0.95) + pos.z * 0.06;
+    vLeafType = aLeafType;
 
     // Gentle tunnel expansion as camera glides forward on scroll
     float warp = smoothstep(0.05, 0.65, uProgress);
     float calmSpace = smoothstep(0.50, 0.82, uProgress);
     float fadeOut = 1.0 - smoothstep(0.84, 1.0, uProgress);
 
-    // Shift portal right-of-center on desktop (uPortalOffsetX=1.45), centered on portrait mobile (0.0)
+    // Shift portal right-of-center on desktop, centered on mobile
     float centerShift = mix(uPortalOffsetX, 0.0, warp);
     pos.x = rotated.x * (1.0 + warp * 0.28) + centerShift;
     pos.y = rotated.y * (1.0 + warp * 0.28);
 
-    // Slow, hypnotic ambient drift + subtle controlled scroll forward push
+    // Hypnotic drifting breeze pushing leaves forward
     float zSpan = 68.0;
     float zTravel = uTime * 0.32 + uProgress * 6.5;
     pos.z = mod(pos.z + zTravel + 52.0, zSpan) - 52.0;
 
-    // Keep the center core cleanly hollow like a wormhole ring
+    // Keep the center hollow like an organic botanical portal
     float radialDist = length(rotated);
     float coreMask = smoothstep(0.9, 2.6, radialDist);
 
@@ -54,39 +62,80 @@ const VERTEX_SHADER = `
     float nearFade = smoothstep(0.8, 6.5, depth);
     float farFade = 1.0 - smoothstep(32.0, 56.0, depth);
 
-    // Calmer, starrier density during "Who We Are" phase
     float layerPresence = mix(1.0, 0.36 + aLayer * 0.45, calmSpace);
 
-    vAlpha = nearFade * farFade * (0.28 + 0.72 * coreMask) * layerPresence * fadeOut;
-    vGlow = smoothstep(2.2, 6.5, radialDist) * 0.5 + 0.5 * sin(uTime * 1.6 + aPhase * 3.0) * 0.5 + 0.25;
+    vAlpha = nearFade * farFade * (0.32 + 0.68 * coreMask) * layerPresence * fadeOut;
+    vGlow = smoothstep(2.2, 6.5, radialDist) * 0.5 + 0.5 * sin(uTime * 1.5 + aPhase * 3.0) * 0.5 + 0.3;
 
-    float sizeScale = aSize * uPixelRatio * (22.0 / max(depth, 1.5));
-    gl_PointSize = clamp(sizeScale, 1.0, 26.0);
+    // Scaled point size for clearly visible fluttering nature leaves
+    float baseLeafScale = (aLeafType < 0.75) ? 2.1 : 1.25;
+    float sizeScale = aSize * uPixelRatio * baseLeafScale * (24.0 / max(depth, 1.5));
+    gl_PointSize = clamp(sizeScale, 2.5, 46.0);
   }
 `;
 
 const FRAGMENT_SHADER = `
   varying float vAlpha;
   varying float vGlow;
+  varying float vAngle;
+  varying float vLeafType;
 
   void main() {
     vec2 uv = gl_PointCoord - vec2(0.5);
-    float d = length(uv);
-    if (d > 0.5) discard;
 
-    // Soft glowing circular bokeh falloff
-    float core = exp(-d * d * 18.0);
-    float halo = smoothstep(0.5, 0.0, d) * 0.55;
-    float intensity = core + halo;
+    // TYPE 1: Fluttering botanical nature leaves (75% of particles)
+    if (vLeafType < 0.75) {
+      float ca = cos(vAngle);
+      float sa = sin(vAngle);
+      vec2 p = mat2(ca, -sa, sa, ca) * uv;
 
-    vec3 deepEmerald = vec3(0.03, 0.48, 0.30);
-    vec3 neonEmerald = vec3(0.08, 0.97, 0.52);
-    vec3 hotMint = vec3(0.75, 1.0, 0.88);
+      float y = p.y;
+      float x = abs(p.x);
 
-    vec3 col = mix(deepEmerald, neonEmerald, clamp(vGlow, 0.0, 1.0));
-    col = mix(col, hotMint, core * 0.45);
+      // Elegant tapered oval leaf silhouette with pointed tip and organic belly
+      float leafProfile = (0.25 - y * y) * (1.35 - y * 0.42);
+      if (y < -0.47 || y > 0.47 || x > leafProfile || leafProfile <= 0.0) {
+        discard;
+      }
 
-    gl_FragColor = vec4(col, intensity * vAlpha);
+      // Central leaf spine / stem
+      float spine = smoothstep(0.022, 0.0, x) * smoothstep(-0.47, -0.38, y);
+
+      // Subtle diagonal leaf veining branching outward
+      float veins = pow(abs(sin((p.y * 16.0 - x * 11.0) * 3.14159)), 4.0) * smoothstep(0.0, 0.09, x) * 0.22;
+
+      // Soft anti-aliased leaf perimeter
+      float edgeSoftness = smoothstep(0.0, 0.14, (leafProfile - x) / max(leafProfile, 0.001));
+
+      // Lush eco-friendly botanical foliage palette
+      vec3 deepForest = vec3(0.015, 0.34, 0.18);
+      vec3 radiantEmerald = vec3(0.08, 0.94, 0.48);
+      vec3 sunlitSprout = vec3(0.58, 0.98, 0.44);
+
+      vec3 col = mix(deepForest, radiantEmerald, 0.38 + 0.62 * vGlow);
+      col = mix(col, sunlitSprout, spine * 0.65 + veins);
+
+      float alpha = edgeSoftness * vAlpha * (0.78 + 0.22 * spine);
+      gl_FragColor = vec4(col, alpha);
+    } 
+    // TYPE 2: Soft glowing biological dew/chloroplast spore particles (25% of particles)
+    else {
+      float d = length(uv);
+      if (d > 0.5) discard;
+
+      float core = exp(-d * d * 18.0);
+      float halo = smoothstep(0.5, 0.0, d) * 0.55;
+      float intensity = core + halo;
+
+      vec3 deepGreen = vec3(0.02, 0.42, 0.24);
+      vec3 neonLeaf = vec3(0.10, 0.96, 0.50);
+      vec3 limeGlow = vec3(0.68, 1.0, 0.58);
+
+      vec3 col = mix(deepGreen, neonLeaf, clamp(vGlow, 0.0, 1.0));
+      col = mix(col, limeGlow, core * 0.5);
+
+      gl_FragColor = vec4(col, intensity * vAlpha * 0.85);
+    }
   }
 `;
 
@@ -125,6 +174,8 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
     const phases = new Float32Array(COUNT);
     const radii = new Float32Array(COUNT);
     const layers = new Float32Array(COUNT);
+    const leafTypes = new Float32Array(COUNT);
+    const rotSpeeds = new Float32Array(COUNT);
 
     for (let i = 0; i < COUNT; i++) {
       const layer = Math.random();
@@ -142,10 +193,13 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
       positions[i * 3 + 1] = Math.sin(theta) * r * (isRing ? 0.92 : 0.75);
       positions[i * 3 + 2] = -Math.random() * 68.0 + 16.0;
 
+      // Generously sized nature leaves with natural variations
       sizes[i] = isRing
-        ? 0.9 + Math.pow(Math.random(), 2.4) * 4.2
-        : 0.7 + Math.random() * 2.2;
+        ? 1.2 + Math.pow(Math.random(), 2.0) * 4.4
+        : 0.9 + Math.random() * 2.6;
       phases[i] = Math.random() * Math.PI * 2;
+      leafTypes[i] = Math.random(); // < 0.75 is full organic leaf, >= 0.75 is glowing dew/spore
+      rotSpeeds[i] = (Math.random() - 0.5) * 1.5; // Natural leaf tumbling speed
     }
 
     const geometry = new THREE.BufferGeometry();
@@ -154,6 +208,8 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
     geometry.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
     geometry.setAttribute("aRadius", new THREE.BufferAttribute(radii, 1));
     geometry.setAttribute("aLayer", new THREE.BufferAttribute(layers, 1));
+    geometry.setAttribute("aLeafType", new THREE.BufferAttribute(leafTypes, 1));
+    geometry.setAttribute("aRotSpeed", new THREE.BufferAttribute(rotSpeeds, 1));
 
     const uniforms = {
       uTime: { value: 0 },

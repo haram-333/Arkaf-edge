@@ -20,17 +20,17 @@ export default function ServicesFlowerSection() {
     if (!wrapper) return;
 
     // Sequence:
-    // 0.00 -> 0.20: Flower blooms into full glory in center (all boxes hidden)
-    // 0.20 -> 0.36: Box 01 appears & stays
-    // 0.36 -> 0.52: Box 02 appears & stays
-    // 0.52 -> 0.68: Box 03 appears & stays
-    // 0.68 -> 0.84: Box 04 appears & stays
-    // 0.84 -> 1.00: All 4 boxes fully visible (opacity 1.0, none faded!)
+    // 0.00 -> 0.05: Flower already radiantly blooming in center (boxes hidden)
+    // 0.05 -> 0.18: Box 01 appears & stays
+    // 0.18 -> 0.32: Box 02 appears & stays
+    // 0.32 -> 0.46: Box 03 appears & stays
+    // 0.46 -> 0.60: Box 04 appears & stays
+    // 0.60 -> 1.00: All 4 boxes fully visible & locked (none faded!)
     const thresholds = [
-      { start: 0.20, end: 0.36 },
-      { start: 0.36, end: 0.52 },
-      { start: 0.52, end: 0.68 },
-      { start: 0.68, end: 0.84 },
+      { start: 0.05, end: 0.18 },
+      { start: 0.18, end: 0.32 },
+      { start: 0.32, end: 0.46 },
+      { start: 0.46, end: 0.60 },
     ];
 
     const ctx = gsap.context(() => {
@@ -43,14 +43,14 @@ export default function ServicesFlowerSection() {
           const p = self.progress;
           progressRef.current = p;
 
-          // Mobile view: flower appears first, then cards step through
-          if (p < 0.20) {
+          // Mobile view: flower appears first, then cards step through cleanly
+          if (p < 0.04) {
             setMobileVisible(false);
           } else {
             setMobileVisible(true);
-            if (p < 0.38) setMobileActive(0);
-            else if (p < 0.56) setMobileActive(1);
-            else if (p < 0.74) setMobileActive(2);
+            if (p < 0.22) setMobileActive(0);
+            else if (p < 0.40) setMobileActive(1);
+            else if (p < 0.58) setMobileActive(2);
             else setMobileActive(3);
           }
 
@@ -86,7 +86,7 @@ export default function ServicesFlowerSection() {
     setMobileVisible(true);
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
-    const progressTargets = [0.28, 0.45, 0.62, 0.88];
+    const progressTargets = [0.12, 0.25, 0.39, 0.54];
     const targetScroll =
       wrapper.offsetTop + progressTargets[idx] * (wrapper.offsetHeight - window.innerHeight);
     const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: object) => void } }).__lenis;
@@ -101,7 +101,7 @@ export default function ServicesFlowerSection() {
     <section
       id="services"
       ref={wrapperRef}
-      className="relative h-[340vh] md:h-[400vh] bg-black"
+      className="relative h-[250vh] md:h-[280vh] bg-black"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black flex flex-col justify-between">
         {/* Centered 3D Translucent Emerald Glass Gerbera Daisy */}
