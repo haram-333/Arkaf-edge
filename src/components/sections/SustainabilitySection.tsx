@@ -91,66 +91,87 @@ export default function SustainabilitySection() {
 
     if (!container || !fixedStage || !bgImage) return;
 
+    // 1. FRAME-PERFECT TICKER EXIT SYNC:
+    // Tracks the exact physical top of the next section (#services) on every single frame.
+    // When #services enters the bottom of the viewport, fixedStage translates up at the EXACT
+    // same sub-pixel speed with ZERO scrub delay, ZERO lag, ZERO gap, and ZERO clipping!
+    const updateSlide = () => {
+      const nextSection = document.getElementById("services");
+      if (!nextSection || !fixedStage) return;
+      const rect = nextSection.getBoundingClientRect();
+      const h = window.innerHeight;
+
+      if (rect.top < h) {
+        const offset = rect.top - h;
+        fixedStage.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
+        if (rect.top <= 0) {
+          fixedStage.style.visibility = "hidden";
+          fixedStage.style.pointerEvents = "none";
+        } else {
+          fixedStage.style.visibility = "visible";
+          fixedStage.style.pointerEvents = "none";
+        }
+      } else {
+        fixedStage.style.transform = "translate3d(0, 0, 0)";
+      }
+    };
+
+    gsap.ticker.add(updateSlide);
+
     const ctx = gsap.context(() => {
       const activePins = pinsRef.current.filter(Boolean);
       const headlineLines = headline ? headline.querySelectorAll(".reveal-line") : [];
 
-      // 1. ENTRANCE CONTROLLER:
-      // While container enters from bottom (start: "top bottom", end: "top top"),
-      // counter-translates the sticky stage so it remains fixed at top: 0 of the screen
-      // and gently fades in, rather than sliding in from the bottom!
-      ScrollTrigger.create({
-        trigger: container,
-        start: "top bottom",
-        end: "top top",
-        scrub: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          if (p < 1) {
-            const remainingY = (1 - p) * window.innerHeight;
-            fixedStage.style.transform = `translate3d(0, -${remainingY}px, 0)`;
-            fixedStage.style.opacity = String(Math.min(1, p * 1.5));
-            fixedStage.style.pointerEvents = "none";
-          } else {
-            fixedStage.style.transform = "translate3d(0, 0, 0)";
-            fixedStage.style.opacity = "1";
-            fixedStage.style.pointerEvents = "auto";
-          }
-        },
-      });
-
-      // 2. MASTER ANIMATION TIMELINE:
-      // Runs smoothly while the stage is held at top: 0 by native CSS sticky!
-      // When container ends, CSS sticky naturally slides the stage up into the ceiling
-      // in 100% native compositor sync with ServicesFlowerSection directly below it.
+      // 2. MASTER TIMELINE:
+      // Controls entrance fade at top: 0 (no cutting off, no sliding from bottom!),
+      // zoom-out, blur clearing, creeping fog entrance, and text reveal.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.8,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.6,
           onUpdate: (self) => {
             const p = self.progress;
-            if (p >= 0.95 && activeHotspotRef.current !== null) {
+            const nextSection = document.getElementById("services");
+            const rect = nextSection ? nextSection.getBoundingClientRect() : null;
+            const h = window.innerHeight;
+
+            if (p <= 0.01 || (rect && rect.top <= 0)) {
+              fixedStage.style.visibility = "hidden";
+              fixedStage.style.pointerEvents = "none";
+            } else {
+              fixedStage.style.visibility = "visible";
+              fixedStage.style.pointerEvents =
+                p >= 0.22 && (!rect || rect.top >= h) ? "auto" : "none";
+            }
+
+            if ((p >= 0.76 || p < 0.22) && activeHotspotRef.current !== null) {
               setActiveHotspot(null);
             }
           },
         },
       });
 
-      // --- PHASE 1: HOLD INITIAL BLURRED/ZOOMED COMPOSITION (0.00 -> 0.08) ---
-      // User clearly perceives the zoomed-in macro terrarium view before zoom-out starts
+      // --- PHASE 1: STAGE SOFTLY FADES IN AT TOP 0 (0.00 -> 0.16) ---
+      // Fixed at top: 0 of default viewport — covers 100% of screen with ZERO horizontal lines!
+      tl.fromTo(
+        fixedStage,
+        { opacity: 0 },
+        { opacity: 1, ease: "power2.out", duration: 0.16 },
+        0
+      );
 
-      // --- PHASE 2: CINEMATIC ZOOM-OUT & BLUR CLEARING (0.08 -> 0.38) ---
+      // --- PHASE 2: HOLD INITIAL BLURRED/ZOOMED VIEW, THEN CINEMATIC ZOOM OUT (0.18 -> 0.46) ---
       tl.fromTo(
         bgImage,
         { scale: 1.35, filter: "blur(12px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.30 },
-        0.08
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.28 },
+        0.18
       );
 
-      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.36 -> 0.60) ---
-      // Rises up from the floor (y: 80 -> 0), scales from 1.15 to 1.0, diffuses from blur(14px) -> blur(0px)
+      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.42 -> 0.64) ---
+      // Never appears instantly! Rises up from floor (y: 80 -> 0), scales, diffuses from blur(14px) -> blur(0px)
       if (fogVideo) {
         tl.fromTo(
           fogVideo,
@@ -166,19 +187,19 @@ export default function SustainabilitySection() {
             scale: 1.0,
             filter: "blur(0px)",
             ease: "power2.out",
-            duration: 0.24,
+            duration: 0.22,
           },
-          0.36
+          0.42
         );
       }
 
-      // --- PHASE 4: GSAP TEXT REVEAL & SENSOR NODES (0.52 -> 0.72) ---
+      // --- PHASE 4: GSAP TEXT REVEAL & SENSOR NODES (0.54 -> 0.70) ---
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 18 },
           { opacity: 1, y: 0, ease: "power3.out", duration: 0.08 },
-          0.52
+          0.54
         );
       }
 
@@ -193,7 +214,7 @@ export default function SustainabilitySection() {
             ease: "power3.out",
             duration: 0.12,
           },
-          0.54
+          0.56
         );
       }
 
@@ -202,7 +223,7 @@ export default function SustainabilitySection() {
           subtext,
           { opacity: 0, y: 14 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.58
+          0.60
         );
       }
 
@@ -211,7 +232,7 @@ export default function SustainabilitySection() {
           cta,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
-          0.62
+          0.63
         );
       }
 
@@ -229,33 +250,36 @@ export default function SustainabilitySection() {
           pills,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.64
+          0.65
         );
       }
 
-      // --- PHASE 5: INTERACTIVE EXPLORATION HOLD (0.72 -> 1.00) ---
-      tl.to({}, { duration: 0.28 }, 0.72);
+      // --- PHASE 5: INTERACTIVE EXPLORATION HOLD (0.70 -> 0.76) ---
+      tl.to({}, { duration: 0.06 }, 0.70);
     }, container);
 
-    return () => ctx.revert();
+    return () => {
+      gsap.ticker.remove(updateSlide);
+      ctx.revert();
+    };
   }, []);
 
   return (
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative z-20 w-full h-[320vh] bg-[#031513]"
+      className="relative z-20 w-full h-[320vh] bg-transparent"
     >
       {/* =====================================================================
-          STICKY VIEWPORT STAGE:
-          - Counter-translated to top: 0 during entrance (fading in, no bottom sliding!)
-          - Held at top: 0 by native CSS sticky during active scroll
-          - Naturally slides up on exit with 100% native compositor sync
+          FIXED VIEWPORT STAGE:
+          - Spans 100% of viewport from top: 0 with ZERO container edge slicing!
+          - Fades in softly at top: 0 during entrance
+          - Exit slide-up is 1:1 hardware-synchronized with #services via ticker
       ===================================================================== */}
       <div
         ref={fixedStageRef}
-        style={{ opacity: 0, transform: "translate3d(0, -100vh, 0)" }}
-        className="sticky top-0 h-screen w-full overflow-hidden bg-[#031513] text-white will-change-transform"
+        style={{ opacity: 0, visibility: "hidden", transform: "translate3d(0, 0, 0)" }}
+        className="fixed inset-0 top-0 left-0 w-full h-full z-20 pointer-events-none overflow-hidden bg-[#031513] text-white will-change-[transform,opacity,visibility]"
       >
         {/* =====================================================================
             LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 UNCOMPRESSED TERRARIUM)
