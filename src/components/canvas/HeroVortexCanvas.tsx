@@ -67,10 +67,10 @@ const VERTEX_SHADER = `
     vAlpha = nearFade * farFade * (0.32 + 0.68 * coreMask) * layerPresence * fadeOut;
     vGlow = smoothstep(2.2, 6.5, radialDist) * 0.5 + 0.5 * sin(uTime * 1.5 + aPhase * 3.0) * 0.5 + 0.3;
 
-    // Scaled point size for clearly visible fluttering nature leaves
-    float baseLeafScale = (aLeafType < 0.75) ? 2.1 : 1.25;
-    float sizeScale = aSize * uPixelRatio * baseLeafScale * (24.0 / max(depth, 1.5));
-    gl_PointSize = clamp(sizeScale, 2.5, 46.0);
+    // Refined point size: leaves are visible and graceful, ambient specks remain delicate
+    float baseLeafScale = (aLeafType < 0.075) ? 1.65 : 0.75;
+    float sizeScale = aSize * uPixelRatio * baseLeafScale * (19.0 / max(depth, 1.5));
+    gl_PointSize = clamp(sizeScale, 1.5, 32.0);
   }
 `;
 
@@ -83,8 +83,8 @@ const FRAGMENT_SHADER = `
   void main() {
     vec2 uv = gl_PointCoord - vec2(0.5);
 
-    // TYPE 1: Fluttering botanical nature leaves (75% of particles)
-    if (vLeafType < 0.75) {
+    // TYPE 1: Sparse, elegant fluttering botanical leaves (~7.5% of particles)
+    if (vLeafType < 0.075) {
       float ca = cos(vAngle);
       float sa = sin(vAngle);
       vec2 p = mat2(ca, -sa, sa, ca) * uv;
@@ -115,10 +115,10 @@ const FRAGMENT_SHADER = `
       vec3 col = mix(deepForest, radiantEmerald, 0.38 + 0.62 * vGlow);
       col = mix(col, sunlitSprout, spine * 0.65 + veins);
 
-      float alpha = edgeSoftness * vAlpha * (0.78 + 0.22 * spine);
+      float alpha = edgeSoftness * vAlpha * (0.82 + 0.18 * spine);
       gl_FragColor = vec4(col, alpha);
     } 
-    // TYPE 2: Soft glowing biological dew/chloroplast spore particles (25% of particles)
+    // TYPE 2: Soft glowing biological dew & micro-dust particles (~92.5% of particles)
     else {
       float d = length(uv);
       if (d > 0.5) discard;
@@ -134,7 +134,7 @@ const FRAGMENT_SHADER = `
       vec3 col = mix(deepGreen, neonLeaf, clamp(vGlow, 0.0, 1.0));
       col = mix(col, limeGlow, core * 0.5);
 
-      gl_FragColor = vec4(col, intensity * vAlpha * 0.85);
+      gl_FragColor = vec4(col, intensity * vAlpha * 0.75);
     }
   }
 `;
@@ -166,9 +166,9 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
     renderer.setClearColor(0x050b09, 1);
     container.appendChild(renderer.domElement);
 
-    // Lighter particle count on mobile for buttery 60fps phone performance
+    // Calm, cinematic particle density (spacious and airy, never a crowded blizzard)
     const isMobile = window.innerWidth < 768;
-    const COUNT = isMobile ? 9500 : 18000;
+    const COUNT = isMobile ? 1800 : 3600;
     const positions = new Float32Array(COUNT * 3);
     const sizes = new Float32Array(COUNT);
     const phases = new Float32Array(COUNT);
@@ -193,13 +193,13 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
       positions[i * 3 + 1] = Math.sin(theta) * r * (isRing ? 0.92 : 0.75);
       positions[i * 3 + 2] = -Math.random() * 68.0 + 16.0;
 
-      // Generously sized nature leaves with natural variations
-      sizes[i] = isRing
-        ? 1.2 + Math.pow(Math.random(), 2.0) * 4.4
-        : 0.9 + Math.random() * 2.6;
+      const isLeaf = Math.random() < 0.075; // Only ~7.5% are leaves: scattered, delicate, and sparse
+      leafTypes[i] = isLeaf ? 0.0 : 1.0;
+      sizes[i] = isLeaf
+        ? 1.4 + Math.random() * 2.2
+        : 0.5 + Math.random() * 1.4;
       phases[i] = Math.random() * Math.PI * 2;
-      leafTypes[i] = Math.random(); // < 0.75 is full organic leaf, >= 0.75 is glowing dew/spore
-      rotSpeeds[i] = (Math.random() - 0.5) * 1.5; // Natural leaf tumbling speed
+      rotSpeeds[i] = (Math.random() - 0.5) * 1.1; // Gentle fluttering speed
     }
 
     const geometry = new THREE.BufferGeometry();
