@@ -63,7 +63,7 @@ const SENSOR_HOTSPOTS: Hotspot[] = [
 
 export default function SustainabilitySection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const stickyRef = useRef<HTMLDivElement | null>(null);
+  const fixedStageRef = useRef<HTMLDivElement | null>(null);
   const bgImageRef = useRef<HTMLDivElement | null>(null);
   const blurOverlayRef = useRef<HTMLDivElement | null>(null);
   const fogVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -79,79 +79,83 @@ export default function SustainabilitySection() {
 
   useEffect(() => {
     const container = containerRef.current;
-    const sticky = stickyRef.current;
+    const fixedStage = fixedStageRef.current;
     const bgImage = bgImageRef.current;
     const blurOverlay = blurOverlayRef.current;
-    const fogVideo = fogVideoRef.current;
     const eyebrow = eyebrowRef.current;
     const headline = headlineRef.current;
     const subtext = subtextRef.current;
     const cta = ctaRef.current;
     const pills = pillsRef.current;
 
-    if (!container || !sticky || !bgImage) return;
+    if (!container || !fixedStage || !bgImage) return;
 
     const ctx = gsap.context(() => {
       const activePins = pinsRef.current.filter(Boolean);
       const headlineLines = headline ? headline.querySelectorAll(".reveal-line") : [];
 
-      // MASTER TIMELINE HOOKED TO SCROLL TRIGGER
-      // Sequence:
-      // 1. Progress 0.00 -> 0.44:
-      //    - Image is ALREADY SHOWING FROM TOP OF SCREEN (no sliding from bottom!)
-      //    - Starts ZOOMED IN (scale: 1.55) with SOFT BLUR OVERLAY
-      //    - Smoothly ZOOMS OUT to 1.02 while blur overlay clears from 18px to 0px
-      // 2. Progress 0.44 -> 0.70:
-      //    - Image is now 100% sharp and full panorama
-      //    - GSAP-style TEXT REVEAL slides up through masked lines
-      //    - 4 Sensor nodes pop in with elastic bounce
-      // 3. Progress 0.70 -> 1.00:
-      //    - Interactive hold state for exploration
+      // MASTER TIMELINE:
+      // Controlled by the scroll track, while the stage is FIXED AT TOP: 0 OF THE DEFAULT VIEWPORT.
+      // Total scroll range: from when track enters bottom of viewport to when it leaves top.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
-          start: "top top",
-          end: "bottom bottom",
+          start: "top bottom",
+          end: "bottom top",
           scrub: 0.5,
+          onUpdate: (self) => {
+            const p = self.progress;
+            // Manage visibility and pointer-events accurately
+            if (p <= 0.01 || p >= 0.99) {
+              fixedStage.style.visibility = "hidden";
+              fixedStage.style.pointerEvents = "none";
+            } else {
+              fixedStage.style.visibility = "visible";
+              fixedStage.style.pointerEvents = p >= 0.25 && p <= 0.88 ? "auto" : "none";
+            }
+          },
         },
       });
 
-      // --- PHASE 1: ZOOM OUT & CLEAR BLUR OVERLAY (0.0 -> 0.44) ---
-      // Image starts ALREADY showing from top (y: 0, no sliding up from bottom)
+      // --- PHASE 1: STAGE FADES IN AT TOP 0 OF DEFAULT VIEWPORT (0.00 -> 0.22) ---
+      // Image is already at top: 0 (no sliding up from bottom with black gap)
       tl.fromTo(
-        bgImage,
-        { scale: 1.55, y: 0 },
-        { scale: 1.02, y: -15, ease: "power2.inOut", duration: 0.44 },
+        fixedStage,
+        { opacity: 0 },
+        { opacity: 1, ease: "power2.out", duration: 0.22 },
         0
       );
 
-      // Blur overlay dissolves from soft dreamlike blur to crystal clear
+      // --- PHASE 2: IMAGE ZOOMS OUT & BLUR DISSOLVES (0.16 -> 0.50) ---
+      tl.fromTo(
+        bgImage,
+        { scale: 1.55 },
+        { scale: 1.0, ease: "power2.inOut", duration: 0.34 },
+        0.16
+      );
+
       if (blurOverlay) {
         tl.fromTo(
           blurOverlay,
           { opacity: 1, backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" },
-          { opacity: 0, backdropFilter: "blur(0px)", WebkitBackdropFilter: "blur(0px)", ease: "power2.out", duration: 0.40 },
-          0
+          {
+            opacity: 0,
+            backdropFilter: "blur(0px)",
+            WebkitBackdropFilter: "blur(0px)",
+            ease: "power2.out",
+            duration: 0.32,
+          },
+          0.16
         );
       }
 
-      // Fog video parallax drift
-      if (fogVideo) {
-        tl.fromTo(
-          fogVideo,
-          { y: 15, opacity: 0.5 },
-          { y: -15, opacity: 0.9, ease: "power2.inOut", duration: 0.44 },
-          0
-        );
-      }
-
-      // --- PHASE 2: GSAP-STYLE TEXT REVEAL AFTER BLUR CLEARS (0.43 -> 0.68) ---
+      // --- PHASE 3: GSAP-STYLE TEXT REVEAL AFTER BLUR CLEARS (0.48 -> 0.68) ---
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 22 },
-          { opacity: 1, y: 0, ease: "power3.out", duration: 0.12 },
-          0.43
+          { opacity: 1, y: 0, ease: "power3.out", duration: 0.10 },
+          0.48
         );
       }
 
@@ -164,9 +168,9 @@ export default function SustainabilitySection() {
             opacity: 1,
             stagger: 0.04,
             ease: "power3.out",
-            duration: 0.16,
+            duration: 0.15,
           },
-          0.45
+          0.50
         );
       }
 
@@ -174,8 +178,8 @@ export default function SustainabilitySection() {
         tl.fromTo(
           subtext,
           { opacity: 0, y: 18 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.12 },
-          0.54
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
+          0.56
         );
       }
 
@@ -183,8 +187,8 @@ export default function SustainabilitySection() {
         tl.fromTo(
           cta,
           { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
-          0.58
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
+          0.60
         );
       }
 
@@ -192,8 +196,8 @@ export default function SustainabilitySection() {
         tl.fromTo(
           activePins,
           { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, stagger: 0.04, ease: "back.out(2)", duration: 0.15 },
-          0.52
+          { scale: 1, opacity: 1, stagger: 0.04, ease: "back.out(2)", duration: 0.12 },
+          0.54
         );
       }
 
@@ -201,13 +205,21 @@ export default function SustainabilitySection() {
         tl.fromTo(
           pills,
           { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.12 },
-          0.60
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
+          0.62
         );
       }
 
-      // --- PHASE 3: INTERACTIVE HOLD (0.68 -> 1.00) ---
-      tl.to({}, { duration: 0.32 }, 0.68);
+      // --- PHASE 4: INTERACTIVE HOLD (0.68 -> 0.85) ---
+      tl.to({}, { duration: 0.17 }, 0.68);
+
+      // --- PHASE 5: CLEAN EXIT HANDOFF TO NEXT SECTION (0.85 -> 0.98) ---
+      tl.fromTo(
+        fixedStage,
+        { opacity: 1 },
+        { opacity: 0, ease: "power2.in", duration: 0.13 },
+        0.85
+      );
     }, container);
 
     return () => ctx.revert();
@@ -217,22 +229,27 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative w-full h-[250vh] bg-[#031513] text-white"
+      className="relative w-full h-[280vh] bg-transparent"
     >
-      {/* STICKY FULL-SCREEN 100VH / 100DVH VIEWPORT STAGE */}
+      {/* =====================================================================
+          FIXED VIEWPORT STAGE:
+          Positioned strictly at top: 0 of the DEFAULT VIEWPORT (not the container!)
+          Spans fixed inset-0 (100vw x 100vh) with zero sliding from bottom!
+      ===================================================================== */}
       <div
-        ref={stickyRef}
-        className="sticky top-0 h-screen h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#031513]"
+        ref={fixedStageRef}
+        style={{ opacity: 0, visibility: "hidden" }}
+        className="fixed inset-0 top-0 left-0 w-screen h-screen z-25 pointer-events-none overflow-hidden bg-[#031513] text-white will-change-[opacity,visibility]"
       >
         {/* =====================================================================
-            LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 HQ TERRARIUM)
-            - Showing already from top of screen (object-top, no sliding up from bottom)
-            - 10vh top/bottom bleed margin to guarantee 100% full height coverage
-            - Starts zoomed in (scale: 1.55) then zooms out to 1.02
+            LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 UNCOMPRESSED TERRARIUM)
+            - Fixed at top: 0 of default viewport
+            - Covers 100% full screen with object-cover object-top
+            - Zooms out smoothly from 1.55 to 1.0
         ===================================================================== */}
         <div
           ref={bgImageRef}
-          className="absolute -top-[10vh] -bottom-[10vh] -left-[6vw] -right-[6vw] w-[112vw] h-[120vh] z-0 pointer-events-none will-change-transform"
+          className="absolute inset-0 z-0 pointer-events-none will-change-transform"
         >
           <Image
             src="/images/sustainability-landscape.jpg"
@@ -243,24 +260,24 @@ export default function SustainabilitySection() {
             className="object-cover object-top"
             sizes="100vw"
           />
-          {/* Subtle gradient vignette protecting text legibility without obscuring nature */}
+          {/* Subtle vignette protecting text legibility without obscuring nature */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(to bottom, rgba(3,21,19,0.52) 0%, rgba(3,21,19,0.12) 45%, rgba(3,21,19,0.55) 100%)",
+                "linear-gradient(to bottom, rgba(3,21,19,0.50) 0%, rgba(3,21,19,0.08) 45%, rgba(3,21,19,0.55) 100%)",
             }}
           />
         </div>
 
         {/* =====================================================================
-            LAYER 2: DREAMLIKE BLUR OVERLAY BEFORE TEXT REVEAL
+            LAYER 2: DREAMLIKE BOKEH BLUR OVERLAY BEFORE TEXT REVEAL
             - Soft bokeh blur (18px) when zoomed in
-            - Smoothly dissolves to 0px as full panorama is reached
+            - Dissolves cleanly to 0px as full panorama is reached
         ===================================================================== */}
         <div
           ref={blurOverlayRef}
-          className="pointer-events-none absolute -inset-16 z-[12] bg-[#031513]/25 will-change-[opacity,backdrop-filter]"
+          className="pointer-events-none absolute inset-0 z-[12] bg-[#031513]/20 will-change-[opacity,backdrop-filter]"
           style={{
             backdropFilter: "blur(18px)",
             WebkitBackdropFilter: "blur(18px)",
@@ -268,13 +285,11 @@ export default function SustainabilitySection() {
         />
 
         {/* =====================================================================
-            LAYER 3: 100% FULL-WIDTH CONTINUOUS CORNER & FLOOR FOG
-            - Spans 100% full width from edge to edge across entire screen
-            - Natural vertical linear gradient mask so fog rolls across entire bottom
-            - Dual volumetric corner mist clouds for deep atmospheric immersion
+            LAYER 3: AUTHENTIC ALETHIA CORNER & FLOOR FOG
+            - Clean screen mix-blend with 0.65 opacity (exact Alethia Framer styling)
+            - 100% full width, zero clipping on sides, zero washed-out gray haze
         ===================================================================== */}
-        <div className="absolute inset-0 z-[14] pointer-events-none overflow-hidden w-full">
-          {/* Primary looping volumetric mist video covering 100% screen width */}
+        <div className="absolute inset-0 z-[14] pointer-events-none overflow-hidden mix-blend-screen opacity-70">
           <video
             ref={fogVideoRef}
             src="/videos/clouds-fog.webm"
@@ -282,52 +297,14 @@ export default function SustainabilitySection() {
             loop
             muted
             playsInline
-            className="absolute -bottom-[8%] -left-[5vw] -right-[5vw] w-[110vw] min-w-full h-[115%] object-cover mix-blend-screen opacity-90 will-change-transform"
-            style={{
-              maskImage:
-                "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 30%, rgba(0,0,0,0.45) 65%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.92) 30%, rgba(0,0,0,0.45) 65%, transparent 100%)",
-            }}
-          />
-
-          {/* Left Corner Volumetric Mist Cloud */}
-          <div
-            className="absolute bottom-0 left-0 w-[55vw] h-[65vh] pointer-events-none opacity-60 mix-blend-screen animate-pulse"
-            style={{
-              background:
-                "radial-gradient(ellipse 90% 70% at 0% 100%, rgba(200,245,215,0.45) 0%, rgba(20,248,132,0.18) 40%, transparent 80%)",
-              filter: "blur(40px)",
-              animationDuration: "8s",
-            }}
-          />
-
-          {/* Right Corner Volumetric Mist Cloud */}
-          <div
-            className="absolute bottom-0 right-0 w-[55vw] h-[65vh] pointer-events-none opacity-60 mix-blend-screen animate-pulse"
-            style={{
-              background:
-                "radial-gradient(ellipse 90% 70% at 100% 100%, rgba(198,241,157,0.45) 0%, rgba(20,248,132,0.18) 40%, transparent 80%)",
-              filter: "blur(40px)",
-              animationDuration: "10s",
-            }}
-          />
-
-          {/* Center Floor Soft Ground Fog Drift */}
-          <div
-            className="absolute -bottom-10 left-0 right-0 w-full h-[35vh] pointer-events-none opacity-50 mix-blend-screen"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(20,248,132,0.22) 0%, rgba(198,241,157,0.12) 40%, transparent 100%)",
-              filter: "blur(30px)",
-            }}
+            className="w-full h-full object-cover object-center"
           />
         </div>
 
         {/* =====================================================================
             LAYER 4: 4 INTERACTIVE SENSOR NODES (Exact Alethia 5-Dot Matrix + Inline Labels)
             - Clean & closed by default so they never block text or view
-            - Inline uppercase tag directly beside the dot (matches Alethia screenshot)
+            - Inline uppercase tag directly beside the dot (matches Alethia reference)
             - Hovering or tapping smoothly reveals rich data capsule
         ===================================================================== */}
         <div className="absolute inset-0 z-30 pointer-events-none">
@@ -418,7 +395,6 @@ export default function SustainabilitySection() {
         {/* =====================================================================
             LAYER 5: FULL-HEIGHT EDITORIAL TYPOGRAPHY & GSAP TEXT REVEAL
             - Positioned in Upper-Right Quadrant (Alethia Layout)
-            - Spans full height edge-to-edge under the blurred glass navbar
             - Leaves Lower 60% of Screen 100% OPEN for Nature & Sensor Nodes
         ===================================================================== */}
         <div className="relative z-20 w-full max-w-[1360px] mx-auto px-5 sm:px-12 h-screen h-[100dvh] flex flex-col justify-between pt-24 sm:pt-28 pb-6 sm:pb-8 pointer-events-none">
