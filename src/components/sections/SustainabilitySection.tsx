@@ -123,14 +123,16 @@ export default function SustainabilitySection() {
       const headlineLines = headline ? headline.querySelectorAll(".reveal-line") : [];
 
       // 2. MASTER TIMELINE:
-      // Controls entrance fade at top: 0 (no cutting off, no sliding from bottom!),
-      // zoom-out, blur clearing, creeping fog entrance, and text reveal.
+      // Controls entrance fade at top: 0, zoom-out, blur clearing, creeping fog entrance,
+      // and complete text reveal. ALL reveals finish by p = 0.42, leaving a massive
+      // static hold zone (0.42 -> 0.81, over 200vh of scroll) where everything is 100%
+      // revealed and completely still before #services arrives to slide it up.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top bottom",
           end: "bottom top",
-          scrub: 0.6,
+          scrub: 0.5,
           onUpdate: (self) => {
             const p = self.progress;
             const nextSection = document.getElementById("services");
@@ -143,43 +145,42 @@ export default function SustainabilitySection() {
             } else {
               fixedStage.style.visibility = "visible";
               fixedStage.style.pointerEvents =
-                p >= 0.22 && (!rect || rect.top >= h) ? "auto" : "none";
+                p >= 0.18 && (!rect || rect.top >= h) ? "auto" : "none";
             }
 
-            if ((p >= 0.76 || p < 0.22) && activeHotspotRef.current !== null) {
+            if ((p >= 0.80 || p < 0.18) && activeHotspotRef.current !== null) {
               setActiveHotspot(null);
             }
           },
         },
       });
 
-      // --- PHASE 1: STAGE SOFTLY FADES IN AT TOP 0 (0.00 -> 0.16) ---
-      // Fixed at top: 0 of default viewport — covers 100% of screen with ZERO horizontal lines!
+      // --- PHASE 1: STAGE SOFTLY FADES IN AT TOP 0 (0.00 -> 0.10) ---
       tl.fromTo(
         fixedStage,
         { opacity: 0 },
-        { opacity: 1, ease: "power2.out", duration: 0.16 },
+        { opacity: 1, ease: "power2.out", duration: 0.10 },
         0
       );
 
-      // --- PHASE 2: HOLD INITIAL BLURRED/ZOOMED VIEW, THEN CINEMATIC ZOOM OUT (0.18 -> 0.46) ---
+      // --- PHASE 2: CINEMATIC ZOOM OUT & DIRECT BLUR CLEARING (0.08 -> 0.24) ---
       tl.fromTo(
         bgImage,
         { scale: 1.35, filter: "blur(12px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.28 },
-        0.18
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.16 },
+        0.08
       );
 
-      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.42 -> 0.64) ---
-      // Never appears instantly! Rises up from floor (y: 80 -> 0), scales, diffuses from blur(14px) -> blur(0px)
+      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.18 -> 0.36) ---
+      // Rises up from floor (y: 75 -> 0), scales, diffuses from blur(12px) -> blur(0px)
       if (fogVideo) {
         tl.fromTo(
           fogVideo,
           {
             opacity: 0,
-            y: 80,
+            y: 75,
             scale: 1.15,
-            filter: "blur(14px)",
+            filter: "blur(12px)",
           },
           {
             opacity: 0.75,
@@ -187,19 +188,20 @@ export default function SustainabilitySection() {
             scale: 1.0,
             filter: "blur(0px)",
             ease: "power2.out",
-            duration: 0.22,
+            duration: 0.18,
           },
-          0.42
+          0.18
         );
       }
 
-      // --- PHASE 4: GSAP TEXT REVEAL & SENSOR NODES (0.54 -> 0.70) ---
+      // --- PHASE 4: FULL GSAP TEXT REVEAL & SENSOR NODES (0.24 -> 0.42) ---
+      // Everything finishes revealing by 0.42 — WAY before the exit slide at ~0.81!
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 18 },
           { opacity: 1, y: 0, ease: "power3.out", duration: 0.08 },
-          0.54
+          0.24
         );
       }
 
@@ -210,11 +212,11 @@ export default function SustainabilitySection() {
           {
             yPercent: 0,
             opacity: 1,
-            stagger: 0.04,
+            stagger: 0.03,
             ease: "power3.out",
-            duration: 0.12,
+            duration: 0.10,
           },
-          0.56
+          0.26
         );
       }
 
@@ -223,7 +225,7 @@ export default function SustainabilitySection() {
           subtext,
           { opacity: 0, y: 14 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.60
+          0.30
         );
       }
 
@@ -232,7 +234,7 @@ export default function SustainabilitySection() {
           cta,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
-          0.63
+          0.33
         );
       }
 
@@ -240,8 +242,8 @@ export default function SustainabilitySection() {
         tl.fromTo(
           activePins,
           { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, stagger: 0.04, ease: "back.out(2)", duration: 0.10 },
-          0.58
+          { scale: 1, opacity: 1, stagger: 0.03, ease: "back.out(2)", duration: 0.09 },
+          0.28
         );
       }
 
@@ -250,12 +252,13 @@ export default function SustainabilitySection() {
           pills,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.65
+          0.34
         );
       }
 
-      // --- PHASE 5: INTERACTIVE EXPLORATION HOLD (0.70 -> 0.76) ---
-      tl.to({}, { duration: 0.06 }, 0.70);
+      // --- PHASE 5: MASSIVE STATIC INTERACTIVE EXPLORATION HOLD (0.42 -> 1.00) ---
+      // Over 200vh of pure scroll where text, fog, hotspots are 100% revealed & static!
+      tl.to({}, { duration: 0.58 }, 0.42);
     }, container);
 
     return () => {
@@ -268,7 +271,7 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative z-20 w-full h-[320vh] bg-transparent"
+      className="relative z-20 w-full h-[420vh] bg-transparent"
     >
       {/* =====================================================================
           FIXED VIEWPORT STAGE:
