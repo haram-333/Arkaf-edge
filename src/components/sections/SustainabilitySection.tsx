@@ -95,75 +95,90 @@ export default function SustainabilitySection() {
       const activePins = pinsRef.current.filter(Boolean);
       const headlineLines = headline ? headline.querySelectorAll(".reveal-line") : [];
 
-      // MASTER TIMELINE:
-      // Controlled by the scroll track, while the stage is FIXED AT TOP: 0 OF THE DEFAULT VIEWPORT.
-      // Generous runway (320vh) for silky-smooth, cinematic animation pacing:
-      // 0.00 -> 0.16: Stage softly fades in at top: 0
-      // 0.16 -> 0.20: Hold blurred & zoomed-in view so user clearly sees the terrarium first
-      // 0.20 -> 0.48: Cinematic zoom-out (1.35 -> 1.0) and direct blur clearing (12px -> 0px)
-      // 0.48 -> 0.60: Fog overlay rolls in strictly AFTER panorama is sharp and zoomed out
-      // 0.56 -> 0.70: GSAP masked text reveal of headline lines, subtext, CTAs, sensor pins
-      // 0.68 -> 0.762: Stable interactive exploration hold
-      // 0.762 -> 1.000: fixedStage slides UP (yPercent: 0 -> -100) in 1:1 sync with next section
+      // 1. ENTRANCE CONTROLLER:
+      // While container enters from bottom (start: "top bottom", end: "top top"),
+      // counter-translates the sticky stage so it remains fixed at top: 0 of the screen
+      // and gently fades in, rather than sliding in from the bottom!
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top bottom",
+        end: "top top",
+        scrub: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          if (p < 1) {
+            const remainingY = (1 - p) * window.innerHeight;
+            fixedStage.style.transform = `translate3d(0, -${remainingY}px, 0)`;
+            fixedStage.style.opacity = String(Math.min(1, p * 1.5));
+            fixedStage.style.pointerEvents = "none";
+          } else {
+            fixedStage.style.transform = "translate3d(0, 0, 0)";
+            fixedStage.style.opacity = "1";
+            fixedStage.style.pointerEvents = "auto";
+          }
+        },
+      });
+
+      // 2. MASTER ANIMATION TIMELINE:
+      // Runs smoothly while the stage is held at top: 0 by native CSS sticky!
+      // When container ends, CSS sticky naturally slides the stage up into the ceiling
+      // in 100% native compositor sync with ServicesFlowerSection directly below it.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.6,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.8,
           onUpdate: (self) => {
             const p = self.progress;
-            // Manage visibility and pointer-events accurately
-            if (p <= 0.01 || p >= 0.999) {
-              fixedStage.style.visibility = "hidden";
-              fixedStage.style.pointerEvents = "none";
-            } else {
-              fixedStage.style.visibility = "visible";
-              fixedStage.style.pointerEvents = p >= 0.22 && p < 0.76 ? "auto" : "none";
-            }
-
-            // Close open tooltip if scrolling into exit or entrance
-            if ((p >= 0.76 || p < 0.22) && activeHotspotRef.current !== null) {
+            if (p >= 0.95 && activeHotspotRef.current !== null) {
               setActiveHotspot(null);
             }
           },
         },
       });
 
-      // --- PHASE 1: STAGE FADES IN AT TOP 0 OF DEFAULT VIEWPORT (0.00 -> 0.16) ---
-      tl.fromTo(
-        fixedStage,
-        { opacity: 0 },
-        { opacity: 1, ease: "power2.out", duration: 0.16 },
-        0
-      );
+      // --- PHASE 1: HOLD INITIAL BLURRED/ZOOMED COMPOSITION (0.00 -> 0.08) ---
+      // User clearly perceives the zoomed-in macro terrarium view before zoom-out starts
 
-      // --- PHASE 2: GENEROUS CINEMATIC ZOOM-OUT & BLUR CLEARING DIRECTLY ON IMAGE (0.20 -> 0.48) ---
-      // Direct filter: blur on the image itself — no separate div sliding up!
+      // --- PHASE 2: CINEMATIC ZOOM-OUT & BLUR CLEARING (0.08 -> 0.38) ---
       tl.fromTo(
         bgImage,
         { scale: 1.35, filter: "blur(12px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.28 },
-        0.20
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.30 },
+        0.08
       );
 
-      // --- PHASE 3: FOG OVERLAY APPLIES STRICTLY AFTER IMAGE HAS ZOOMED OUT (0.48 -> 0.60) ---
+      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.36 -> 0.60) ---
+      // Rises up from the floor (y: 80 -> 0), scales from 1.15 to 1.0, diffuses from blur(14px) -> blur(0px)
       if (fogVideo) {
         tl.fromTo(
           fogVideo,
-          { opacity: 0 },
-          { opacity: 0.70, ease: "power2.out", duration: 0.12 },
-          0.48
+          {
+            opacity: 0,
+            y: 80,
+            scale: 1.15,
+            filter: "blur(14px)",
+          },
+          {
+            opacity: 0.75,
+            y: 0,
+            scale: 1.0,
+            filter: "blur(0px)",
+            ease: "power2.out",
+            duration: 0.24,
+          },
+          0.36
         );
       }
 
-      // --- PHASE 4: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.56 -> 0.70) ---
+      // --- PHASE 4: GSAP TEXT REVEAL & SENSOR NODES (0.52 -> 0.72) ---
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 18 },
           { opacity: 1, y: 0, ease: "power3.out", duration: 0.08 },
-          0.56
+          0.52
         );
       }
 
@@ -178,7 +193,7 @@ export default function SustainabilitySection() {
             ease: "power3.out",
             duration: 0.12,
           },
-          0.58
+          0.54
         );
       }
 
@@ -187,7 +202,7 @@ export default function SustainabilitySection() {
           subtext,
           { opacity: 0, y: 14 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.62
+          0.58
         );
       }
 
@@ -196,7 +211,7 @@ export default function SustainabilitySection() {
           cta,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
-          0.64
+          0.62
         );
       }
 
@@ -205,7 +220,7 @@ export default function SustainabilitySection() {
           activePins,
           { scale: 0, opacity: 0 },
           { scale: 1, opacity: 1, stagger: 0.04, ease: "back.out(2)", duration: 0.10 },
-          0.60
+          0.58
         );
       }
 
@@ -214,24 +229,12 @@ export default function SustainabilitySection() {
           pills,
           { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.65
+          0.64
         );
       }
 
-      // --- PHASE 5: INTERACTIVE EXPLORATION HOLD (0.70 -> 0.762) ---
-      tl.to({}, { duration: 0.062 }, 0.70);
-
-      // --- PHASE 6: FULL 1:1 SCROLL SLIDE UP OUT OF VIEWPORT TO REVEAL NEXT SECTION (0.762 -> 1.000) ---
-      // At p = 0.762 (320vh / 420vh), the next section enters the bottom of the viewport (y = 100vh).
-      // Over the remaining 100vh of scroll (p = 0.762 to 1.000, duration 0.238),
-      // animating fixedStage with yPercent: -100 linearly (ease: "none") matches the native scroll 1:1,
-      // smoothly sliding the sustainability section up into the ceiling as the flower section scrolls in.
-      tl.fromTo(
-        fixedStage,
-        { yPercent: 0 },
-        { yPercent: -100, ease: "none", duration: 0.238 },
-        0.762
-      );
+      // --- PHASE 5: INTERACTIVE EXPLORATION HOLD (0.72 -> 1.00) ---
+      tl.to({}, { duration: 0.28 }, 0.72);
     }, container);
 
     return () => ctx.revert();
@@ -241,18 +244,18 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative w-full h-[320vh] bg-transparent"
+      className="relative z-20 w-full h-[320vh] bg-[#031513]"
     >
       {/* =====================================================================
-          FIXED VIEWPORT STAGE:
-          Positioned strictly at top: 0 of the DEFAULT VIEWPORT (not the container!)
-          Spans fixed inset-0 with zero sliding from bottom on entrance!
-          Slides up smoothly on exit (yPercent: 0 -> -100) to reveal next section!
+          STICKY VIEWPORT STAGE:
+          - Counter-translated to top: 0 during entrance (fading in, no bottom sliding!)
+          - Held at top: 0 by native CSS sticky during active scroll
+          - Naturally slides up on exit with 100% native compositor sync
       ===================================================================== */}
       <div
         ref={fixedStageRef}
-        style={{ opacity: 0, visibility: "hidden", transform: "translate3d(0, 0%, 0)" }}
-        className="fixed inset-0 top-0 left-0 w-full h-full z-20 pointer-events-none overflow-hidden bg-[#031513] text-white will-change-[transform,opacity,visibility]"
+        style={{ opacity: 0, transform: "translate3d(0, -100vh, 0)" }}
+        className="sticky top-0 h-screen w-full overflow-hidden bg-[#031513] text-white will-change-transform"
       >
         {/* =====================================================================
             LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 UNCOMPRESSED TERRARIUM)
@@ -286,13 +289,17 @@ export default function SustainabilitySection() {
 
         {/* =====================================================================
             LAYER 2: AUTHENTIC ALETHIA CORNER & FLOOR FOG
-            - Clean screen mix-blend with 0.70 opacity
-            - Starts at opacity: 0, and APPLIES ONLY AFTER IMAGE HAS ZOOMED OUT!
+            - Clean screen mix-blend with rich creeping entrance animation
+            - Floats up from floor, expands, diffuses and rolls across moss & corners
         ===================================================================== */}
         <div
           ref={fogVideoRef}
-          style={{ opacity: 0 }}
-          className="absolute inset-0 z-[14] pointer-events-none overflow-hidden mix-blend-screen will-change-[opacity]"
+          style={{
+            opacity: 0,
+            transform: "translate3d(0, 80px, 0) scale(1.15)",
+            filter: "blur(14px)",
+          }}
+          className="absolute inset-0 z-[14] pointer-events-none overflow-hidden mix-blend-screen will-change-[transform,opacity,filter]"
         >
           <video
             src="/videos/clouds-fog.webm"
@@ -300,9 +307,18 @@ export default function SustainabilitySection() {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover object-center animate-fog-drift"
           />
         </div>
+
+        {/* Seamless bottom vignette melting into the next section */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-28 pointer-events-none z-10"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(3,21,19,0) 0%, rgba(0,0,0,0.85) 100%)",
+          }}
+        />
 
         {/* =====================================================================
             LAYER 4: 4 INTERACTIVE SENSOR NODES (Exact Alethia 5-Dot Matrix + Inline Labels)

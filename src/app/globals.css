@@ -90,6 +90,19 @@ body {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
+@keyframes fog-ambient-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1.02);
+  }
+  50% {
+    transform: translate3d(-10px, -6px, 0) scale(1.05);
+  }
+}
+
+.animate-fog-drift {
+  animation: fog-ambient-drift 16s ease-in-out infinite;
+}
+
 /* Custom thin dark scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
