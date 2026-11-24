@@ -112,14 +112,12 @@ export default function Navbar() {
         />
       </div>
 
-      {/* Compact Fixed Navbar with frosted glass background for crystal-clear readability */}
+      {/* Compact Fixed Navbar with frosted glass blur background (never colored) */}
       <header
         className={`fixed top-0 left-0 right-0 z-[60] px-4 sm:px-9 py-3 sm:py-3.5 flex items-center justify-between transition-all duration-300 ${
           isLight
-            ? "bg-[#f1f5f4]/94 backdrop-blur-md border-b border-[#091412]/10 shadow-sm"
-            : isScrolled
-            ? "bg-[#050b09]/90 backdrop-blur-md border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.55)]"
-            : "bg-[#050b09]/60 backdrop-blur-sm border-b border-transparent"
+            ? "bg-white/40 backdrop-blur-md border-b border-black/10 shadow-sm"
+            : "bg-black/20 backdrop-blur-md border-b border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.25)]"
         }`}
       >
         {/* Brand Mark: tight ARKAFEDGE. lockup + glowing #17f888 A box */}
@@ -151,7 +149,7 @@ export default function Navbar() {
             className={`hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-mono-label text-[9.5px] font-semibold transition-all duration-300 ${
               isLight
                 ? "border border-[#06a65a]/45 bg-white/80 text-[#06a65a] hover:bg-[#091412] hover:text-[#14f884]"
-                : "border border-[#14f884]/45 bg-[#050b09]/65 backdrop-blur-md text-[#14f884] hover:bg-[#14f884] hover:text-[#050b09]"
+                : "border border-[#14f884]/45 bg-black/20 backdrop-blur-md text-[#14f884] hover:bg-[#14f884] hover:text-[#050b09]"
             }`}
           >
             <Sparkles className="w-3 h-3" />
@@ -165,7 +163,7 @@ export default function Navbar() {
             className={`w-8 h-8 rounded-full hidden sm:flex items-center justify-center border transition-all duration-300 cursor-pointer ${
               isLight || themeMode === "light"
                 ? "border-[#091412]/15 text-[#06a65a] bg-white/75 hover:border-[#06a65a]"
-                : "border-white/15 text-[#14f884]/80 bg-[#050b09]/65 hover:border-[#14f884]"
+                : "border-white/15 text-[#14f884]/80 bg-black/20 backdrop-blur-md hover:border-[#14f884]"
             }`}
           >
             {isLight || themeMode === "light" ? (

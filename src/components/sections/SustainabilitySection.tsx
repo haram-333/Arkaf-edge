@@ -65,6 +65,7 @@ export default function SustainabilitySection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
   const bgImageRef = useRef<HTMLDivElement | null>(null);
+  const blurOverlayRef = useRef<HTMLDivElement | null>(null);
   const fogVideoRef = useRef<HTMLVideoElement | null>(null);
   const eyebrowRef = useRef<HTMLDivElement | null>(null);
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
@@ -80,6 +81,7 @@ export default function SustainabilitySection() {
     const container = containerRef.current;
     const sticky = stickyRef.current;
     const bgImage = bgImageRef.current;
+    const blurOverlay = blurOverlayRef.current;
     const fogVideo = fogVideoRef.current;
     const eyebrow = eyebrowRef.current;
     const headline = headlineRef.current;
@@ -95,9 +97,15 @@ export default function SustainabilitySection() {
 
       // MASTER TIMELINE HOOKED TO SCROLL TRIGGER
       // Sequence:
-      // 1. Progress 0.00 -> 0.45: Image starts ZOOMED IN (scale: 1.55) and smoothly ZOOMS OUT to 1.0
-      // 2. Progress 0.45 -> 0.70: GSAP-style TEXT REVEAL after zoom out completes
-      // 3. Progress 0.70 -> 1.00: Interactive hold state allowing sensor node exploration
+      // 1. Progress 0.00 -> 0.45:
+      //    - Image starts ZOOMED IN (scale: 1.55) with SOFT BLUR OVERLAY
+      //    - Smoothly ZOOMS OUT to 1.0 while blur overlay clears from 16px to 0px
+      // 2. Progress 0.45 -> 0.70:
+      //    - Image is now 100% sharp and full panorama
+      //    - GSAP-style TEXT REVEAL slides up through masked lines
+      //    - 4 Sensor nodes pop in with elastic bounce
+      // 3. Progress 0.70 -> 1.00:
+      //    - Interactive hold state for exploration
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -107,30 +115,40 @@ export default function SustainabilitySection() {
         },
       });
 
-      // --- PHASE 1: ZOOM OUT FROM CLOSE-UP TO FULL PANORAMA (0.0 -> 0.45) ---
+      // --- PHASE 1: ZOOM OUT & CLEAR BLUR OVERLAY (0.0 -> 0.44) ---
       tl.fromTo(
         bgImage,
         { scale: 1.55, y: 45 },
-        { scale: 1.0, y: -25, ease: "power2.inOut", duration: 0.45 },
+        { scale: 1.0, y: -25, ease: "power2.inOut", duration: 0.44 },
         0
       );
 
-      if (fogVideo) {
+      // Blur overlay dissolves from soft dreamlike blur to crystal clear
+      if (blurOverlay) {
         tl.fromTo(
-          fogVideo,
-          { y: 30, opacity: 0.45 },
-          { y: -25, opacity: 0.8, ease: "power2.inOut", duration: 0.45 },
+          blurOverlay,
+          { opacity: 1, backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" },
+          { opacity: 0, backdropFilter: "blur(0px)", WebkitBackdropFilter: "blur(0px)", ease: "power2.out", duration: 0.40 },
           0
         );
       }
 
-      // --- PHASE 2: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.42 -> 0.68) ---
+      if (fogVideo) {
+        tl.fromTo(
+          fogVideo,
+          { y: 30, opacity: 0.4 },
+          { y: -25, opacity: 0.8, ease: "power2.inOut", duration: 0.44 },
+          0
+        );
+      }
+
+      // --- PHASE 2: GSAP-STYLE TEXT REVEAL AFTER BLUR CLEARS (0.43 -> 0.68) ---
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 22 },
           { opacity: 1, y: 0, ease: "power3.out", duration: 0.12 },
-          0.42
+          0.43
         );
       }
 
@@ -186,7 +204,6 @@ export default function SustainabilitySection() {
       }
 
       // --- PHASE 3: INTERACTIVE HOLD (0.68 -> 1.00) ---
-      // Scene remains fully revealed & interactive while user scrolls the remaining track
       tl.to({}, { duration: 0.32 }, 0.68);
     }, container);
 
@@ -197,14 +214,14 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative w-full h-[220vh] bg-[#031513] text-white border-t border-b border-white/15"
+      className="relative w-full h-[230vh] bg-[#031513] text-white"
     >
       <div id="who-we-are" className="absolute -top-12 left-0 h-1 w-1" />
 
-      {/* STICKY FULL-SCREEN VIEWPORT STAGE */}
+      {/* STICKY FULL-SCREEN 100VH / 100DVH VIEWPORT STAGE */}
       <div
         ref={stickyRef}
-        className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-[#031513]"
+        className="sticky top-0 h-screen h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[#031513]"
       >
         {/* =====================================================================
             LAYER 1: RAW UNCOMPRESSED HQ NATURE LANDSCAPE (FERNS, MOSS & SOIL)
@@ -235,9 +252,23 @@ export default function SustainabilitySection() {
         </div>
 
         {/* =====================================================================
-            LAYER 2: CONTINUOUS FOG & VOLUMETRIC CORNER MIST
+            LAYER 2: DREAMLIKE BLUR OVERLAY BEFORE TEXT REVEAL
+            - Soft bokeh blur (18px) when zoomed in
+            - Smoothly dissolves to 0px as full panorama is reached
         ===================================================================== */}
-        <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+        <div
+          ref={blurOverlayRef}
+          className="pointer-events-none absolute inset-0 z-[12] bg-[#031513]/25 will-change-[opacity,backdrop-filter]"
+          style={{
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+          }}
+        />
+
+        {/* =====================================================================
+            LAYER 3: CONTINUOUS FOG & VOLUMETRIC CORNER MIST
+        ===================================================================== */}
+        <div className="absolute inset-0 z-[14] pointer-events-none overflow-hidden">
           <video
             ref={fogVideoRef}
             src="/videos/clouds-fog.webm"
@@ -259,7 +290,7 @@ export default function SustainabilitySection() {
         </div>
 
         {/* =====================================================================
-            LAYER 3: 4 INTERACTIVE SENSOR NODES (Exact Alethia 5-Dot Matrix)
+            LAYER 4: 4 INTERACTIVE SENSOR NODES (Exact Alethia 5-Dot Matrix)
             - Clean & closed by default so they never block text or view
             - Hovering or tapping smoothly reveals data capsule
         ===================================================================== */}
@@ -341,14 +372,14 @@ export default function SustainabilitySection() {
         </div>
 
         {/* =====================================================================
-            LAYER 4: EDITORIAL TYPOGRAPHY & GSAP TEXT REVEAL
+            LAYER 5: FULL-HEIGHT EDITORIAL TYPOGRAPHY & GSAP TEXT REVEAL
             - Positioned in Upper-Right Quadrant (Alethia Layout)
+            - Spans full height edge-to-edge under the blurred glass navbar
             - Leaves Lower 60% of Screen 100% OPEN for Nature & Sensor Nodes
-            - Refined, elegant editorial font size (no screaming block text!)
         ===================================================================== */}
-        <div className="relative z-20 w-full max-w-[1320px] mx-auto px-5 sm:px-12 h-full flex flex-col justify-between py-8 sm:py-12 pointer-events-none">
+        <div className="relative z-20 w-full max-w-[1360px] mx-auto px-5 sm:px-12 h-screen h-[100dvh] flex flex-col justify-between pt-24 sm:pt-28 pb-6 sm:pb-8 pointer-events-none">
           {/* Top Row: Eyebrow on Far-Left + Upper-Right Headline */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-4 sm:pt-8 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Top-Left Eyebrow (Alethia Carbon Intelligence style) */}
             <div ref={eyebrowRef} className="lg:col-span-4 pointer-events-auto">
               <span className="block font-mono-label text-[9px] sm:text-[10.5px] text-[#14f884] font-bold uppercase tracking-[0.16em] leading-relaxed">
@@ -395,7 +426,7 @@ export default function SustainabilitySection() {
 
                 <a
                   href="#work"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-sm text-white px-4 sm:px-5 py-2.5 sm:py-3 font-mono-label text-[9.5px] sm:text-[10.5px] font-medium hover:border-[#14f884] hover:text-[#14f884] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/40 backdrop-blur-md text-white px-4 sm:px-5 py-2.5 sm:py-3 font-mono-label text-[9.5px] sm:text-[10.5px] font-medium hover:border-[#14f884] hover:text-[#14f884] transition-all cursor-pointer"
                 >
                   <span>CIRCULAR WORK ↗</span>
                 </a>
@@ -404,7 +435,7 @@ export default function SustainabilitySection() {
           </div>
 
           {/* Lower Row: 9 Focus Circular Sectors Pills (Discreetly at the bottom edge) */}
-          <div ref={pillsRef} className="pt-4 pointer-events-auto border-t border-white/10">
+          <div ref={pillsRef} className="pt-3 pointer-events-auto border-t border-white/10">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
               <span className="font-mono-label text-[8px] sm:text-[9px] text-[#14f884] font-bold uppercase tracking-wider">
                 PARTICULAR AFFECTION FOR:
@@ -418,7 +449,7 @@ export default function SustainabilitySection() {
               {SUSTAINABILITY_CONTENT.industries.map((ind) => (
                 <span
                   key={ind}
-                  className="px-2.5 py-1 rounded-full border border-white/15 bg-black/60 backdrop-blur-sm font-mono-label text-[8px] sm:text-[9px] text-[#d4ede4] hover:border-[#14f884]/60 hover:text-[#14f884] transition-colors"
+                  className="px-2.5 py-1 rounded-full border border-white/15 bg-black/60 backdrop-blur-md font-mono-label text-[8px] sm:text-[9px] text-[#d4ede4] hover:border-[#14f884]/60 hover:text-[#14f884] transition-colors"
                 >
                   {ind}
                 </span>
