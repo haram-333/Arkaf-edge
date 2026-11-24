@@ -101,7 +101,7 @@ export default function ServicesFlowerSection() {
     <section
       id="services"
       ref={wrapperRef}
-      className="relative h-[250vh] md:h-[280vh] bg-black"
+      className="relative z-30 h-[250vh] md:h-[280vh] bg-black"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black flex flex-col justify-between">
         {/* Centered 3D Translucent Emerald Glass Gerbera Daisy */}

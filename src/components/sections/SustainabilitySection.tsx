@@ -75,6 +75,8 @@ export default function SustainabilitySection() {
 
   // Hotspot states (starts completely clean & closed)
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
+  const activeHotspotRef = useRef<string | null>(null);
+  activeHotspotRef.current = activeHotspot;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -97,11 +99,12 @@ export default function SustainabilitySection() {
       // Controlled by the scroll track, while the stage is FIXED AT TOP: 0 OF THE DEFAULT VIEWPORT.
       // Generous runway (320vh) for silky-smooth, cinematic animation pacing:
       // 0.00 -> 0.16: Stage softly fades in at top: 0
-      // 0.14 -> 0.46: Cinematic zoom-out (1.38 -> 1.0) and direct blur clearing (12px -> 0px)
-      // 0.44 -> 0.58: Organic fog video rolls in across floor and corners once panorama is clear
-      // 0.52 -> 0.70: GSAP masked text reveal of headline lines, subtext, CTAs, sensor pins
-      // 0.70 -> 0.88: Generous interactive exploration hold
-      // 0.88 -> 0.98: Stage dissolves cleanly, handing over to next section
+      // 0.16 -> 0.20: Hold blurred & zoomed-in view so user clearly sees the terrarium first
+      // 0.20 -> 0.48: Cinematic zoom-out (1.35 -> 1.0) and direct blur clearing (12px -> 0px)
+      // 0.48 -> 0.60: Fog overlay rolls in strictly AFTER panorama is sharp and zoomed out
+      // 0.56 -> 0.70: GSAP masked text reveal of headline lines, subtext, CTAs, sensor pins
+      // 0.68 -> 0.762: Stable interactive exploration hold
+      // 0.762 -> 1.000: fixedStage slides UP (yPercent: 0 -> -100) in 1:1 sync with next section
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -111,12 +114,17 @@ export default function SustainabilitySection() {
           onUpdate: (self) => {
             const p = self.progress;
             // Manage visibility and pointer-events accurately
-            if (p <= 0.01 || p >= 0.99) {
+            if (p <= 0.01 || p >= 0.999) {
               fixedStage.style.visibility = "hidden";
               fixedStage.style.pointerEvents = "none";
             } else {
               fixedStage.style.visibility = "visible";
-              fixedStage.style.pointerEvents = p >= 0.25 && p <= 0.88 ? "auto" : "none";
+              fixedStage.style.pointerEvents = p >= 0.22 && p < 0.76 ? "auto" : "none";
+            }
+
+            // Close open tooltip if scrolling into exit or entrance
+            if ((p >= 0.76 || p < 0.22) && activeHotspotRef.current !== null) {
+              setActiveHotspot(null);
             }
           },
         },
@@ -130,32 +138,32 @@ export default function SustainabilitySection() {
         0
       );
 
-      // --- PHASE 2: GENEROUS CINEMATIC ZOOM-OUT & BLUR CLEARING DIRECTLY ON IMAGE (0.14 -> 0.46) ---
+      // --- PHASE 2: GENEROUS CINEMATIC ZOOM-OUT & BLUR CLEARING DIRECTLY ON IMAGE (0.20 -> 0.48) ---
       // Direct filter: blur on the image itself — no separate div sliding up!
       tl.fromTo(
         bgImage,
-        { scale: 1.38, filter: "blur(12px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.32 },
-        0.14
+        { scale: 1.35, filter: "blur(12px)" },
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.28 },
+        0.20
       );
 
-      // --- PHASE 3: FOG OVERLAY APPLIES ONLY AFTER IMAGE HAS ZOOMED OUT (0.44 -> 0.58) ---
+      // --- PHASE 3: FOG OVERLAY APPLIES STRICTLY AFTER IMAGE HAS ZOOMED OUT (0.48 -> 0.60) ---
       if (fogVideo) {
         tl.fromTo(
           fogVideo,
           { opacity: 0 },
-          { opacity: 0.65, ease: "power2.out", duration: 0.14 },
-          0.44
+          { opacity: 0.70, ease: "power2.out", duration: 0.12 },
+          0.48
         );
       }
 
-      // --- PHASE 4: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.52 -> 0.70) ---
+      // --- PHASE 4: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.56 -> 0.70) ---
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 18 },
-          { opacity: 1, y: 0, ease: "power3.out", duration: 0.10 },
-          0.52
+          { opacity: 1, y: 0, ease: "power3.out", duration: 0.08 },
+          0.56
         );
       }
 
@@ -168,9 +176,9 @@ export default function SustainabilitySection() {
             opacity: 1,
             stagger: 0.04,
             ease: "power3.out",
-            duration: 0.14,
+            duration: 0.12,
           },
-          0.54
+          0.58
         );
       }
 
@@ -178,8 +186,8 @@ export default function SustainabilitySection() {
         tl.fromTo(
           subtext,
           { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
-          0.58
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
+          0.62
         );
       }
 
@@ -187,8 +195,8 @@ export default function SustainabilitySection() {
         tl.fromTo(
           cta,
           { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.62
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
+          0.64
         );
       }
 
@@ -196,8 +204,8 @@ export default function SustainabilitySection() {
         tl.fromTo(
           activePins,
           { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, stagger: 0.04, ease: "back.out(2)", duration: 0.12 },
-          0.56
+          { scale: 1, opacity: 1, stagger: 0.04, ease: "back.out(2)", duration: 0.10 },
+          0.60
         );
       }
 
@@ -205,20 +213,24 @@ export default function SustainabilitySection() {
         tl.fromTo(
           pills,
           { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
-          0.64
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
+          0.65
         );
       }
 
-      // --- PHASE 5: INTERACTIVE HOLD (0.70 -> 0.88) ---
-      tl.to({}, { duration: 0.18 }, 0.70);
+      // --- PHASE 5: INTERACTIVE EXPLORATION HOLD (0.70 -> 0.762) ---
+      tl.to({}, { duration: 0.062 }, 0.70);
 
-      // --- PHASE 6: CLEAN EXIT HANDOFF TO NEXT SECTION (0.88 -> 0.98) ---
+      // --- PHASE 6: FULL 1:1 SCROLL SLIDE UP OUT OF VIEWPORT TO REVEAL NEXT SECTION (0.762 -> 1.000) ---
+      // At p = 0.762 (320vh / 420vh), the next section enters the bottom of the viewport (y = 100vh).
+      // Over the remaining 100vh of scroll (p = 0.762 to 1.000, duration 0.238),
+      // animating fixedStage with yPercent: -100 linearly (ease: "none") matches the native scroll 1:1,
+      // smoothly sliding the sustainability section up into the ceiling as the flower section scrolls in.
       tl.fromTo(
         fixedStage,
-        { opacity: 1 },
-        { opacity: 0, ease: "power2.in", duration: 0.10 },
-        0.88
+        { yPercent: 0 },
+        { yPercent: -100, ease: "none", duration: 0.238 },
+        0.762
       );
     }, container);
 
@@ -234,22 +246,23 @@ export default function SustainabilitySection() {
       {/* =====================================================================
           FIXED VIEWPORT STAGE:
           Positioned strictly at top: 0 of the DEFAULT VIEWPORT (not the container!)
-          Spans fixed inset-0 (100vw x 100vh) with zero sliding from bottom!
+          Spans fixed inset-0 with zero sliding from bottom on entrance!
+          Slides up smoothly on exit (yPercent: 0 -> -100) to reveal next section!
       ===================================================================== */}
       <div
         ref={fixedStageRef}
-        style={{ opacity: 0, visibility: "hidden" }}
-        className="fixed inset-0 top-0 left-0 w-screen h-screen z-25 pointer-events-none overflow-hidden bg-[#031513] text-white will-change-[opacity,visibility]"
+        style={{ opacity: 0, visibility: "hidden", transform: "translate3d(0, 0%, 0)" }}
+        className="fixed inset-0 top-0 left-0 w-full h-full z-20 pointer-events-none overflow-hidden bg-[#031513] text-white will-change-[transform,opacity,visibility]"
       >
         {/* =====================================================================
             LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 UNCOMPRESSED TERRARIUM)
             - Fixed at top: 0 of default viewport
             - Direct blur (12px) on the image itself (no separate overlay sliding up!)
-            - Smoothly unblurs to 0px as it zooms out from 1.38 to 1.0
+            - Smoothly unblurs to 0px as it zooms out from 1.35 to 1.0
         ===================================================================== */}
         <div
           ref={bgImageRef}
-          style={{ filter: "blur(12px)", transform: "scale(1.38)" }}
+          style={{ filter: "blur(12px)", transform: "scale(1.35)" }}
           className="absolute inset-0 z-0 pointer-events-none will-change-[transform,filter]"
         >
           <Image
