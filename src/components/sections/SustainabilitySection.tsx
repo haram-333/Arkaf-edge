@@ -95,12 +95,19 @@ export default function SustainabilitySection() {
 
       // MASTER TIMELINE:
       // Controlled by the scroll track, while the stage is FIXED AT TOP: 0 OF THE DEFAULT VIEWPORT.
+      // Generous runway (320vh) for silky-smooth, cinematic animation pacing:
+      // 0.00 -> 0.16: Stage softly fades in at top: 0
+      // 0.14 -> 0.46: Cinematic zoom-out (1.38 -> 1.0) and direct blur clearing (12px -> 0px)
+      // 0.44 -> 0.58: Organic fog video rolls in across floor and corners once panorama is clear
+      // 0.52 -> 0.70: GSAP masked text reveal of headline lines, subtext, CTAs, sensor pins
+      // 0.70 -> 0.88: Generous interactive exploration hold
+      // 0.88 -> 0.98: Stage dissolves cleanly, handing over to next section
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top bottom",
           end: "bottom top",
-          scrub: 0.5,
+          scrub: 0.6,
           onUpdate: (self) => {
             const p = self.progress;
             // Manage visibility and pointer-events accurately
@@ -115,40 +122,40 @@ export default function SustainabilitySection() {
         },
       });
 
-      // --- PHASE 1: STAGE FADES IN AT TOP 0 OF DEFAULT VIEWPORT (0.00 -> 0.20) ---
+      // --- PHASE 1: STAGE FADES IN AT TOP 0 OF DEFAULT VIEWPORT (0.00 -> 0.16) ---
       tl.fromTo(
         fixedStage,
         { opacity: 0 },
-        { opacity: 1, ease: "power2.out", duration: 0.20 },
+        { opacity: 1, ease: "power2.out", duration: 0.16 },
         0
       );
 
-      // --- PHASE 2: IMAGE ZOOMS OUT & BLUR DIRECTLY ON IMAGE CLEARS (0.16 -> 0.48) ---
+      // --- PHASE 2: GENEROUS CINEMATIC ZOOM-OUT & BLUR CLEARING DIRECTLY ON IMAGE (0.14 -> 0.46) ---
       // Direct filter: blur on the image itself — no separate div sliding up!
       tl.fromTo(
         bgImage,
-        { scale: 1.55, filter: "blur(18px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.inOut", duration: 0.32 },
-        0.16
+        { scale: 1.38, filter: "blur(12px)" },
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.32 },
+        0.14
       );
 
-      // --- PHASE 3: FOG OVERLAY APPLIES ONLY AFTER IMAGE HAS ZOOMED OUT (0.46 -> 0.58) ---
+      // --- PHASE 3: FOG OVERLAY APPLIES ONLY AFTER IMAGE HAS ZOOMED OUT (0.44 -> 0.58) ---
       if (fogVideo) {
         tl.fromTo(
           fogVideo,
           { opacity: 0 },
-          { opacity: 0.7, ease: "power2.out", duration: 0.12 },
-          0.46
+          { opacity: 0.65, ease: "power2.out", duration: 0.14 },
+          0.44
         );
       }
 
-      // --- PHASE 4: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.50 -> 0.68) ---
+      // --- PHASE 4: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.52 -> 0.70) ---
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
-          { opacity: 0, y: 22 },
+          { opacity: 0, y: 18 },
           { opacity: 1, y: 0, ease: "power3.out", duration: 0.10 },
-          0.50
+          0.52
         );
       }
 
@@ -161,16 +168,16 @@ export default function SustainabilitySection() {
             opacity: 1,
             stagger: 0.04,
             ease: "power3.out",
-            duration: 0.15,
+            duration: 0.14,
           },
-          0.52
+          0.54
         );
       }
 
       if (subtext) {
         tl.fromTo(
           subtext,
-          { opacity: 0, y: 18 },
+          { opacity: 0, y: 14 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
           0.58
         );
@@ -179,7 +186,7 @@ export default function SustainabilitySection() {
       if (cta) {
         tl.fromTo(
           cta,
-          { opacity: 0, y: 15 },
+          { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
           0.62
         );
@@ -197,21 +204,21 @@ export default function SustainabilitySection() {
       if (pills) {
         tl.fromTo(
           pills,
-          { opacity: 0, y: 15 },
+          { opacity: 0, y: 12 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
           0.64
         );
       }
 
-      // --- PHASE 5: INTERACTIVE HOLD (0.68 -> 0.85) ---
-      tl.to({}, { duration: 0.17 }, 0.68);
+      // --- PHASE 5: INTERACTIVE HOLD (0.70 -> 0.88) ---
+      tl.to({}, { duration: 0.18 }, 0.70);
 
-      // --- PHASE 6: CLEAN EXIT HANDOFF TO NEXT SECTION (0.85 -> 0.98) ---
+      // --- PHASE 6: CLEAN EXIT HANDOFF TO NEXT SECTION (0.88 -> 0.98) ---
       tl.fromTo(
         fixedStage,
         { opacity: 1 },
-        { opacity: 0, ease: "power2.in", duration: 0.13 },
-        0.85
+        { opacity: 0, ease: "power2.in", duration: 0.10 },
+        0.88
       );
     }, container);
 
@@ -222,7 +229,7 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative w-full h-[280vh] bg-transparent"
+      className="relative w-full h-[320vh] bg-transparent"
     >
       {/* =====================================================================
           FIXED VIEWPORT STAGE:
@@ -237,12 +244,12 @@ export default function SustainabilitySection() {
         {/* =====================================================================
             LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 UNCOMPRESSED TERRARIUM)
             - Fixed at top: 0 of default viewport
-            - Direct blur (18px) on the image itself (no separate overlay sliding up!)
-            - Smoothly unblurs to 0px as it zooms out from 1.55 to 1.0
+            - Direct blur (12px) on the image itself (no separate overlay sliding up!)
+            - Smoothly unblurs to 0px as it zooms out from 1.38 to 1.0
         ===================================================================== */}
         <div
           ref={bgImageRef}
-          style={{ filter: "blur(18px)", transform: "scale(1.55)" }}
+          style={{ filter: "blur(12px)", transform: "scale(1.38)" }}
           className="absolute inset-0 z-0 pointer-events-none will-change-[transform,filter]"
         >
           <Image

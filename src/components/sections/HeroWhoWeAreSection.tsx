@@ -11,12 +11,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroWhoWeAreSection() {
   const wrapperRef = useRef<HTMLElement | null>(null);
+  const stickyStageRef = useRef<HTMLDivElement | null>(null);
   const heroLayerRef = useRef<HTMLDivElement | null>(null);
   const whoLayerRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef<number>(0);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
+    const stickyStage = stickyStageRef.current;
     const heroEl = heroLayerRef.current;
     const whoEl = whoLayerRef.current;
     if (!wrapper || !heroEl || !whoEl) return;
@@ -58,6 +60,16 @@ export default function HeroWhoWeAreSection() {
           whoEl.style.opacity = String(Math.max(0, Math.min(1, whoOpacity)));
           whoEl.style.transform = `translate3d(0, ${whoY.toFixed(1)}px, 0)`;
           whoEl.style.pointerEvents = whoOpacity > 0.3 ? "auto" : "none";
+
+          // At the end of Hero (p: 0.84 -> 0.99), fade out the entire sticky stage (canvas + dark bg)
+          // so it dissolves in place into pure transparency instead of sliding up like a garage door!
+          let stageOpacity = 1;
+          if (p > 0.84) {
+            stageOpacity = Math.max(0, 1 - (p - 0.84) / 0.14);
+          }
+          if (stickyStage) {
+            stickyStage.style.opacity = String(stageOpacity);
+          }
         },
       });
 
@@ -71,11 +83,14 @@ export default function HeroWhoWeAreSection() {
     <section
       id="hero"
       ref={wrapperRef}
-      className="relative h-[250vh] bg-[#050b09]"
+      className="relative h-[250vh] bg-transparent"
     >
       <div id="who-we-are" className="absolute top-[56%] left-0 h-1 w-1" />
 
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center">
+      <div
+        ref={stickyStageRef}
+        className="sticky top-0 h-screen w-full overflow-hidden flex items-center bg-[#050b09] will-change-[opacity]"
+      >
         {/* Realtime 3D Emerald Particle Vortex Tunnel */}
         <HeroVortexCanvas progressRef={progressRef} />
 
