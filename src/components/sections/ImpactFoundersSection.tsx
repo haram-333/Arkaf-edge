@@ -10,170 +10,164 @@ import { IMPACT_STATS, FOUNDERS, VISION_CONTENT } from "@/data/content";
 gsap.registerPlugin(ScrollTrigger);
 
 // ============================================================================
-// ASYMMETRICAL ARTIFACTS
-// Substantial, handsome card heights (h-[155px] to h-[200px]) with rich visuals!
-// Starts snug around center -> SPREADS OUTWARD dynamically on scroll!
-// Safe maximum bounds: max |Y| <= 165px (Zero clipping on any display!)
+// ASYMMETRICAL ARTIFACTS (True Alethia Style)
+// - RADICALLY DIFFERENT WIDTHS & HEIGHTS for each box (to show true uniqueness)
+// - ORGANIC, STAGGERED ASYMMETRIC POSITIONS (curated editorial scatter, no rigid grid)
+// - STRICT CENTER CORRIDOR PROTECTION: Zero overlap with center headline & paragraph!
 // ============================================================================
 const ASYMMETRIC_ARTIFACTS = [
-  // 1. TOP-LEFT: Aeronautical Turbine Schematic + Detached Floating Pill
-  // Generous height: h-[185px], w-[240px]
+  // 1. TOP-LEFT: Tall Vertical Blueprint Card (Anurag) + Detached Pill
+  // Unique Dimensions: w-[195px] h-[230px] (Tall & narrow vertical format!)
   {
     id: "aero-turbine",
-    startX: -240,
+    startX: -330,
     startY: -140,
-    spreadX: -130,
-    spreadY: -40,
-    rotation: -3,
+    spreadX: -55,
+    spreadY: -25,
+    rotation: -3.5,
     render: () => (
-      <div className="relative flex items-center gap-2.5">
-        <div className="w-[240px] h-[185px] rounded-2xl border border-white/20 bg-[#051c17]/95 p-4 shadow-2xl backdrop-blur-md flex flex-col justify-between">
+      <div className="relative flex items-center gap-2">
+        <div className="w-[195px] h-[230px] rounded-2xl border border-white/20 bg-[#051c17]/95 p-3.5 shadow-2xl backdrop-blur-md flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold tracking-wide">
+            <span className="font-mono-label text-[8px] text-[#14f884] font-semibold tracking-wider">
               [AERONAUTICAL 2012]
             </span>
             <div className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
           </div>
 
-          {/* Turbine Schematic Graphic (Tall & Detailed) */}
-          <div className="relative h-18 w-full rounded-xl bg-black/65 border border-white/10 overflow-hidden flex items-center justify-center my-1.5">
-            <svg viewBox="0 0 160 52" className="w-full h-full stroke-[#14f884]/65 fill-none">
-              <circle cx="80" cy="26" r="20" strokeWidth="1" strokeDasharray="2 3" />
-              <circle cx="80" cy="26" r="12" strokeWidth="1.2" />
-              <circle cx="80" cy="26" r="3.5" fill="#14f884" />
-              <line x1="15" y1="26" x2="145" y2="26" strokeWidth="0.8" strokeOpacity="0.4" />
-              <line x1="80" y1="4" x2="80" y2="48" strokeWidth="0.8" strokeOpacity="0.4" />
-              <path d="M 64 10 L 96 42 M 64 42 L 96 10" strokeWidth="0.8" strokeOpacity="0.5" />
+          {/* Detailed Turbine Schematic (Tall) */}
+          <div className="relative h-24 w-full rounded-xl bg-black/65 border border-white/10 overflow-hidden flex items-center justify-center my-1">
+            <svg viewBox="0 0 160 80" className="w-full h-full stroke-[#14f884]/65 fill-none">
+              <circle cx="80" cy="40" r="28" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="80" cy="40" r="18" strokeWidth="1.2" />
+              <circle cx="80" cy="40" r="8" strokeWidth="1.4" />
+              <circle cx="80" cy="40" r="3" fill="#14f884" />
+              <line x1="15" y1="40" x2="145" y2="40" strokeWidth="0.8" strokeOpacity="0.4" />
+              <line x1="80" y1="6" x2="80" y2="74" strokeWidth="0.8" strokeOpacity="0.4" />
+              <path d="M 60 20 L 100 60 M 60 60 L 100 20" strokeWidth="0.8" strokeOpacity="0.5" />
             </svg>
-            <span className="absolute bottom-1.5 right-2 font-mono-label text-[7.5px] text-[#14f884]/80">
-              MACH-LOGIC • Ø120
+            <span className="absolute bottom-1 right-2 font-mono-label text-[7px] text-[#14f884]/80">
+              MACH-LOGIC
             </span>
           </div>
 
           <div>
-            <p className="text-[11.5px] font-bold text-white leading-tight">Navigating Without a Map</p>
-            <p className="text-[10px] text-[#9cb5ad] leading-snug mt-0.5">
-              Sudden medical detour built frontline logic and commercial resilience.
+            <p className="text-[11px] font-bold text-white leading-tight">Navigating Without a Map</p>
+            <p className="text-[9px] text-[#9cb5ad] leading-snug mt-1">
+              Sudden medical detour built on-ground frontline resilience.
             </p>
           </div>
         </div>
 
-        {/* Detached pill (Alethia style) */}
-        <span className="shrink-0 px-2.5 py-1 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8.5px] font-black shadow-[0_0_14px_rgba(20,248,132,0.45)]">
+        {/* Detached floating pill (Alethia style) */}
+        <span className="shrink-0 px-2 py-1 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8px] font-black shadow-[0_0_12px_rgba(20,248,132,0.45)]">
           LOGIC
         </span>
       </div>
     ),
   },
 
-  // 2. TOP-CENTER: Real-Time Telemetry Data Chip (CLIMAVUE style with live equalizer)
-  // Generous height: h-[155px], w-[260px]
+  // 2. TOP-CENTER-RIGHT: Wide Horizontal Telemetry Capsule (CLIMAVUE style)
+  // Unique Dimensions: w-[290px] h-[95px] (Ultra-wide, sleek horizontal capsule!)
   {
     id: "climavue-pill",
-    startX: -40,
-    startY: -160,
-    spreadX: -30,
-    spreadY: -45,
+    startX: 40,
+    startY: -165,
+    spreadX: 25,
+    spreadY: -35,
     rotation: 1.5,
     render: () => (
-      <div className="w-[260px] h-[155px] rounded-2xl border border-white/20 bg-black/85 backdrop-blur-md p-4 shadow-xl flex flex-col justify-between">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
+      <div className="w-[290px] h-[95px] rounded-2xl border border-white/20 bg-black/90 backdrop-blur-md px-4 py-3 shadow-xl flex items-center justify-between gap-3">
+        <div className="flex-1">
+          <div className="flex items-center gap-1.5 mb-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-            <span className="font-mono-label text-[8px] text-[#14f884] uppercase tracking-wide">
-              CORE QUESTION
+            <span className="font-mono-label text-[7.5px] text-[#14f884] uppercase tracking-wider">
+              CORE PHILOSOPHY
             </span>
           </div>
-          <span className="font-mono-label text-[8px] font-bold px-2 py-0.5 rounded bg-[#05261e] text-[#14f884] border border-[#14f884]/30">
-            IMPACT × PROFIT
+          <p className="text-[12px] font-bold text-white leading-snug">
+            &ldquo;Why can&apos;t business do both?&rdquo;
+          </p>
+          <span className="font-mono-label text-[8px] text-[#a9f5cf]">
+            2.4x COMPOUND GROWTH
           </span>
         </div>
 
-        <p className="text-[13px] font-bold text-white leading-snug my-1">
-          &ldquo;Why can&apos;t business do both?&rdquo;
-        </p>
-
-        {/* Multi-column animated equalizer bar chart */}
-        <div className="pt-2 border-t border-white/10 flex items-center justify-between">
-          <div className="flex items-end gap-1.5 h-6">
-            <span className="w-1.5 h-2.5 rounded-sm bg-[#14f884]" />
-            <span className="w-1.5 h-5 rounded-sm bg-[#14f884]" />
-            <span className="w-1.5 h-3.5 rounded-sm bg-[#14f884]" />
-            <span className="w-1.5 h-6 rounded-sm bg-[#14f884]" />
-            <span className="w-1.5 h-4.5 rounded-sm bg-[#14f884]" />
-            <span className="w-1.5 h-3 rounded-sm bg-[#14f884]" />
-          </div>
-          <span className="font-mono-label text-[9px] text-[#a9f5cf]">
-            2.4x COMPOUND VALUE
-          </span>
+        {/* Equalizer Bar Chart */}
+        <div className="flex items-end gap-1 h-8 shrink-0 px-2 py-1 rounded-lg bg-[#05261e] border border-[#14f884]/30">
+          <span className="w-1.5 h-3 rounded-sm bg-[#14f884]" />
+          <span className="w-1.5 h-6 rounded-sm bg-[#14f884]" />
+          <span className="w-1.5 h-4.5 rounded-sm bg-[#14f884]" />
+          <span className="w-1.5 h-7 rounded-sm bg-[#14f884]" />
+          <span className="w-1.5 h-4 rounded-sm bg-[#14f884]" />
         </div>
       </div>
     ),
   },
 
-  // 3. TOP-RIGHT: Foliage Photo Tile + Micro Chart Badge
-  // Generous height: h-[190px], w-[240px]
+  // 3. TOP-RIGHT: Landscape Foliage Photo Tile
+  // Unique Dimensions: w-[230px] h-[150px] (Medium landscape format!)
   {
     id: "foliage-tile",
-    startX: 240,
-    startY: -140,
-    spreadX: 130,
-    spreadY: -40,
+    startX: 330,
+    startY: -150,
+    spreadX: 55,
+    spreadY: -25,
     rotation: 3,
     render: () => (
-      <div className="w-[240px] h-[190px] rounded-2xl border border-white/20 bg-[#05221b] p-3.5 shadow-2xl overflow-hidden relative flex flex-col justify-between">
-        <div className="relative h-22 w-full rounded-xl overflow-hidden">
+      <div className="w-[230px] h-[150px] rounded-2xl border border-white/20 bg-[#05221b] p-3 shadow-2xl overflow-hidden relative flex flex-col justify-between">
+        <div className="relative h-18 w-full rounded-xl overflow-hidden">
           <Image
             src="/images/art-01.jpg"
             alt="Circularity"
             fill
             className="object-cover opacity-65"
-            sizes="240px"
+            sizes="230px"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#05221b] via-transparent to-transparent" />
-          <span className="absolute top-2 right-2 font-mono-label text-[8px] font-bold px-2 py-0.5 rounded bg-black/85 text-[#14f884] border border-[#14f884]/35 shadow-md">
+          <span className="absolute top-1.5 right-1.5 font-mono-label text-[7.5px] font-bold px-1.5 py-0.5 rounded bg-black/85 text-[#14f884] border border-[#14f884]/35 shadow-md">
             2020 • VALUE
           </span>
         </div>
 
         <div>
-          <p className="text-[12px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
-          <p className="text-[10px] text-[#9cb5ad] leading-snug mt-1">
-            Exploring how discard could become productive, scalable and circular.
+          <p className="text-[11.5px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
+          <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">
+            Converting discarded materials into high-value commercial solutions.
           </p>
         </div>
       </div>
     ),
   },
 
-  // 4. MID-LEFT: 3D Topographical Contour Model (PURE WIREFRAME — NO BOX!)
-  // Generous height: h-[175px], w-[230px]
+  // 4. MID-LEFT: Pure 3D Topographical Wireframe (NO BOX / NO BACKGROUND RECTANGLE!)
+  // Unique Dimensions: w-[180px] h-[140px] (Pure freestanding wireframe model!)
   {
     id: "topo-contour",
-    startX: -290,
-    startY: 0,
-    spreadX: -130,
-    spreadY: 0,
-    rotation: -2,
+    startX: -360,
+    startY: 35,
+    spreadX: -50,
+    spreadY: 10,
+    rotation: -2.5,
     render: () => (
-      <div className="w-[230px] h-[175px] p-3 flex flex-col justify-between select-none">
-        <div className="relative w-full h-24 flex items-center justify-center">
+      <div className="w-[180px] h-[140px] p-2 flex flex-col justify-between select-none">
+        <div className="relative w-full h-20 flex items-center justify-center">
           <svg viewBox="0 0 160 64" className="w-full h-full stroke-[#14f884] fill-none opacity-85">
-            <ellipse cx="80" cy="32" rx="74" ry="24" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
-            <ellipse cx="80" cy="31" rx="56" ry="19" strokeWidth="1" strokeOpacity="0.5" />
-            <ellipse cx="80" cy="30" rx="40" ry="14" strokeWidth="1.2" strokeOpacity="0.75" />
-            <ellipse cx="80" cy="28" rx="24" ry="9" strokeWidth="1.4" strokeOpacity="0.95" />
-            <ellipse cx="80" cy="26" rx="11" ry="4.5" fill="#14f884" fillOpacity="0.35" strokeWidth="1.5" />
+            <ellipse cx="80" cy="32" rx="72" ry="24" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
+            <ellipse cx="80" cy="31" rx="54" ry="18" strokeWidth="1" strokeOpacity="0.5" />
+            <ellipse cx="80" cy="30" rx="38" ry="13" strokeWidth="1.2" strokeOpacity="0.75" />
+            <ellipse cx="80" cy="28" rx="22" ry="8" strokeWidth="1.4" strokeOpacity="0.95" />
+            <ellipse cx="80" cy="26" rx="10" ry="4" fill="#14f884" fillOpacity="0.35" strokeWidth="1.5" />
           </svg>
         </div>
         <div>
           <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="font-mono-label text-[9px] text-[#14f884] font-bold uppercase">
+            <span className="font-mono-label text-[8.5px] text-[#14f884] font-bold uppercase">
               [GROUND REALITY]
             </span>
-            <span className="font-mono-label text-[8.5px] text-white/50">8 SECTORS</span>
+            <span className="font-mono-label text-[8px] text-white/50">8 SECTORS</span>
           </div>
-          <p className="text-[10.5px] text-[#c7d6d1] font-medium leading-snug">
+          <p className="text-[10px] text-[#c7d6d1] font-medium leading-snug">
             Collections • Real Estate • BD • Risk
           </p>
         </div>
@@ -181,17 +175,17 @@ const ASYMMETRIC_ARTIFACTS = [
     ),
   },
 
-  // 5. MID-RIGHT: Analogue Film Studio Card (Aperture Iris Aesthetic)
-  // Generous height: h-[195px], w-[230px]
+  // 5. MID-RIGHT: Analogue Photography Deep Square Tile
+  // Unique Dimensions: w-[210px] h-[210px] (Deep square studio tile!)
   {
     id: "film-studio",
-    startX: 290,
-    startY: 10,
-    spreadX: 130,
-    spreadY: 5,
+    startX: 340,
+    startY: 15,
+    spreadX: 50,
+    spreadY: 10,
     rotation: 2.5,
     render: () => (
-      <div className="w-[230px] h-[195px] rounded-2xl border border-white/20 bg-[#051d18]/95 p-4 shadow-2xl backdrop-blur-md flex flex-col justify-between">
+      <div className="w-[210px] h-[210px] rounded-2xl border border-white/20 bg-[#051d18]/95 p-4 shadow-2xl backdrop-blur-md flex flex-col justify-between">
         <div className="flex items-center justify-between">
           <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold">
             [STUDIO FLOOR 2009]
@@ -202,15 +196,19 @@ const ASYMMETRIC_ARTIFACTS = [
           </svg>
         </div>
 
-        <div className="h-16 w-full rounded-xl bg-black/60 border border-white/10 flex items-center justify-center my-1">
+        {/* Film reel strip aesthetic */}
+        <div className="h-20 w-full rounded-xl bg-black/65 border border-white/10 flex flex-col items-center justify-center my-1 px-3">
           <span className="font-mono-label text-[10px] text-[#14f884] tracking-widest font-bold">
             FILM &amp; ANALOGUE
+          </span>
+          <span className="font-mono-label text-[7.5px] text-white/40 mt-1">
+            DAKC • 35MM • MEDIUM FORMAT
           </span>
         </div>
 
         <div>
-          <p className="text-[12px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
-          <p className="text-[10px] text-[#9cb5ad] leading-snug mt-1">
+          <p className="text-[11.5px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
+          <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">
             7 months from sweeping studio floors to running complete film shoots.
           </p>
         </div>
@@ -218,117 +216,103 @@ const ASYMMETRIC_ARTIFACTS = [
     ),
   },
 
-  // 6. BOTTOM-LEFT: Dual Sparkline Telemetry Chip
-  // Generous height: h-[165px], w-[240px]
+  // 6. BOTTOM-LEFT: Dual Telemetry Sparkline Chip
+  // Unique Dimensions: w-[220px] h-[105px] (Slim horizontal data chip!)
   {
     id: "metric-line",
-    startX: -240,
-    startY: 145,
-    spreadX: -120,
+    startX: -300,
+    startY: 175,
+    spreadX: -45,
     spreadY: 25,
     rotation: -2,
     render: () => (
-      <div className="w-[240px] h-[165px] rounded-2xl border border-white/15 bg-[#05211b]/95 p-4 shadow-xl flex flex-col justify-between">
+      <div className="w-[220px] h-[105px] rounded-2xl border border-white/15 bg-[#05211b]/95 p-3 shadow-xl flex flex-col justify-between">
         <div className="flex items-center justify-between">
-          <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold">
+          <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
             THE SHARED PURPOSE
           </span>
-          <span className="font-mono-label text-[8px] text-white/50 px-2 py-0.5 rounded bg-white/5">
+          <span className="font-mono-label text-[7.5px] text-white/50 px-1.5 py-0.5 rounded bg-white/5">
             14+ YRS
           </span>
         </div>
 
-        <p className="text-[12px] font-bold text-white leading-tight my-1">
+        <p className="text-[11px] font-bold text-white leading-tight">
           &ldquo;Help good businesses get seen.&rdquo;
         </p>
 
-        <div className="pt-2 border-t border-white/10">
-          <div className="h-5 w-full flex items-center">
-            <svg viewBox="0 0 140 18" className="w-full h-full stroke-[#14f884] fill-none">
-              <polyline points="0,15 35,11 70,13 105,5 140,2" strokeWidth="1.5" />
-              <circle cx="140" cy="2" r="2.5" fill="#14f884" />
-            </svg>
-          </div>
-          <span className="block mt-1 font-mono-label text-[7.5px] text-white/40 uppercase">
-            GROUND-LEVEL REPUTATION
-          </span>
+        <div className="h-4 w-full flex items-center">
+          <svg viewBox="0 0 130 14" className="w-full h-full stroke-[#14f884] fill-none">
+            <polyline points="0,12 35,9 70,11 100,4 130,2" strokeWidth="1.4" />
+            <circle cx="130" cy="2" r="2" fill="#14f884" />
+          </svg>
         </div>
       </div>
     ),
   },
 
-  // 7. BOTTOM-CENTER: Solid Lime Badge (Alethia Carbon Balance style)
-  // Generous height: h-[160px], w-[240px]
-  // Max Y stays at +185px (Safely inside safe bounds, ZERO clipping!)
+  // 7. BOTTOM-CENTER-LEFT: Compact High-Contrast Solid Lime Badge (Carbon Balance style)
+  // Unique Dimensions: w-[210px] h-[120px] (Bold, punchy, compact lime pill!)
+  // Placed safely at startY = 180px (Leaves 45px clear margin below paragraph! ZERO overlap!)
   {
     id: "solid-lime-bba",
-    startX: 15,
-    startY: 155,
-    spreadX: 25,
+    startX: -40,
+    startY: 180,
+    spreadX: -15,
     spreadY: 25,
     rotation: 2,
     render: () => (
-      <div className="w-[240px] h-[160px] rounded-2xl bg-[#c6f19d] text-[#051f10] p-4 shadow-[0_10px_30px_rgba(198,241,157,0.35)] border border-[#c6f19d] flex flex-col justify-between">
+      <div className="w-[210px] h-[120px] rounded-2xl bg-[#c6f19d] text-[#051f10] p-3.5 shadow-[0_10px_30px_rgba(198,241,157,0.35)] border border-[#c6f19d] flex flex-col justify-between">
         <div className="flex items-center justify-between">
-          <span className="font-mono-label text-[8.5px] font-bold uppercase tracking-wider text-[#051f10]/80">
+          <span className="font-mono-label text-[8px] font-bold uppercase tracking-wider text-[#051f10]/80">
             BBA 2024 • RESILIENCE
           </span>
-          <span className="font-mono-label text-[8px] font-black px-2 py-0.5 rounded bg-[#051f10] text-[#c6f19d]">
+          <span className="font-mono-label text-[7.5px] font-black px-1.5 py-0.2 rounded bg-[#051f10] text-[#c6f19d]">
             NO EXCUSES
           </span>
         </div>
 
         <div>
-          <p className="text-[13.5px] font-black leading-tight text-[#051f10]">
+          <p className="text-[12.5px] font-black leading-tight text-[#051f10]">
             Finish What You Started
           </p>
-          <p className="text-[10px] text-[#051f10]/80 leading-snug mt-1.5">
-            Completing education while operating companies. Follow-through defines character.
+          <p className="text-[9.5px] text-[#051f10]/80 leading-snug mt-0.5">
+            Completing education while operating companies. Follow-through matters.
           </p>
         </div>
 
-        <div className="pt-2 border-t border-[#051f10]/15 flex items-center justify-between">
-          <span className="font-mono-label text-[8.5px] font-bold text-[#051f10]">
-            100% FOLLOW-THROUGH
+        <div className="flex items-center justify-between pt-1 border-t border-[#051f10]/15">
+          <span className="font-mono-label text-[8px] font-bold text-[#051f10]">
+            100% RESOLVE
           </span>
-          <div className="w-2 h-2 rounded-full bg-[#051f10]" />
+          <div className="w-1.5 h-1.5 rounded-full bg-[#051f10]" />
         </div>
       </div>
     ),
   },
 
-  // 8. BOTTOM-RIGHT: Minimal Monospace Persistence Pill
-  // Generous height: h-[155px], w-[230px]
+  // 8. BOTTOM-RIGHT: Minimalist Persistence Capsule
+  // Unique Dimensions: w-[180px] h-[65px] (Compact rounded pill!)
   {
     id: "persistence-pill",
-    startX: 240,
-    startY: 145,
-    spreadX: 120,
+    startX: 270,
+    startY: 175,
+    spreadX: 40,
     spreadY: 25,
     rotation: -2,
     render: () => (
-      <div className="w-[230px] h-[155px] rounded-2xl border border-white/20 bg-[#051e17]/95 p-4 shadow-xl flex flex-col justify-between">
-        <div className="flex items-center justify-between">
-          <span className="font-mono-label text-[8px] text-[#14f884] uppercase tracking-wide">
-            [THE EDGE]
-          </span>
-          <span className="font-mono-label text-[8px] text-[#14f884] px-2 py-0.5 rounded bg-[#14f884]/15 border border-[#14f884]/30">
-            GRIT
-          </span>
-        </div>
-
-        <p className="text-[13px] font-bold text-white leading-tight my-1">
-          &ldquo;Keep moving.&rdquo;
-        </p>
-
-        <p className="text-[10px] text-[#9cb5ad] leading-snug">
-          Neither building a business nor a life is ever a straight line.
-        </p>
-
-        <div className="pt-2 border-t border-white/10 flex items-center gap-1.5">
+      <div className="w-[180px] h-[65px] rounded-full border border-white/20 bg-[#051e17]/95 px-4 py-2 shadow-xl flex items-center justify-between">
+        <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-          <span className="font-mono-label text-[8px] text-white/50">RESILIENCE IN ACTION</span>
+          <div>
+            <span className="block font-mono-label text-[7px] text-[#14f884] uppercase">
+              [THE EDGE]
+            </span>
+            <span className="block text-[11px] font-bold text-white leading-tight">
+              &ldquo;Keep moving.&rdquo;
+            </span>
+          </div>
         </div>
+        <span className="font-mono-label text-[7.5px] text-[#14f884]/80">GRIT</span>
       </div>
     ),
   },
@@ -375,7 +359,7 @@ export default function ImpactFoundersSection() {
   }, []);
 
   // GSAP: Scroll-Driven SPREAD OUT from center to perimeter!
-  // NO HIDING BUGS: Tiles have opacity: 1 by default, always 100% visible!
+  // Always 100% visible, perfectly safe bounds, zero clipping!
   useEffect(() => {
     const track = spreadTrackRef.current;
     const sticky = spreadStickyRef.current;
@@ -397,13 +381,12 @@ export default function ImpactFoundersSection() {
             const item = ASYMMETRIC_ARTIFACTS[idx];
             if (!item) return;
 
-            // Spreads from startX/startY outward by spreadX/spreadY!
+            // Spreads smoothly from startX/startY outward by spreadX/spreadY
             const currentX = item.startX + item.spreadX * easeProgress;
             const currentY = item.startY + item.spreadY * easeProgress;
-            const currentRot = item.rotation * (1 + easeProgress * 0.4);
-            const currentScale = 0.96 + easeProgress * 0.08;
+            const currentRot = item.rotation * (1 + easeProgress * 0.35);
 
-            el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) scale(${currentScale.toFixed(2)}) rotate(${currentRot.toFixed(1)}deg)`;
+            el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) rotate(${currentRot.toFixed(1)}deg)`;
           });
 
           // Subtle breathing effect on center text
@@ -473,10 +456,10 @@ export default function ImpactFoundersSection() {
 
       {/* =========================================================================
           PART 2: SPREAD-OUT FOUNDERS SHOWCASE (Alethia Solves style)
-          - Substantial, handsome card heights (h-[155px] to h-[195px])
-          - Starts snug around center -> SPREADS OUTWARD dynamically on scroll!
-          - Asymmetric shapes (wireframe contour, turbine schematic, telemetry pill, etc.)
-          - Zero clipping (safe bounds inside viewport)
+          - UNIQUE WIDTHS & HEIGHTS for each box (showing true uniqueness!)
+          - ASYMMETRICAL ORGANIC POSITIONS (curated scatter, no rigid grid)
+          - STRICT CENTER CORRIDOR PROTECTION: Zero overlap with center text!
+          - Outward spread on scroll with ZERO clipping
       ========================================================================= */}
       <div
         ref={spreadTrackRef}
@@ -495,7 +478,7 @@ export default function ImpactFoundersSection() {
             }}
           />
 
-          {/* Centered Primary Headline & Subtitle */}
+          {/* Centered Primary Headline & Subtitle (Completely open, unobstructed, 100% readable!) */}
           <div
             ref={centerTextRef}
             className="relative z-20 max-w-lg mx-auto px-5 text-center select-none pointer-events-none transition-transform duration-200"
@@ -512,8 +495,8 @@ export default function ImpactFoundersSection() {
             </p>
           </div>
 
-          {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS SPREADING OUTWARD
-              Always 100% visible (opacity: 1), never hidden by broken triggers! */}
+          {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS
+              Each with unique width, height, and organic staggered positions */}
           <div className="absolute inset-0 z-10 pointer-events-none hidden md:flex items-center justify-center">
             {ASYMMETRIC_ARTIFACTS.map((item, idx) => (
               <div
@@ -523,7 +506,7 @@ export default function ImpactFoundersSection() {
                 }}
                 className="absolute will-change-transform opacity-100"
                 style={{
-                  transform: `translate3d(${item.startX}px, ${item.startY}px, 0) scale(0.96) rotate(${item.rotation}deg)`,
+                  transform: `translate3d(${item.startX}px, ${item.startY}px, 0) rotate(${item.rotation}deg)`,
                 }}
               >
                 {item.render()}
@@ -536,7 +519,7 @@ export default function ImpactFoundersSection() {
             {ASYMMETRIC_ARTIFACTS.slice(0, 5).map((item) => (
               <div
                 key={item.id}
-                className="shrink-0 w-60 rounded-xl border border-white/20 bg-[#05211e]/90 p-3 opacity-100"
+                className="shrink-0 w-52 rounded-xl border border-white/20 bg-[#05211e]/90 p-3 opacity-100"
               >
                 {item.render()}
               </div>
