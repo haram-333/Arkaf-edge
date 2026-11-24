@@ -70,9 +70,10 @@ export default function SustainabilitySection() {
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const subtextRef = useRef<HTMLParagraphElement | null>(null);
   const ctaRef = useRef<HTMLDivElement | null>(null);
+  const pillsRef = useRef<HTMLDivElement | null>(null);
   const pinsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Hotspots start closed (no messy open cards on load!)
+  // Hotspot states (starts completely clean & closed)
   const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
 
   useEffect(() => {
@@ -84,103 +85,109 @@ export default function SustainabilitySection() {
     const headline = headlineRef.current;
     const subtext = subtextRef.current;
     const cta = ctaRef.current;
+    const pills = pillsRef.current;
 
-    if (!container || !sticky) return;
+    if (!container || !sticky || !bgImage) return;
 
     const ctx = gsap.context(() => {
-      // 1. PINNED PARALLAX SCROLL SCRUB (True Deep 3D Parallax Effect)
-      ScrollTrigger.create({
-        trigger: container,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 0.6,
-        onUpdate: (self) => {
-          const p = self.progress;
+      const activePins = pinsRef.current.filter(Boolean);
+      const headlineLines = headline ? headline.querySelectorAll(".reveal-line") : [];
 
-          // Parallax: background landscape glides smoothly through viewport
-          if (bgImage) {
-            const yMove = (p - 0.5) * -110; // moves 110px vertically relative to scroll
-            const scale = 1.15 - p * 0.05;
-            bgImage.style.transform = `translate3d(0, ${yMove.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
-          }
-
-          // Fog video drifts with independent atmospheric parallax
-          if (fogVideo) {
-            const fogY = (p - 0.5) * -60;
-            fogVideo.style.transform = `translate3d(0, ${fogY.toFixed(1)}px, 0)`;
-          }
-
-          // Subtle parallax drift on headline and eyebrow
-          if (headline) {
-            const textY = (p - 0.5) * 25;
-            headline.style.transform = `translate3d(0, ${textY.toFixed(1)}px, 0)`;
-          }
-        },
-      });
-
-      // 2. VIEWPORT-TRIGGERED CINEMATIC TEXT REVEAL
-      // Triggers smoothly when this section becomes the active view in viewport
-      const revealTl = gsap.timeline({
+      // MASTER TIMELINE HOOKED TO SCROLL TRIGGER
+      // Sequence:
+      // 1. Progress 0.00 -> 0.45: Image starts ZOOMED IN (scale: 1.55) and smoothly ZOOMS OUT to 1.0
+      // 2. Progress 0.45 -> 0.70: GSAP-style TEXT REVEAL after zoom out completes
+      // 3. Progress 0.70 -> 1.00: Interactive hold state allowing sensor node exploration
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
-          start: "top 65%",
-          toggleActions: "play none none reverse",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.5,
         },
       });
 
-      if (eyebrow) {
-        revealTl.fromTo(
-          eyebrow,
-          { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+      // --- PHASE 1: ZOOM OUT FROM CLOSE-UP TO FULL PANORAMA (0.0 -> 0.45) ---
+      tl.fromTo(
+        bgImage,
+        { scale: 1.55, y: 45 },
+        { scale: 1.0, y: -25, ease: "power2.inOut", duration: 0.45 },
+        0
+      );
+
+      if (fogVideo) {
+        tl.fromTo(
+          fogVideo,
+          { y: 30, opacity: 0.45 },
+          { y: -25, opacity: 0.8, ease: "power2.inOut", duration: 0.45 },
           0
         );
       }
 
-      if (headline) {
-        const lines = headline.querySelectorAll(".reveal-line");
-        revealTl.fromTo(
-          lines,
-          { opacity: 0, y: 55 },
+      // --- PHASE 2: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.42 -> 0.68) ---
+      if (eyebrow) {
+        tl.fromTo(
+          eyebrow,
+          { opacity: 0, y: 22 },
+          { opacity: 1, y: 0, ease: "power3.out", duration: 0.12 },
+          0.42
+        );
+      }
+
+      if (headlineLines.length > 0) {
+        tl.fromTo(
+          headlineLines,
+          { yPercent: 115, opacity: 0 },
           {
+            yPercent: 0,
             opacity: 1,
-            y: 0,
-            duration: 0.9,
-            stagger: 0.1,
+            stagger: 0.04,
             ease: "power3.out",
+            duration: 0.18,
           },
-          0.1
+          0.46
         );
       }
 
       if (subtext) {
-        revealTl.fromTo(
+        tl.fromTo(
           subtext,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-          0.35
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.14 },
+          0.54
         );
       }
 
       if (cta) {
-        revealTl.fromTo(
+        tl.fromTo(
           cta,
           { opacity: 0, y: 15 },
-          { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" },
-          0.45
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.12 },
+          0.58
         );
       }
 
-      // Sensor nodes pop in smoothly onto the plants & moss
-      const activePins = pinsRef.current.filter(Boolean);
       if (activePins.length > 0) {
-        revealTl.fromTo(
+        tl.fromTo(
           activePins,
           { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.65, stagger: 0.08, ease: "back.out(2)" },
-          0.3
+          { scale: 1, opacity: 1, stagger: 0.03, ease: "back.out(2)", duration: 0.16 },
+          0.52
         );
       }
+
+      if (pills) {
+        tl.fromTo(
+          pills,
+          { opacity: 0, y: 15 },
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.12 },
+          0.60
+        );
+      }
+
+      // --- PHASE 3: INTERACTIVE HOLD (0.68 -> 1.00) ---
+      // Scene remains fully revealed & interactive while user scrolls the remaining track
+      tl.to({}, { duration: 0.32 }, 0.68);
     }, container);
 
     return () => ctx.revert();
@@ -190,7 +197,7 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative w-full h-[190vh] bg-[#031513] text-white border-t border-b border-white/15"
+      className="relative w-full h-[220vh] bg-[#031513] text-white border-t border-b border-white/15"
     >
       <div id="who-we-are" className="absolute -top-12 left-0 h-1 w-1" />
 
@@ -200,32 +207,35 @@ export default function SustainabilitySection() {
         className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-[#031513]"
       >
         {/* =====================================================================
-            LAYER 1: 2880x1800 NATURE LANDSCAPE (FERNS, MOSS & EARTH) WITH PARALLAX
+            LAYER 1: RAW UNCOMPRESSED HQ NATURE LANDSCAPE (FERNS, MOSS & SOIL)
+            - Starts ZOOMED IN (scale: 1.55)
+            - Smoothly ZOOMS OUT to show full landscape as you scroll
         ===================================================================== */}
         <div
           ref={bgImageRef}
-          className="absolute inset-0 z-0 pointer-events-none will-change-transform scale-[1.12]"
+          className="absolute inset-0 z-0 pointer-events-none will-change-transform"
         >
           <Image
             src="/images/sustainability-landscape.jpg"
             alt="ARKAF Edge Nature-Positive Terrarium Landscape"
             fill
             priority
+            unoptimized
             className="object-cover object-center"
             sizes="100vw"
           />
-          {/* Subtle upper gradient so text in top right is 100% legible without crushing nature */}
+          {/* Subtle gradient vignette protecting text legibility without obscuring nature */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(to bottom, rgba(3,21,19,0.55) 0%, rgba(3,21,19,0.15) 45%, rgba(3,21,19,0.5) 100%)",
+                "linear-gradient(to bottom, rgba(3,21,19,0.52) 0%, rgba(3,21,19,0.12) 45%, rgba(3,21,19,0.55) 100%)",
             }}
           />
         </div>
 
         {/* =====================================================================
-            LAYER 2: CONTINUOUS CORNER & FLOOR FOG ANIMATION (Video + Ambient Glow)
+            LAYER 2: CONTINUOUS FOG & VOLUMETRIC CORNER MIST
         ===================================================================== */}
         <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
           <video
@@ -243,15 +253,15 @@ export default function SustainabilitySection() {
                 "radial-gradient(ellipse 90% 75% at 50% 85%, black 20%, rgba(0,0,0,0.85) 60%, transparent 85%)",
             }}
           />
-          {/* Soft volumetric glow in bottom corners */}
+          {/* Ambient corner glows for volumetric atmospheric warmth */}
           <div className="absolute -bottom-16 -left-16 w-80 h-80 rounded-full bg-[#14f884]/10 blur-[80px]" />
           <div className="absolute -bottom-16 -right-16 w-80 h-80 rounded-full bg-[#c6f19d]/10 blur-[80px]" />
         </div>
 
         {/* =====================================================================
             LAYER 3: 4 INTERACTIVE SENSOR NODES (Exact Alethia 5-Dot Matrix)
-            - Placed onto plant leaves, moss bed & earth
-            - Closed by default so screen stays clean and never blocks text!
+            - Clean & closed by default so they never block text or view
+            - Hovering or tapping smoothly reveals data capsule
         ===================================================================== */}
         <div className="absolute inset-0 z-30 pointer-events-none">
           {SENSOR_HOTSPOTS.map((spot, idx) => {
@@ -296,7 +306,7 @@ export default function SustainabilitySection() {
                   </svg>
                 </button>
 
-                {/* Sleek Tooltip Capsule (Reveals on Hover / Click - Alethia Style) */}
+                {/* Sleek Tooltip Capsule (Reveals on Hover / Tap - Alethia Style) */}
                 <div
                   className={`absolute z-40 transition-all duration-300 ease-out pointer-events-none ${
                     isActive
@@ -331,9 +341,10 @@ export default function SustainabilitySection() {
         </div>
 
         {/* =====================================================================
-            LAYER 4: EDITORIAL TYPOGRAPHY & VIEWPORT TEXT REVEAL (ALETHIA STYLE)
-            - Placed in Upper-Right / Top-Half so Lower 60% with Nature is 100% OPEN!
-            - Reduced, refined editorial font size (no more giant blocky text!)
+            LAYER 4: EDITORIAL TYPOGRAPHY & GSAP TEXT REVEAL
+            - Positioned in Upper-Right Quadrant (Alethia Layout)
+            - Leaves Lower 60% of Screen 100% OPEN for Nature & Sensor Nodes
+            - Refined, elegant editorial font size (no screaming block text!)
         ===================================================================== */}
         <div className="relative z-20 w-full max-w-[1320px] mx-auto px-5 sm:px-12 h-full flex flex-col justify-between py-8 sm:py-12 pointer-events-none">
           {/* Top Row: Eyebrow on Far-Left + Upper-Right Headline */}
@@ -347,19 +358,19 @@ export default function SustainabilitySection() {
               </span>
             </div>
 
-            {/* Upper-Right Headline + Subtitle (Alethia Ecosystem Accounting Style) */}
+            {/* Upper-Right Headline + Subtitle (Alethia Style) */}
             <div className="lg:col-span-8 lg:pl-6 pointer-events-auto">
               <h2
                 ref={headlineRef}
-                className="text-[clamp(1.35rem,2.3vw,2.2rem)] font-medium sm:font-semibold text-[#f5f4f2] tracking-[-0.03em] leading-[1.28]"
+                className="text-[clamp(1.2rem,1.9vw,1.85rem)] font-medium sm:font-semibold text-[#f5f4f2] tracking-[-0.025em] leading-[1.3]"
               >
-                <span className="block overflow-hidden">
-                  <span className="reveal-line block">
+                <span className="block overflow-hidden py-0.5">
+                  <span className="reveal-line block will-change-transform">
                     The future shouldn&apos;t need another marketing campaign.
                   </span>
                 </span>
-                <span className="block overflow-hidden mt-1">
-                  <span className="reveal-line block text-[#14f884] font-bold">
+                <span className="block overflow-hidden py-0.5 mt-0.5">
+                  <span className="reveal-line block text-[#14f884] font-bold will-change-transform">
                     It needs businesses willing to build it.
                   </span>
                 </span>
@@ -367,13 +378,13 @@ export default function SustainabilitySection() {
 
               <p
                 ref={subtextRef}
-                className="mt-3.5 max-w-xl text-[clamp(0.82rem,1.05vw,0.92rem)] text-[#d0ded9] font-light leading-relaxed"
+                className="mt-3 max-w-lg text-[clamp(0.8rem,0.95vw,0.88rem)] text-[#d0ded9] font-light leading-relaxed"
               >
                 Sustainability isn&apos;t a green badge we attach to our services. It is one of the reasons ARKAF Edge exists. We bring the strategic caliber and technology of global market leaders to founders building what comes next.
               </p>
 
               {/* Clean Action Button */}
-              <div ref={ctaRef} className="mt-5 flex items-center gap-3">
+              <div ref={ctaRef} className="mt-4 sm:mt-5 flex items-center gap-3">
                 <a
                   href="#services"
                   className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-5 sm:px-6 py-2.5 sm:py-3 font-mono-label text-[10px] sm:text-[11px] font-bold shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#a9f5cf] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
@@ -393,7 +404,7 @@ export default function SustainabilitySection() {
           </div>
 
           {/* Lower Row: 9 Focus Circular Sectors Pills (Discreetly at the bottom edge) */}
-          <div className="pt-4 pointer-events-auto border-t border-white/10">
+          <div ref={pillsRef} className="pt-4 pointer-events-auto border-t border-white/10">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
               <span className="font-mono-label text-[8px] sm:text-[9px] text-[#14f884] font-bold uppercase tracking-wider">
                 PARTICULAR AFFECTION FOR:
