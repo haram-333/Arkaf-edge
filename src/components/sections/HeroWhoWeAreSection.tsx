@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
 import HeroVortexCanvas from "@/components/canvas/HeroVortexCanvas";
-import { HERO_CONTENT, SUSTAINABILITY_CONTENT } from "@/data/content";
+import { HERO_CONTENT, BRAND_STATEMENT } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -162,7 +162,7 @@ export default function HeroWhoWeAreSection() {
           </div>
         </div>
 
-        {/* STAGE 2 — SUSTAINABILITY / WHO WE ARE LAYER (calibrated to fit all viewport heights without clipping) */}
+        {/* STAGE 2 — BRAND STATEMENT / WHO WE ARE LAYER (From Written Content docx) */}
         <div
           ref={whoLayerRef}
           style={{ opacity: 0, pointerEvents: "none" }}
@@ -170,47 +170,38 @@ export default function HeroWhoWeAreSection() {
         >
           <div className="w-full max-w-3xl mx-auto flex flex-col items-center justify-center my-auto">
             <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[9px] sm:text-[10px] font-bold px-3 py-1 mb-2.5 sm:mb-3 shadow-[0_0_24px_rgba(169,245,207,0.38)]">
-              {SUSTAINABILITY_CONTENT.badge}
+              {BRAND_STATEMENT.badge}
             </span>
 
-            <h2 className="text-[clamp(1.45rem,3.2vw,2.65rem)] font-black tracking-[-0.03em] leading-[1.1] max-w-3xl">
-              <span className="block text-white">{SUSTAINABILITY_CONTENT.headlineWhite}</span>
+            <h2 className="text-[clamp(1.75rem,3.8vw,3.2rem)] font-black tracking-[-0.03em] leading-[1.08] max-w-3xl uppercase">
+              <span className="block text-white">{BRAND_STATEMENT.headlineWhite}</span>
               <span className="block text-[#14f884] neon-text-glow">
-                {SUSTAINABILITY_CONTENT.headlineGreen}
+                {BRAND_STATEMENT.headlineGreen}
               </span>
             </h2>
 
-            <p className="mt-2.5 sm:mt-3 max-w-[680px] text-[clamp(0.8rem,1.05vw,0.92rem)] text-[#dce8e4] font-light leading-[1.48]">
-              {SUSTAINABILITY_CONTENT.lead} {SUSTAINABILITY_CONTENT.story}
-            </p>
-
-            <p className="mt-2 max-w-[640px] text-[clamp(0.76rem,0.95vw,0.86rem)] text-[#a9f5cf]/90 font-medium leading-[1.4]">
-              {SUSTAINABILITY_CONTENT.affection}
-            </p>
-
-            {/* Focus Industry Badges */}
-            <div className="mt-2.5 sm:mt-3 max-w-2xl flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
-              {SUSTAINABILITY_CONTENT.industries.map((ind) => (
-                <span
-                  key={ind}
-                  className="px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-[#14f884]/30 bg-[#051a12]/85 font-mono-label text-[8.5px] sm:text-[9.5px] text-[#a9f5cf]"
+            <div className="mt-4 sm:mt-5 max-w-2xl space-y-2.5 text-center">
+              {BRAND_STATEMENT.paragraphs.map((para, i) => (
+                <p
+                  key={i}
+                  className={`text-[clamp(0.85rem,1.15vw,1.02rem)] leading-relaxed ${
+                    i === BRAND_STATEMENT.paragraphs.length - 1
+                      ? "text-[#14f884] font-semibold text-[clamp(0.92rem,1.25vw,1.08rem)]"
+                      : "text-[#c7d6d1] font-light"
+                  }`}
                 >
-                  {ind}
-                </span>
+                  {para}
+                </p>
               ))}
             </div>
 
-            <p className="mt-2.5 sm:mt-3 max-w-[620px] text-[clamp(0.78rem,0.95vw,0.86rem)] text-[#99b3ab] font-light leading-[1.42]">
-              {SUSTAINABILITY_CONTENT.closing}
-            </p>
-
-            {/* Clear, Prominent Primary Pill CTA Button */}
-            <div className="mt-4 sm:mt-5 pointer-events-auto">
+            {/* Link seamlessly to the new Sustainability Section */}
+            <div className="mt-6 sm:mt-8 pointer-events-auto flex items-center gap-3">
               <a
-                href="#services"
-                className="inline-flex items-center justify-center gap-2.5 rounded-full border border-[#14f884] bg-[#14f884] px-6 sm:px-8 py-3 sm:py-3.5 font-mono-label text-[10.5px] sm:text-[11.5px] font-bold text-[#050b09] shadow-[0_0_24px_rgba(20,248,132,0.45)] hover:bg-[#a9f5cf] hover:shadow-[0_0_36px_rgba(20,248,132,0.75)] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+                href="#sustainability"
+                className="inline-flex items-center justify-center gap-2.5 rounded-full border border-[#14f884] bg-[#14f884] px-6 sm:px-8 py-3.5 sm:py-4 font-mono-label text-[10.5px] sm:text-[11.5px] font-bold text-[#050b09] shadow-[0_0_24px_rgba(20,248,132,0.45)] hover:bg-[#a9f5cf] hover:shadow-[0_0_36px_rgba(20,248,132,0.75)] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
               >
-                <span>{SUSTAINABILITY_CONTENT.cta}</span>
+                <span>OUR COMMITMENT TO IMPACT</span>
                 <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
               </a>
             </div>
