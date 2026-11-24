@@ -59,7 +59,7 @@ export default function ImpactFoundersSection() {
     return () => io.disconnect();
   }, []);
 
-  // GSAP: Scroll-Driven Spread Outward from Alethia's Exact Positions + Smooth Entrance
+  // GSAP: Scroll-Driven Spread Outward from Snug Starting Positions near the text
   useEffect(() => {
     const track = spreadTrackRef.current;
     const sticky = spreadStickyRef.current;
@@ -67,26 +67,51 @@ export default function ImpactFoundersSection() {
     if (!track || !sticky) return;
 
     const ctx = gsap.context(() => {
-      // Modern Entrance Animation when section comes into view
-      const items = [
-        item1Ref.current,
-        item2Ref.current,
-        item3Ref.current,
-        item4Ref.current,
-        item5Ref.current,
-        item6Ref.current,
-        item7Ref.current,
-        item8Ref.current,
-      ].filter(Boolean);
+      // Configuration for each artifact:
+      // (dx, dy): Inward offset at progress=0 (snug close to text).
+      // As progress -> 1, offset smoothly eases to 0 (spreading out to full Alethia perimeter).
+      const SPREAD_ITEMS = [
+        { ref: item1Ref, dx: 190, dy: 75, s: 0.94 },   // Top-Far-Left (Mast blueprint)
+        { ref: item2Ref, dx: 55, dy: 70, s: 0.95 },    // Top-Center-Left (Telemetry sensor)
+        { ref: item3Ref, dx: -35, dy: 45, s: 0.94 },   // Top-Center-Right (Aerial photo + chart)
+        { ref: item4Ref, dx: -175, dy: 40, s: 0.94 },  // Top-Far-Right (Ribbed cylinder)
+        { ref: item5Ref, dx: 185, dy: 0, s: 0.94 },    // Mid-Far-Left (3D wireframe contour)
+        { ref: item6Ref, dx: 55, dy: -60, s: 0.94 },   // Bottom-Center-Left (Foliage photo + graph)
+        { ref: item7Ref, dx: -45, dy: -75, s: 0.95 },  // Bottom-Center-Right (Solid lime badge)
+        { ref: item8Ref, dx: -175, dy: -50, s: 0.94 }, // Bottom-Far-Right (3D island & stat)
+      ];
 
-      if (items.length > 0 && centerText) {
+      const updatePositions = (progress: number) => {
+        const p = Math.max(0, Math.min(1, progress));
+        const ease = gsap.parseEase("power2.out")(p);
+        const inward = 1 - ease;
+
+        SPREAD_ITEMS.forEach(({ ref, dx, dy, s }) => {
+          if (!ref.current) return;
+          const currX = (dx * inward).toFixed(1);
+          const currY = (dy * inward).toFixed(1);
+          const currScale = (s + (1 - s) * ease).toFixed(3);
+          ref.current.style.transform = `translate3d(${currX}px, ${currY}px, 0) scale(${currScale})`;
+        });
+
+        if (centerText) {
+          const textScale = (0.98 + 0.03 * ease).toFixed(3);
+          centerText.style.transform = `translate(-50%, -48%) scale(${textScale})`;
+        }
+      };
+
+      // Set initial snug starting position immediately (close to text)
+      updatePositions(0);
+
+      // Modern Entrance Animation when section comes into view
+      if (centerText) {
         gsap.fromTo(
           centerText,
-          { opacity: 0, y: 20, scale: 0.96 },
+          { opacity: 0, y: 25, scale: 0.95 },
           {
             opacity: 1,
             y: 0,
-            scale: 1,
+            scale: 0.98,
             duration: 0.9,
             ease: "power3.out",
             scrollTrigger: {
@@ -96,16 +121,17 @@ export default function ImpactFoundersSection() {
             },
           }
         );
+      }
 
+      const activeItemElements = SPREAD_ITEMS.map((item) => item.ref.current).filter(Boolean);
+      if (activeItemElements.length > 0) {
         gsap.fromTo(
-          items,
-          { opacity: 0, scale: 0.92, y: 15 },
+          activeItemElements,
+          { opacity: 0 },
           {
             opacity: 1,
-            scale: 1,
-            y: 0,
-            duration: 0.85,
-            stagger: 0.05,
+            duration: 0.8,
+            stagger: 0.04,
             ease: "power2.out",
             scrollTrigger: {
               trigger: track,
@@ -116,31 +142,14 @@ export default function ImpactFoundersSection() {
         );
       }
 
-      // Scroll-driven spread scrub: as you scroll, cards glide outward away from center!
+      // Scroll-driven spread scrub: as you scroll down, cards burst outward from snug to wide!
       ScrollTrigger.create({
         trigger: track,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.4,
+        scrub: 0.5,
         onUpdate: (self) => {
-          const p = self.progress;
-          const ease = gsap.parseEase("power2.out")(p);
-
-          // Subtle outward spread drift away from center
-          if (item1Ref.current) item1Ref.current.style.transform = `translate3d(${(-35 * ease).toFixed(1)}px, ${(-25 * ease).toFixed(1)}px, 0)`;
-          if (item2Ref.current) item2Ref.current.style.transform = `translate3d(${(-12 * ease).toFixed(1)}px, ${(-30 * ease).toFixed(1)}px, 0)`;
-          if (item3Ref.current) item3Ref.current.style.transform = `translate3d(${(30 * ease).toFixed(1)}px, ${(-25 * ease).toFixed(1)}px, 0)`;
-          if (item4Ref.current) item4Ref.current.style.transform = `translate3d(${(35 * ease).toFixed(1)}px, ${(-10 * ease).toFixed(1)}px, 0)`;
-          if (item5Ref.current) item5Ref.current.style.transform = `translate3d(${(-35 * ease).toFixed(1)}px, ${(10 * ease).toFixed(1)}px, 0)`;
-          if (item6Ref.current) item6Ref.current.style.transform = `translate3d(${(-20 * ease).toFixed(1)}px, ${(25 * ease).toFixed(1)}px, 0)`;
-          if (item7Ref.current) item7Ref.current.style.transform = `translate3d(${(15 * ease).toFixed(1)}px, ${(28 * ease).toFixed(1)}px, 0)`;
-          if (item8Ref.current) item8Ref.current.style.transform = `translate3d(${(35 * ease).toFixed(1)}px, ${(22 * ease).toFixed(1)}px, 0)`;
-
-          // Subtle breathing effect on center text
-          if (centerText) {
-            const textScale = 1 + ease * 0.02;
-            centerText.style.transform = `translate(-50%, -50%) scale(${textScale.toFixed(3)})`;
-          }
+          updatePositions(self.progress);
         },
       });
     }, track);
@@ -215,7 +224,7 @@ export default function ImpactFoundersSection() {
       ========================================================================= */}
       <div
         ref={spreadTrackRef}
-        className="relative h-[135vh] w-full border-t border-white/10"
+        className="relative h-[160vh] w-full border-t border-white/10"
       >
         <div
           ref={spreadStickyRef}
