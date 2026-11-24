@@ -65,8 +65,7 @@ export default function SustainabilitySection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const fixedStageRef = useRef<HTMLDivElement | null>(null);
   const bgImageRef = useRef<HTMLDivElement | null>(null);
-  const blurOverlayRef = useRef<HTMLDivElement | null>(null);
-  const fogVideoRef = useRef<HTMLVideoElement | null>(null);
+  const fogVideoRef = useRef<HTMLDivElement | null>(null);
   const eyebrowRef = useRef<HTMLDivElement | null>(null);
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const subtextRef = useRef<HTMLParagraphElement | null>(null);
@@ -81,7 +80,7 @@ export default function SustainabilitySection() {
     const container = containerRef.current;
     const fixedStage = fixedStageRef.current;
     const bgImage = bgImageRef.current;
-    const blurOverlay = blurOverlayRef.current;
+    const fogVideo = fogVideoRef.current;
     const eyebrow = eyebrowRef.current;
     const headline = headlineRef.current;
     const subtext = subtextRef.current;
@@ -96,7 +95,6 @@ export default function SustainabilitySection() {
 
       // MASTER TIMELINE:
       // Controlled by the scroll track, while the stage is FIXED AT TOP: 0 OF THE DEFAULT VIEWPORT.
-      // Total scroll range: from when track enters bottom of viewport to when it leaves top.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -117,45 +115,40 @@ export default function SustainabilitySection() {
         },
       });
 
-      // --- PHASE 1: STAGE FADES IN AT TOP 0 OF DEFAULT VIEWPORT (0.00 -> 0.22) ---
-      // Image is already at top: 0 (no sliding up from bottom with black gap)
+      // --- PHASE 1: STAGE FADES IN AT TOP 0 OF DEFAULT VIEWPORT (0.00 -> 0.20) ---
       tl.fromTo(
         fixedStage,
         { opacity: 0 },
-        { opacity: 1, ease: "power2.out", duration: 0.22 },
+        { opacity: 1, ease: "power2.out", duration: 0.20 },
         0
       );
 
-      // --- PHASE 2: IMAGE ZOOMS OUT & BLUR DISSOLVES (0.16 -> 0.50) ---
+      // --- PHASE 2: IMAGE ZOOMS OUT & BLUR DIRECTLY ON IMAGE CLEARS (0.16 -> 0.48) ---
+      // Direct filter: blur on the image itself — no separate div sliding up!
       tl.fromTo(
         bgImage,
-        { scale: 1.55 },
-        { scale: 1.0, ease: "power2.inOut", duration: 0.34 },
+        { scale: 1.55, filter: "blur(18px)" },
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.inOut", duration: 0.32 },
         0.16
       );
 
-      if (blurOverlay) {
+      // --- PHASE 3: FOG OVERLAY APPLIES ONLY AFTER IMAGE HAS ZOOMED OUT (0.46 -> 0.58) ---
+      if (fogVideo) {
         tl.fromTo(
-          blurOverlay,
-          { opacity: 1, backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)" },
-          {
-            opacity: 0,
-            backdropFilter: "blur(0px)",
-            WebkitBackdropFilter: "blur(0px)",
-            ease: "power2.out",
-            duration: 0.32,
-          },
-          0.16
+          fogVideo,
+          { opacity: 0 },
+          { opacity: 0.7, ease: "power2.out", duration: 0.12 },
+          0.46
         );
       }
 
-      // --- PHASE 3: GSAP-STYLE TEXT REVEAL AFTER BLUR CLEARS (0.48 -> 0.68) ---
+      // --- PHASE 4: GSAP-STYLE TEXT REVEAL AFTER ZOOM OUT (0.50 -> 0.68) ---
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
           { opacity: 0, y: 22 },
           { opacity: 1, y: 0, ease: "power3.out", duration: 0.10 },
-          0.48
+          0.50
         );
       }
 
@@ -170,7 +163,7 @@ export default function SustainabilitySection() {
             ease: "power3.out",
             duration: 0.15,
           },
-          0.50
+          0.52
         );
       }
 
@@ -179,7 +172,7 @@ export default function SustainabilitySection() {
           subtext,
           { opacity: 0, y: 18 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
-          0.56
+          0.58
         );
       }
 
@@ -188,7 +181,7 @@ export default function SustainabilitySection() {
           cta,
           { opacity: 0, y: 15 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.60
+          0.62
         );
       }
 
@@ -197,7 +190,7 @@ export default function SustainabilitySection() {
           activePins,
           { scale: 0, opacity: 0 },
           { scale: 1, opacity: 1, stagger: 0.04, ease: "back.out(2)", duration: 0.12 },
-          0.54
+          0.56
         );
       }
 
@@ -206,14 +199,14 @@ export default function SustainabilitySection() {
           pills,
           { opacity: 0, y: 15 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.10 },
-          0.62
+          0.64
         );
       }
 
-      // --- PHASE 4: INTERACTIVE HOLD (0.68 -> 0.85) ---
+      // --- PHASE 5: INTERACTIVE HOLD (0.68 -> 0.85) ---
       tl.to({}, { duration: 0.17 }, 0.68);
 
-      // --- PHASE 5: CLEAN EXIT HANDOFF TO NEXT SECTION (0.85 -> 0.98) ---
+      // --- PHASE 6: CLEAN EXIT HANDOFF TO NEXT SECTION (0.85 -> 0.98) ---
       tl.fromTo(
         fixedStage,
         { opacity: 1 },
@@ -244,12 +237,13 @@ export default function SustainabilitySection() {
         {/* =====================================================================
             LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 UNCOMPRESSED TERRARIUM)
             - Fixed at top: 0 of default viewport
-            - Covers 100% full screen with object-cover object-top
-            - Zooms out smoothly from 1.55 to 1.0
+            - Direct blur (18px) on the image itself (no separate overlay sliding up!)
+            - Smoothly unblurs to 0px as it zooms out from 1.55 to 1.0
         ===================================================================== */}
         <div
           ref={bgImageRef}
-          className="absolute inset-0 z-0 pointer-events-none will-change-transform"
+          style={{ filter: "blur(18px)", transform: "scale(1.55)" }}
+          className="absolute inset-0 z-0 pointer-events-none will-change-[transform,filter]"
         >
           <Image
             src="/images/sustainability-landscape.jpg"
@@ -271,27 +265,16 @@ export default function SustainabilitySection() {
         </div>
 
         {/* =====================================================================
-            LAYER 2: DREAMLIKE BOKEH BLUR OVERLAY BEFORE TEXT REVEAL
-            - Soft bokeh blur (18px) when zoomed in
-            - Dissolves cleanly to 0px as full panorama is reached
+            LAYER 2: AUTHENTIC ALETHIA CORNER & FLOOR FOG
+            - Clean screen mix-blend with 0.70 opacity
+            - Starts at opacity: 0, and APPLIES ONLY AFTER IMAGE HAS ZOOMED OUT!
         ===================================================================== */}
         <div
-          ref={blurOverlayRef}
-          className="pointer-events-none absolute inset-0 z-[12] bg-[#031513]/20 will-change-[opacity,backdrop-filter]"
-          style={{
-            backdropFilter: "blur(18px)",
-            WebkitBackdropFilter: "blur(18px)",
-          }}
-        />
-
-        {/* =====================================================================
-            LAYER 3: AUTHENTIC ALETHIA CORNER & FLOOR FOG
-            - Clean screen mix-blend with 0.65 opacity (exact Alethia Framer styling)
-            - 100% full width, zero clipping on sides, zero washed-out gray haze
-        ===================================================================== */}
-        <div className="absolute inset-0 z-[14] pointer-events-none overflow-hidden mix-blend-screen opacity-70">
+          ref={fogVideoRef}
+          style={{ opacity: 0 }}
+          className="absolute inset-0 z-[14] pointer-events-none overflow-hidden mix-blend-screen will-change-[opacity]"
+        >
           <video
-            ref={fogVideoRef}
             src="/videos/clouds-fog.webm"
             autoPlay
             loop
