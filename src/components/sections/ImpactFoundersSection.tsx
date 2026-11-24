@@ -4,327 +4,28 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, ArrowUpRight, Sparkles, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Sparkles, X, Check } from "lucide-react";
 import { IMPACT_STATS, FOUNDERS, VISION_CONTENT } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// ============================================================================
-// ASYMMETRICAL ARTIFACTS (True Alethia Style)
-// - RADICALLY DIFFERENT WIDTHS & HEIGHTS for each box (to show true uniqueness)
-// - ORGANIC, STAGGERED ASYMMETRIC POSITIONS (curated editorial scatter, no rigid grid)
-// - STRICT CENTER CORRIDOR PROTECTION: Zero overlap with center headline & paragraph!
-// ============================================================================
-const ASYMMETRIC_ARTIFACTS = [
-  // 1. TOP-LEFT: Tall Vertical Blueprint Card (Anurag) + Detached Pill
-  // Unique Dimensions: w-[195px] h-[230px] (Tall & narrow vertical format!)
-  {
-    id: "aero-turbine",
-    startX: -330,
-    startY: -140,
-    spreadX: -55,
-    spreadY: -25,
-    rotation: -3.5,
-    render: () => (
-      <div className="relative flex items-center gap-2">
-        <div className="w-[195px] h-[230px] rounded-2xl border border-white/20 bg-[#051c17]/95 p-3.5 shadow-2xl backdrop-blur-md flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="font-mono-label text-[8px] text-[#14f884] font-semibold tracking-wider">
-              [AERONAUTICAL 2012]
-            </span>
-            <div className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
-          </div>
-
-          {/* Detailed Turbine Schematic (Tall) */}
-          <div className="relative h-24 w-full rounded-xl bg-black/65 border border-white/10 overflow-hidden flex items-center justify-center my-1">
-            <svg viewBox="0 0 160 80" className="w-full h-full stroke-[#14f884]/65 fill-none">
-              <circle cx="80" cy="40" r="28" strokeWidth="1" strokeDasharray="3 3" />
-              <circle cx="80" cy="40" r="18" strokeWidth="1.2" />
-              <circle cx="80" cy="40" r="8" strokeWidth="1.4" />
-              <circle cx="80" cy="40" r="3" fill="#14f884" />
-              <line x1="15" y1="40" x2="145" y2="40" strokeWidth="0.8" strokeOpacity="0.4" />
-              <line x1="80" y1="6" x2="80" y2="74" strokeWidth="0.8" strokeOpacity="0.4" />
-              <path d="M 60 20 L 100 60 M 60 60 L 100 20" strokeWidth="0.8" strokeOpacity="0.5" />
-            </svg>
-            <span className="absolute bottom-1 right-2 font-mono-label text-[7px] text-[#14f884]/80">
-              MACH-LOGIC
-            </span>
-          </div>
-
-          <div>
-            <p className="text-[11px] font-bold text-white leading-tight">Navigating Without a Map</p>
-            <p className="text-[9px] text-[#9cb5ad] leading-snug mt-1">
-              Sudden medical detour built on-ground frontline resilience.
-            </p>
-          </div>
-        </div>
-
-        {/* Detached floating pill (Alethia style) */}
-        <span className="shrink-0 px-2 py-1 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8px] font-black shadow-[0_0_12px_rgba(20,248,132,0.45)]">
-          LOGIC
-        </span>
-      </div>
-    ),
-  },
-
-  // 2. TOP-CENTER-RIGHT: Wide Horizontal Telemetry Capsule (CLIMAVUE style)
-  // Unique Dimensions: w-[290px] h-[95px] (Ultra-wide, sleek horizontal capsule!)
-  {
-    id: "climavue-pill",
-    startX: 40,
-    startY: -165,
-    spreadX: 25,
-    spreadY: -35,
-    rotation: 1.5,
-    render: () => (
-      <div className="w-[290px] h-[95px] rounded-2xl border border-white/20 bg-black/90 backdrop-blur-md px-4 py-3 shadow-xl flex items-center justify-between gap-3">
-        <div className="flex-1">
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-            <span className="font-mono-label text-[7.5px] text-[#14f884] uppercase tracking-wider">
-              CORE PHILOSOPHY
-            </span>
-          </div>
-          <p className="text-[12px] font-bold text-white leading-snug">
-            &ldquo;Why can&apos;t business do both?&rdquo;
-          </p>
-          <span className="font-mono-label text-[8px] text-[#a9f5cf]">
-            2.4x COMPOUND GROWTH
-          </span>
-        </div>
-
-        {/* Equalizer Bar Chart */}
-        <div className="flex items-end gap-1 h-8 shrink-0 px-2 py-1 rounded-lg bg-[#05261e] border border-[#14f884]/30">
-          <span className="w-1.5 h-3 rounded-sm bg-[#14f884]" />
-          <span className="w-1.5 h-6 rounded-sm bg-[#14f884]" />
-          <span className="w-1.5 h-4.5 rounded-sm bg-[#14f884]" />
-          <span className="w-1.5 h-7 rounded-sm bg-[#14f884]" />
-          <span className="w-1.5 h-4 rounded-sm bg-[#14f884]" />
-        </div>
-      </div>
-    ),
-  },
-
-  // 3. TOP-RIGHT: Landscape Foliage Photo Tile
-  // Unique Dimensions: w-[230px] h-[150px] (Medium landscape format!)
-  {
-    id: "foliage-tile",
-    startX: 330,
-    startY: -150,
-    spreadX: 55,
-    spreadY: -25,
-    rotation: 3,
-    render: () => (
-      <div className="w-[230px] h-[150px] rounded-2xl border border-white/20 bg-[#05221b] p-3 shadow-2xl overflow-hidden relative flex flex-col justify-between">
-        <div className="relative h-18 w-full rounded-xl overflow-hidden">
-          <Image
-            src="/images/art-01.jpg"
-            alt="Circularity"
-            fill
-            className="object-cover opacity-65"
-            sizes="230px"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#05221b] via-transparent to-transparent" />
-          <span className="absolute top-1.5 right-1.5 font-mono-label text-[7.5px] font-bold px-1.5 py-0.5 rounded bg-black/85 text-[#14f884] border border-[#14f884]/35 shadow-md">
-            2020 • VALUE
-          </span>
-        </div>
-
-        <div>
-          <p className="text-[11.5px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
-          <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">
-            Converting discarded materials into high-value commercial solutions.
-          </p>
-        </div>
-      </div>
-    ),
-  },
-
-  // 4. MID-LEFT: Pure 3D Topographical Wireframe (NO BOX / NO BACKGROUND RECTANGLE!)
-  // Unique Dimensions: w-[180px] h-[140px] (Pure freestanding wireframe model!)
-  {
-    id: "topo-contour",
-    startX: -360,
-    startY: 35,
-    spreadX: -50,
-    spreadY: 10,
-    rotation: -2.5,
-    render: () => (
-      <div className="w-[180px] h-[140px] p-2 flex flex-col justify-between select-none">
-        <div className="relative w-full h-20 flex items-center justify-center">
-          <svg viewBox="0 0 160 64" className="w-full h-full stroke-[#14f884] fill-none opacity-85">
-            <ellipse cx="80" cy="32" rx="72" ry="24" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
-            <ellipse cx="80" cy="31" rx="54" ry="18" strokeWidth="1" strokeOpacity="0.5" />
-            <ellipse cx="80" cy="30" rx="38" ry="13" strokeWidth="1.2" strokeOpacity="0.75" />
-            <ellipse cx="80" cy="28" rx="22" ry="8" strokeWidth="1.4" strokeOpacity="0.95" />
-            <ellipse cx="80" cy="26" rx="10" ry="4" fill="#14f884" fillOpacity="0.35" strokeWidth="1.5" />
-          </svg>
-        </div>
-        <div>
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="font-mono-label text-[8.5px] text-[#14f884] font-bold uppercase">
-              [GROUND REALITY]
-            </span>
-            <span className="font-mono-label text-[8px] text-white/50">8 SECTORS</span>
-          </div>
-          <p className="text-[10px] text-[#c7d6d1] font-medium leading-snug">
-            Collections • Real Estate • BD • Risk
-          </p>
-        </div>
-      </div>
-    ),
-  },
-
-  // 5. MID-RIGHT: Analogue Photography Deep Square Tile
-  // Unique Dimensions: w-[210px] h-[210px] (Deep square studio tile!)
-  {
-    id: "film-studio",
-    startX: 340,
-    startY: 15,
-    spreadX: 50,
-    spreadY: 10,
-    rotation: 2.5,
-    render: () => (
-      <div className="w-[210px] h-[210px] rounded-2xl border border-white/20 bg-[#051d18]/95 p-4 shadow-2xl backdrop-blur-md flex flex-col justify-between">
-        <div className="flex items-center justify-between">
-          <span className="font-mono-label text-[8.5px] text-[#14f884] font-semibold">
-            [STUDIO FLOOR 2009]
-          </span>
-          <svg viewBox="0 0 20 20" className="w-4 h-4 stroke-[#14f884] fill-none">
-            <circle cx="10" cy="10" r="8" strokeWidth="1.2" />
-            <path d="M 6 4 L 14 6 M 16 7 L 14 15 M 13 16 L 5 14 M 4 13 L 6 5" strokeWidth="1" />
-          </svg>
-        </div>
-
-        {/* Film reel strip aesthetic */}
-        <div className="h-20 w-full rounded-xl bg-black/65 border border-white/10 flex flex-col items-center justify-center my-1 px-3">
-          <span className="font-mono-label text-[10px] text-[#14f884] tracking-widest font-bold">
-            FILM &amp; ANALOGUE
-          </span>
-          <span className="font-mono-label text-[7.5px] text-white/40 mt-1">
-            DAKC • 35MM • MEDIUM FORMAT
-          </span>
-        </div>
-
-        <div>
-          <p className="text-[11.5px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
-          <p className="text-[9.5px] text-[#9cb5ad] leading-snug mt-0.5">
-            7 months from sweeping studio floors to running complete film shoots.
-          </p>
-        </div>
-      </div>
-    ),
-  },
-
-  // 6. BOTTOM-LEFT: Dual Telemetry Sparkline Chip
-  // Unique Dimensions: w-[220px] h-[105px] (Slim horizontal data chip!)
-  {
-    id: "metric-line",
-    startX: -300,
-    startY: 175,
-    spreadX: -45,
-    spreadY: 25,
-    rotation: -2,
-    render: () => (
-      <div className="w-[220px] h-[105px] rounded-2xl border border-white/15 bg-[#05211b]/95 p-3 shadow-xl flex flex-col justify-between">
-        <div className="flex items-center justify-between">
-          <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
-            THE SHARED PURPOSE
-          </span>
-          <span className="font-mono-label text-[7.5px] text-white/50 px-1.5 py-0.5 rounded bg-white/5">
-            14+ YRS
-          </span>
-        </div>
-
-        <p className="text-[11px] font-bold text-white leading-tight">
-          &ldquo;Help good businesses get seen.&rdquo;
-        </p>
-
-        <div className="h-4 w-full flex items-center">
-          <svg viewBox="0 0 130 14" className="w-full h-full stroke-[#14f884] fill-none">
-            <polyline points="0,12 35,9 70,11 100,4 130,2" strokeWidth="1.4" />
-            <circle cx="130" cy="2" r="2" fill="#14f884" />
-          </svg>
-        </div>
-      </div>
-    ),
-  },
-
-  // 7. BOTTOM-CENTER-LEFT: Compact High-Contrast Solid Lime Badge (Carbon Balance style)
-  // Unique Dimensions: w-[210px] h-[120px] (Bold, punchy, compact lime pill!)
-  // Placed safely at startY = 180px (Leaves 45px clear margin below paragraph! ZERO overlap!)
-  {
-    id: "solid-lime-bba",
-    startX: -40,
-    startY: 180,
-    spreadX: -15,
-    spreadY: 25,
-    rotation: 2,
-    render: () => (
-      <div className="w-[210px] h-[120px] rounded-2xl bg-[#c6f19d] text-[#051f10] p-3.5 shadow-[0_10px_30px_rgba(198,241,157,0.35)] border border-[#c6f19d] flex flex-col justify-between">
-        <div className="flex items-center justify-between">
-          <span className="font-mono-label text-[8px] font-bold uppercase tracking-wider text-[#051f10]/80">
-            BBA 2024 • RESILIENCE
-          </span>
-          <span className="font-mono-label text-[7.5px] font-black px-1.5 py-0.2 rounded bg-[#051f10] text-[#c6f19d]">
-            NO EXCUSES
-          </span>
-        </div>
-
-        <div>
-          <p className="text-[12.5px] font-black leading-tight text-[#051f10]">
-            Finish What You Started
-          </p>
-          <p className="text-[9.5px] text-[#051f10]/80 leading-snug mt-0.5">
-            Completing education while operating companies. Follow-through matters.
-          </p>
-        </div>
-
-        <div className="flex items-center justify-between pt-1 border-t border-[#051f10]/15">
-          <span className="font-mono-label text-[8px] font-bold text-[#051f10]">
-            100% RESOLVE
-          </span>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#051f10]" />
-        </div>
-      </div>
-    ),
-  },
-
-  // 8. BOTTOM-RIGHT: Minimalist Persistence Capsule
-  // Unique Dimensions: w-[180px] h-[65px] (Compact rounded pill!)
-  {
-    id: "persistence-pill",
-    startX: 270,
-    startY: 175,
-    spreadX: 40,
-    spreadY: 25,
-    rotation: -2,
-    render: () => (
-      <div className="w-[180px] h-[65px] rounded-full border border-white/20 bg-[#051e17]/95 px-4 py-2 shadow-xl flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-          <div>
-            <span className="block font-mono-label text-[7px] text-[#14f884] uppercase">
-              [THE EDGE]
-            </span>
-            <span className="block text-[11px] font-bold text-white leading-tight">
-              &ldquo;Keep moving.&rdquo;
-            </span>
-          </div>
-        </div>
-        <span className="font-mono-label text-[7.5px] text-[#14f884]/80">GRIT</span>
-      </div>
-    ),
-  },
-];
 
 export default function ImpactFoundersSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const spreadTrackRef = useRef<HTMLDivElement | null>(null);
   const spreadStickyRef = useRef<HTMLDivElement | null>(null);
-  const tileRefs = useRef<(HTMLDivElement | null)[]>([]);
   const centerTextRef = useRef<HTMLDivElement | null>(null);
+  const artifactsContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Individual refs for the 8 Alethia-positioned artifacts
+  const item1Ref = useRef<HTMLDivElement | null>(null);
+  const item2Ref = useRef<HTMLDivElement | null>(null);
+  const item3Ref = useRef<HTMLDivElement | null>(null);
+  const item4Ref = useRef<HTMLDivElement | null>(null);
+  const item5Ref = useRef<HTMLDivElement | null>(null);
+  const item6Ref = useRef<HTMLDivElement | null>(null);
+  const item7Ref = useRef<HTMLDivElement | null>(null);
+  const item8Ref = useRef<HTMLDivElement | null>(null);
 
   const [hoveredFounder, setHoveredFounder] = useState<string | null>(null);
   const [activeFounder, setActiveFounder] = useState<(typeof FOUNDERS)[number] | null>(null);
@@ -358,8 +59,7 @@ export default function ImpactFoundersSection() {
     return () => io.disconnect();
   }, []);
 
-  // GSAP: Scroll-Driven SPREAD OUT from center to perimeter!
-  // Always 100% visible, perfectly safe bounds, zero clipping!
+  // GSAP: Scroll-Driven Spread Outward from Alethia's Exact Positions + Smooth Entrance
   useEffect(() => {
     const track = spreadTrackRef.current;
     const sticky = spreadStickyRef.current;
@@ -367,6 +67,56 @@ export default function ImpactFoundersSection() {
     if (!track || !sticky) return;
 
     const ctx = gsap.context(() => {
+      // Modern Entrance Animation when section comes into view
+      const items = [
+        item1Ref.current,
+        item2Ref.current,
+        item3Ref.current,
+        item4Ref.current,
+        item5Ref.current,
+        item6Ref.current,
+        item7Ref.current,
+        item8Ref.current,
+      ].filter(Boolean);
+
+      if (items.length > 0 && centerText) {
+        gsap.fromTo(
+          centerText,
+          { opacity: 0, y: 20, scale: 0.96 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: track,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+
+        gsap.fromTo(
+          items,
+          { opacity: 0, scale: 0.92, y: 15 },
+          {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.85,
+            stagger: 0.05,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: track,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // Scroll-driven spread scrub: as you scroll, cards glide outward away from center!
       ScrollTrigger.create({
         trigger: track,
         start: "top top",
@@ -374,25 +124,22 @@ export default function ImpactFoundersSection() {
         scrub: 0.4,
         onUpdate: (self) => {
           const p = self.progress;
-          const easeProgress = gsap.parseEase("power2.out")(p);
+          const ease = gsap.parseEase("power2.out")(p);
 
-          tileRefs.current.forEach((el, idx) => {
-            if (!el) return;
-            const item = ASYMMETRIC_ARTIFACTS[idx];
-            if (!item) return;
-
-            // Spreads smoothly from startX/startY outward by spreadX/spreadY
-            const currentX = item.startX + item.spreadX * easeProgress;
-            const currentY = item.startY + item.spreadY * easeProgress;
-            const currentRot = item.rotation * (1 + easeProgress * 0.35);
-
-            el.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) rotate(${currentRot.toFixed(1)}deg)`;
-          });
+          // Subtle outward spread drift away from center
+          if (item1Ref.current) item1Ref.current.style.transform = `translate3d(${(-35 * ease).toFixed(1)}px, ${(-25 * ease).toFixed(1)}px, 0)`;
+          if (item2Ref.current) item2Ref.current.style.transform = `translate3d(${(-12 * ease).toFixed(1)}px, ${(-30 * ease).toFixed(1)}px, 0)`;
+          if (item3Ref.current) item3Ref.current.style.transform = `translate3d(${(30 * ease).toFixed(1)}px, ${(-25 * ease).toFixed(1)}px, 0)`;
+          if (item4Ref.current) item4Ref.current.style.transform = `translate3d(${(35 * ease).toFixed(1)}px, ${(-10 * ease).toFixed(1)}px, 0)`;
+          if (item5Ref.current) item5Ref.current.style.transform = `translate3d(${(-35 * ease).toFixed(1)}px, ${(10 * ease).toFixed(1)}px, 0)`;
+          if (item6Ref.current) item6Ref.current.style.transform = `translate3d(${(-20 * ease).toFixed(1)}px, ${(25 * ease).toFixed(1)}px, 0)`;
+          if (item7Ref.current) item7Ref.current.style.transform = `translate3d(${(15 * ease).toFixed(1)}px, ${(28 * ease).toFixed(1)}px, 0)`;
+          if (item8Ref.current) item8Ref.current.style.transform = `translate3d(${(35 * ease).toFixed(1)}px, ${(22 * ease).toFixed(1)}px, 0)`;
 
           // Subtle breathing effect on center text
           if (centerText) {
-            const textScale = 1 + easeProgress * 0.02;
-            centerText.style.transform = `scale(${textScale.toFixed(3)})`;
+            const textScale = 1 + ease * 0.02;
+            centerText.style.transform = `translate(-50%, -50%) scale(${textScale.toFixed(3)})`;
           }
         },
       });
@@ -418,7 +165,6 @@ export default function ImpactFoundersSection() {
     >
       {/* =========================================================================
           PART 1: IMPACT & NUMBERS COUNTER
-          Compact padding (NO big gap!)
       ========================================================================= */}
       <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pt-10 sm:pt-14 pb-6 sm:pb-8">
         <div className="text-center mb-6 sm:mb-8">
@@ -455,15 +201,21 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
-          PART 2: SPREAD-OUT FOUNDERS SHOWCASE (Alethia Solves style)
-          - UNIQUE WIDTHS & HEIGHTS for each box (showing true uniqueness!)
-          - ASYMMETRICAL ORGANIC POSITIONS (curated scatter, no rigid grid)
-          - STRICT CENTER CORRIDOR PROTECTION: Zero overlap with center text!
-          - Outward spread on scroll with ZERO clipping
+          PART 2: SPREAD-OUT FOUNDERS SHOWCASE (EXACT ALETHIA COMPOSITION)
+          Modeled 1:1 on Alethia Solves ("The Biggest Problem in Climate Action: Trust"):
+          - 1. Top-Far-Left: Tall vertical card + detached pill badge
+          - 2. Top-Center-Left: Horizontal sensor card with checkmark & green equalizer
+          - 3. Top-Center-Right: Aerial photo card + overlapping floating chart card!
+          - 4. Top-Far-Right: Vertical cylinder component card
+          - 5. Mid-Far-Left: Square 3D wireframe contour model card
+          - 6. Bottom-Center-Left: Foliage photo card + overlapping line graph card
+          - 7. Bottom-Center-Right: High-contrast solid lime badge (shifted right, well clear of text!)
+          - 8. Bottom-Far-Right: Dark card with stat & 3D graphic
+          - Center Text: 100% CLEAR, UNOBSTRUCTED & OPEN CORRIDOR!
       ========================================================================= */}
       <div
         ref={spreadTrackRef}
-        className="relative h-[125vh] w-full border-t border-white/10"
+        className="relative h-[135vh] w-full border-t border-white/10"
       >
         <div
           ref={spreadStickyRef}
@@ -478,62 +230,337 @@ export default function ImpactFoundersSection() {
             }}
           />
 
-          {/* Centered Primary Headline & Subtitle (Completely open, unobstructed, 100% readable!) */}
-          <div
-            ref={centerTextRef}
-            className="relative z-20 max-w-lg mx-auto px-5 text-center select-none pointer-events-none transition-transform duration-200"
-          >
-            <span className="inline-block rounded-full border border-[#14f884]/35 bg-[#072924]/90 px-3.5 py-1 font-mono-label text-[9px] sm:text-[10px] text-[#14f884] mb-2.5 shadow-[0_0_16px_rgba(20,248,132,0.2)]">
-              ABOUT &amp; LEADERSHIP
-            </span>
-            <h2 className="text-[clamp(1.75rem,3.8vw,3.1rem)] font-black uppercase tracking-tight leading-[1.05]">
-              <span className="block text-white">TWO JOURNEYS.</span>
-              <span className="block text-[#14f884] neon-text-glow">ONE EDGE.</span>
-            </h2>
-            <p className="mt-3 text-[clamp(0.8rem,1.05vw,0.95rem)] text-[#d4e4df] font-light leading-relaxed max-w-md mx-auto">
-              We weren&apos;t born in a boardroom. We were built through detours. Two different journeys arrived at one shared idea: build something meaningful and help others build theirs.
-            </p>
-          </div>
+          {/* Spatial Stage calibrated to viewport height */}
+          <div className="relative w-full max-w-[1360px] h-[min(730px,88vh)] mx-auto px-4">
+            {/* CENTER TEXT BLOCK (Centered at 50% / 48% with dedicated unobstructed corridor) */}
+            <div
+              ref={centerTextRef}
+              className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-20 max-w-md sm:max-w-lg w-full px-4 text-center select-none pointer-events-none"
+            >
+              <span className="inline-block rounded-full border border-[#14f884]/35 bg-[#072924]/90 px-3.5 py-1 font-mono-label text-[9px] sm:text-[10px] text-[#14f884] mb-2.5 shadow-[0_0_16px_rgba(20,248,132,0.2)]">
+                ABOUT &amp; LEADERSHIP
+              </span>
+              <h2 className="text-[clamp(1.75rem,3.4vw,2.9rem)] font-black uppercase tracking-tight leading-[1.08]">
+                <span className="block text-white">TWO JOURNEYS.</span>
+                <span className="block text-[#14f884] neon-text-glow">ONE EDGE.</span>
+              </h2>
+              <p className="mt-3 text-[clamp(0.78rem,0.95vw,0.88rem)] text-[#d4e4df] font-light leading-relaxed max-w-sm sm:max-w-md mx-auto">
+                We weren&apos;t born in a boardroom. We were built through detours. Two different journeys arrived at one shared idea: build something meaningful and help others build theirs.
+              </p>
+            </div>
 
-          {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS
-              Each with unique width, height, and organic staggered positions */}
-          <div className="absolute inset-0 z-10 pointer-events-none hidden md:flex items-center justify-center">
-            {ASYMMETRIC_ARTIFACTS.map((item, idx) => (
+            {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS IN EXACT ALETHIA POSITIONS */}
+            <div ref={artifactsContainerRef} className="hidden md:block">
+              {/* 1. TOP-FAR-LEFT: Tall vertical card + detached pill (Alethia weather mast style) */}
               <div
-                key={item.id}
-                ref={(el) => {
-                  tileRefs.current[idx] = el;
-                }}
-                className="absolute will-change-transform opacity-100"
-                style={{
-                  transform: `translate3d(${item.startX}px, ${item.startY}px, 0) rotate(${item.rotation}deg)`,
-                }}
+                ref={item1Ref}
+                className="absolute left-[2.5%] top-[3%] z-10 will-change-transform flex items-end gap-2"
               >
-                {item.render()}
+                <div className="w-[185px] sm:w-[195px] h-[250px] sm:h-[265px] rounded-3xl border border-white/20 bg-[#051c17]/95 p-3.5 shadow-2xl backdrop-blur-md flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono-label text-[8px] text-[#14f884] font-semibold tracking-wider">
+                      [AERONAUTICAL 2012]
+                    </span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
+                  </div>
+                  {/* Vertical mast schematic (Alethia mast style) */}
+                  <div className="relative h-28 w-full rounded-2xl bg-black/70 border border-white/10 flex items-center justify-center overflow-hidden my-1">
+                    <svg viewBox="0 0 100 120" className="w-full h-full stroke-[#14f884] fill-none">
+                      <line x1="50" y1="10" x2="50" y2="110" strokeWidth="1.8" />
+                      <line x1="20" y1="35" x2="80" y2="35" strokeWidth="1.4" />
+                      <circle cx="25" cy="35" r="7" strokeWidth="1.2" />
+                      <circle cx="35" cy="25" r="5" strokeWidth="1" />
+                      <circle cx="75" cy="35" r="7" strokeWidth="1.2" />
+                      <line x1="30" y1="110" x2="50" y2="70" strokeWidth="1" strokeOpacity="0.4" />
+                      <line x1="70" y1="110" x2="50" y2="70" strokeWidth="1" strokeOpacity="0.4" />
+                      <circle cx="50" cy="15" r="2.5" fill="#14f884" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-white leading-tight">Navigating Without a Map</p>
+                    <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">Built on-ground commercial resilience.</p>
+                  </div>
+                </div>
+                {/* Floating detached pill (Alethia 1 tCO2e style) */}
+                <span className="mb-3 px-2 py-0.5 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8px] font-black shadow-[0_0_12px_rgba(20,248,132,0.45)]">
+                  LOGIC
+                </span>
               </div>
-            ))}
-          </div>
 
-          {/* MOBILE VIEW (<768px): Clean horizontal swipe pill carousel */}
-          <div className="absolute bottom-6 inset-x-4 md:hidden z-20 flex gap-2.5 overflow-x-auto pb-2 pointer-events-auto">
-            {ASYMMETRIC_ARTIFACTS.slice(0, 5).map((item) => (
+              {/* 2. TOP-CENTER-LEFT: Horizontal telemetry card (Alethia CLIMAVUE style) */}
               <div
-                key={item.id}
-                className="shrink-0 w-52 rounded-xl border border-white/20 bg-[#05211e]/90 p-3 opacity-100"
+                ref={item2Ref}
+                className="absolute left-[26%] top-[7%] z-10 will-change-transform"
               >
-                {item.render()}
+                <div className="w-[215px] h-[105px] rounded-2xl border border-white/20 bg-black/90 backdrop-blur-md p-3.5 shadow-xl flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="block font-mono-label text-[7.5px] text-[#14f884] uppercase font-bold tracking-wider">
+                        CORE PHILOSOPHY
+                      </span>
+                      <span className="block text-[8px] text-white/50">COMMERCIAL LOGIC</span>
+                    </div>
+                    <div className="w-5 h-5 rounded-full bg-[#14f884] flex items-center justify-center">
+                      <Check className="w-3 h-3 text-[#051f10] stroke-[3]" />
+                    </div>
+                  </div>
+                  <p className="text-[11.5px] font-bold text-white leading-snug">
+                    &ldquo;Why can&apos;t business do both?&rdquo;
+                  </p>
+                  <div className="flex items-end justify-between pt-1 border-t border-white/10">
+                    <span className="font-mono-label text-[9px] font-bold text-[#14f884]">
+                      2.4X VALUE
+                    </span>
+                    <div className="flex items-end gap-1 h-3.5">
+                      <span className="w-1 h-2 rounded-sm bg-[#14f884]" />
+                      <span className="w-1 h-3.5 rounded-sm bg-[#14f884]" />
+                      <span className="w-1 h-2.5 rounded-sm bg-[#14f884]" />
+                      <span className="w-1 h-3.5 rounded-sm bg-[#14f884]" />
+                    </div>
+                  </div>
+                </div>
               </div>
-            ))}
+
+              {/* 3. TOP-CENTER-RIGHT: Aerial photo card + Overlapping floating chart (Alethia style) */}
+              <div
+                ref={item3Ref}
+                className="absolute left-[54%] top-[2%] z-10 will-change-transform"
+              >
+                <div className="relative">
+                  {/* Base Photo Card */}
+                  <div className="w-[195px] h-[220px] rounded-3xl overflow-hidden border border-white/20 bg-[#05221b] p-3 shadow-2xl relative flex flex-col justify-between">
+                    <div className="relative h-28 w-full rounded-2xl overflow-hidden">
+                      <Image
+                        src="/images/art-01.jpg"
+                        alt="Circularity"
+                        fill
+                        className="object-cover opacity-75"
+                        sizes="195px"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#05221b] via-transparent to-transparent" />
+                      <span className="absolute top-2 right-2 font-mono-label text-[7px] font-bold px-1.5 py-0.5 rounded bg-black/85 text-[#14f884] border border-[#14f884]/35">
+                        2020 • VALUE
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
+                      <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">
+                        Turning discard into commercial treasure.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Overlapping Floating Dark Bar Chart Card (Exact Alethia 8.3 chart layout!) */}
+                  <div className="absolute -bottom-2.5 -right-12 w-[160px] h-[80px] rounded-2xl bg-black/92 border border-white/20 p-2.5 shadow-2xl backdrop-blur-md flex flex-col justify-between z-20">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono-label text-[8px] text-[#14f884] font-bold">8.5x</span>
+                      <span className="font-mono-label text-[7.5px] text-white/50">CIRCULAR VALUE</span>
+                    </div>
+                    <div className="flex items-end gap-1.5 h-6">
+                      <span className="w-1.5 h-2.5 rounded-sm bg-[#14f884]" />
+                      <span className="w-1.5 h-5 rounded-sm bg-[#14f884]" />
+                      <span className="w-1.5 h-3.5 rounded-sm bg-[#14f884]" />
+                      <span className="w-1.5 h-6 rounded-sm bg-[#14f884]" />
+                      <span className="w-1.5 h-4.5 rounded-sm bg-[#14f884]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. TOP-FAR-RIGHT: Vertical Component Card (Alethia 3D ribbed cylinder style) */}
+              <div
+                ref={item4Ref}
+                className="absolute right-[2.5%] top-[18%] z-10 will-change-transform"
+              >
+                <div className="w-[175px] h-[215px] rounded-3xl border border-white/20 bg-[#051d18]/95 p-3.5 shadow-2xl backdrop-blur-md flex flex-col justify-between">
+                  <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
+                    [STUDIO FLOOR 2009]
+                  </span>
+                  {/* Fluted/ribbed cylinder graphic */}
+                  <div className="relative h-24 w-full rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center overflow-hidden my-1">
+                    <svg viewBox="0 0 80 80" className="w-full h-full stroke-[#14f884] fill-none">
+                      <ellipse cx="40" cy="18" rx="25" ry="8" strokeWidth="1.2" />
+                      <line x1="15" y1="18" x2="15" y2="62" strokeWidth="1" />
+                      <line x1="65" y1="18" x2="65" y2="62" strokeWidth="1" />
+                      <ellipse cx="40" cy="30" rx="25" ry="8" strokeWidth="1" strokeOpacity="0.7" />
+                      <ellipse cx="40" cy="42" rx="25" ry="8" strokeWidth="1" strokeOpacity="0.7" />
+                      <ellipse cx="40" cy="54" rx="25" ry="8" strokeWidth="1" strokeOpacity="0.7" />
+                      <ellipse cx="40" cy="62" rx="25" ry="8" strokeWidth="1.2" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
+                    <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">7 months to master film cameras.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 5. MID-FAR-LEFT: 3D Topographic Wireframe Contour (Alethia style) */}
+              <div
+                ref={item5Ref}
+                className="absolute left-[2.5%] top-[48%] z-10 will-change-transform"
+              >
+                <div className="w-[165px] h-[165px] rounded-3xl border border-white/20 bg-[#051c17]/95 p-3 shadow-2xl backdrop-blur-md flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono-label text-[8px] text-[#14f884] font-bold uppercase">
+                      [GROUND REALITY]
+                    </span>
+                    <span className="font-mono-label text-[7.5px] text-white/50">8 SECTORS</span>
+                  </div>
+                  <div className="relative w-full h-16 flex items-center justify-center my-0.5">
+                    <svg viewBox="0 0 140 60" className="w-full h-full stroke-[#14f884] fill-none opacity-85">
+                      <ellipse cx="70" cy="30" rx="60" ry="20" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
+                      <ellipse cx="70" cy="29" rx="44" ry="15" strokeWidth="1" strokeOpacity="0.5" />
+                      <ellipse cx="70" cy="28" rx="28" ry="10" strokeWidth="1.2" strokeOpacity="0.75" />
+                      <ellipse cx="70" cy="26" rx="14" ry="5.5" strokeWidth="1.4" strokeOpacity="0.95" />
+                      <ellipse cx="70" cy="24" rx="6" ry="2.5" fill="#14f884" fillOpacity="0.4" strokeWidth="1.5" />
+                    </svg>
+                  </div>
+                  <p className="text-[9.5px] text-[#c7d6d1] font-medium leading-snug">
+                    Collections • Real Estate • BD • Risk
+                  </p>
+                </div>
+              </div>
+
+              {/* 6. BOTTOM-CENTER-LEFT: Foliage photo card + Overlapping Line Graph Card (Alethia style) */}
+              <div
+                ref={item6Ref}
+                className="absolute left-[23%] bottom-[1%] z-10 will-change-transform"
+              >
+                <div className="relative">
+                  {/* Floating Dark Line Graph Card (Alethia 4 tCO2e style overlapping on left) */}
+                  <div className="absolute -top-3.5 -left-8 w-[155px] h-[72px] rounded-2xl bg-black/92 border border-white/20 p-2.5 shadow-2xl backdrop-blur-md flex flex-col justify-between z-20">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono-label text-[7.5px] text-[#14f884] font-bold uppercase">+14 YRS</span>
+                      <span className="font-mono-label text-[7px] text-white/50">REPUTATION</span>
+                    </div>
+                    {/* Line Graph with dots */}
+                    <div className="relative w-full h-5 flex items-center">
+                      <svg viewBox="0 0 120 20" className="w-full h-full overflow-visible">
+                        <polyline
+                          fill="none"
+                          stroke="#14f884"
+                          strokeWidth="1.5"
+                          points="5,16 35,14 65,10 95,5 115,2"
+                        />
+                        <circle cx="5" cy="16" r="2" fill="#fff" />
+                        <circle cx="35" cy="14" r="2" fill="#fff" />
+                        <circle cx="65" cy="10" r="2" fill="#fff" />
+                        <circle cx="95" cy="5" r="2.5" fill="#14f884" />
+                        <circle cx="115" cy="2" r="3" fill="#14f884" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Base Leaf Photo Card */}
+                  <div className="w-[195px] h-[155px] rounded-3xl overflow-hidden border border-white/20 bg-[#05211b] p-3 shadow-2xl flex flex-col justify-between relative">
+                    <div className="relative h-18 w-full rounded-2xl overflow-hidden">
+                      <Image
+                        src="/images/art-02.jpg"
+                        alt="Ground reality"
+                        fill
+                        className="object-cover opacity-60"
+                        sizes="195px"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#05211b] via-transparent to-transparent" />
+                    </div>
+                    <div>
+                      <span className="font-mono-label text-[7.5px] text-[#14f884] font-semibold">
+                        THE SHARED PURPOSE
+                      </span>
+                      <p className="text-[10.5px] font-bold text-white leading-tight mt-0.5">
+                        &ldquo;Help good businesses get seen.&rdquo;
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 7. BOTTOM-CENTER-RIGHT: Solid Lime Badge peeking up (Alethia Carbon Balance style!)
+                  CRITICAL: Positioned at left-[53%] bottom-[2%] - completely clear of center text! */}
+              <div
+                ref={item7Ref}
+                className="absolute left-[53%] bottom-[2%] z-10 will-change-transform"
+              >
+                <div className="w-[210px] h-[110px] rounded-2xl bg-[#c6f19d] text-[#051f10] p-3.5 shadow-2xl border border-[#c6f19d] flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono-label text-[8px] font-bold uppercase tracking-wider text-[#051f10]/80">
+                      BBA 2024 • RESILIENCE
+                    </span>
+                    <span className="font-mono-label text-[7.5px] font-black px-1.5 py-0.5 rounded bg-[#051f10] text-[#c6f19d]">
+                      NO EXCUSES
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-[13px] font-black leading-tight text-[#051f10]">
+                      Finish What You Started
+                    </p>
+                    <p className="text-[9.5px] text-[#051f10]/80 leading-snug mt-0.5">
+                      Completing education because follow-through defines character.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 8. BOTTOM-FAR-RIGHT: Dark card with stat & 3D island element (Alethia 42.152 style) */}
+              <div
+                ref={item8Ref}
+                className="absolute right-[2.5%] bottom-[4%] z-10 will-change-transform"
+              >
+                <div className="w-[185px] h-[160px] rounded-3xl border border-white/20 bg-[#051e17]/95 p-3.5 shadow-2xl flex flex-col justify-between">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono-label text-[7.5px] text-[#14f884] uppercase">
+                      [THE EDGE]
+                    </span>
+                    <span className="font-mono-label text-[7.5px] text-[#14f884] font-bold px-1.5 py-0.5 rounded bg-[#14f884]/15">
+                      GRIT
+                    </span>
+                  </div>
+                  <div className="my-1">
+                    <span className="block text-[22px] font-black text-[#14f884] leading-none">
+                      42+
+                    </span>
+                    <span className="block font-mono-label text-[8px] text-white/50">
+                      FOUNDERS BACKED
+                    </span>
+                  </div>
+                  <p className="text-[10.5px] font-bold text-white leading-tight">
+                    &ldquo;Keep moving.&rdquo;
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* MOBILE VIEW (<768px): Clean horizontal swipe pill carousel */}
+            <div className="absolute bottom-4 inset-x-2 md:hidden z-20 flex gap-2.5 overflow-x-auto pb-2 pointer-events-auto">
+              <div className="shrink-0 w-52 rounded-xl border border-white/20 bg-[#05211e]/90 p-3">
+                <span className="font-mono-label text-[8px] text-[#14f884]">[AERONAUTICAL 2012]</span>
+                <p className="text-xs font-bold text-white mt-1">Navigating Without a Map</p>
+                <p className="text-[10px] text-[#9cb5ad]">Sudden medical detour built frontline logic.</p>
+              </div>
+              <div className="shrink-0 w-52 rounded-xl border border-white/20 bg-[#05211e]/90 p-3">
+                <span className="font-mono-label text-[8px] text-[#14f884]">[STUDIO FLOOR 2009]</span>
+                <p className="text-xs font-bold text-white mt-1">Swept Floors to Full Shoots</p>
+                <p className="text-[10px] text-[#9cb5ad]">7 months to master film cameras.</p>
+              </div>
+              <div className="shrink-0 w-52 rounded-xl bg-[#c6f19d] text-[#051f10] p-3">
+                <span className="font-mono-label text-[8px] font-bold">[BBA 2024]</span>
+                <p className="text-xs font-black mt-1">Finish What You Started</p>
+                <p className="text-[10px] text-[#051f10]/80">Follow-through defines character.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          PART 3: INTERACTIVE FOUNDER CARDS (Images 2, 4, 3 style)
+          PART 3: INTERACTIVE FOUNDER CARDS (Alethia Style)
           - STRICT FIXED HEIGHT: h-[540px] sm:h-[580px] (ZERO height jump on hover!)
           - Crossfade container prevents any layout expansion
-          - Luxurious unhurried 1.0s circular expansion growing from arrow button
-          - Clean header without patronizing explanatory subtext!
+          - Smooth liquid circular wave expansion originating directly from the arrow button:
+            clip-path: circle(...) centered at calc(100% - 56px) 56px
+          - Duration calibrated to 700ms with easeOutQuint curve (luxurious & smooth, never too fast!)
+          - Clean header without patronizing explanatory subtext
       ========================================================================= */}
       <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-10 sm:py-16">
         <div className="mb-8 sm:mb-10">
@@ -561,7 +588,7 @@ export default function ImpactFoundersSection() {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && setActiveFounder(founder)}
-                className="group relative rounded-[24px] border border-white/20 bg-[#051e17] overflow-hidden p-7 sm:p-9 h-[540px] sm:h-[580px] flex flex-col justify-between transition-all duration-500 shadow-2xl cursor-pointer select-none focus:outline-none"
+                className="group relative rounded-[28px] border border-white/20 bg-[#051e17] overflow-hidden p-7 sm:p-9 h-[540px] sm:h-[580px] flex flex-col justify-between transition-all duration-500 shadow-2xl cursor-pointer select-none focus:outline-none"
               >
                 {/* Visual Background Photography Layer */}
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -569,22 +596,22 @@ export default function ImpactFoundersSection() {
                     src={founder.image}
                     alt={founder.name}
                     fill
-                    className="object-cover opacity-20 group-hover:opacity-10 scale-100 group-hover:scale-105 transition-all duration-1000 ease-out"
+                    className="object-cover opacity-20 group-hover:opacity-10 scale-100 group-hover:scale-105 transition-all duration-700 ease-out"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#041d1a] via-[#051e17]/80 to-transparent" />
                 </div>
 
-                {/* THE GROWING CIRCLE ANIMATION (Exact match to Images 2, 4, 3)
-                    - Smooth, luxurious, unhurried 1.0s expansion: duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)]
-                    - Originates at top-right (center of the arrow button: calc(100% - 42px) 42px)
-                    - Grows smoothly to 150% radius, covering the full card! */}
+                {/* THE GROWING CIRCLE ANIMATION (Exact match to Alethia reference)
+                    - Originates directly at the center of the arrow button: calc(100% - 56px) 56px
+                    - Smooth, luxurious liquid wave expansion (700ms easeOutQuint)
+                    - Floods the entire card cleanly without any lag */}
                 <div
-                  className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                  className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{
                     clipPath: isHovered
-                      ? "circle(150% at calc(100% - 42px) 42px)"
-                      : "circle(0px at calc(100% - 42px) 42px)",
+                      ? "circle(160% at calc(100% - 56px) 56px)"
+                      : "circle(0px at calc(100% - 56px) 56px)",
                   }}
                 />
 
@@ -600,7 +627,7 @@ export default function ImpactFoundersSection() {
                     {founder.tag}
                   </span>
 
-                  {/* Circular Arrow Button (Source of the growing circle) */}
+                  {/* Circular Arrow Button (Source of the growing circle wave) */}
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 shadow-md ${
                       isHovered
@@ -660,7 +687,7 @@ export default function ImpactFoundersSection() {
 
                     {/* LAYER 2: Hovered Revealed Milestones + Read Bio Button */}
                     <div
-                      className={`absolute inset-0 flex flex-col justify-between transition-all duration-700 delay-150 ${
+                      className={`absolute inset-0 flex flex-col justify-between transition-all duration-500 delay-100 ${
                         isHovered
                           ? "opacity-100 translate-y-0 pointer-events-auto"
                           : "opacity-0 translate-y-3 pointer-events-none"
@@ -694,7 +721,7 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
-          PART 4: OUR VISION BANNER (From docx)
+          PART 4: OUR VISION BANNER
       ========================================================================= */}
       <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pb-12 sm:pb-16">
         <div className="rounded-[22px] border border-[#14f884]/35 bg-[#031c19] p-7 sm:p-12 text-center relative overflow-hidden shadow-2xl">
