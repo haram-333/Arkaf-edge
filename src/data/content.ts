@@ -557,7 +557,6 @@ export const EDGE_NOTES_CONTENT = {
 export const EDGE_NOTES = [
   {
     category: "Brand × Culture",
-    readTime: "5 min read",
     title: "The Future of Purpose-Driven Brands",
     excerpt:
       "How modern consumers evaluate authenticity and why purpose-led positioning drives long-term customer loyalty.",
@@ -566,7 +565,6 @@ export const EDGE_NOTES = [
   },
   {
     category: "Growth × Responsibility",
-    readTime: "4 min read",
     title: "Why Waste is the Ultimate Untapped Asset",
     excerpt:
       "From upcycling to circular supply chains: how progressive businesses turn ecological constraints into competitive edge.",
@@ -574,8 +572,7 @@ export const EDGE_NOTES = [
       "Our earliest ambition was to explore how waste itself could become useful, productive and scalable. When businesses design for circularity, growth stops being an extractive race and starts generating compound regenerative value.",
   },
   {
-    category: "Strategy × Commercial Accountability",
-    readTime: "6 min read",
+    category: "Marketing × Human Behaviour",
     title: "Clicks Aren't Growth: Measuring What Matters",
     excerpt:
       "Why vanity metrics destroy marketing budgets and how outcome-driven performance marketing rebuilds real enterprise value.",

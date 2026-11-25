@@ -29,6 +29,35 @@ export default function ImpactFoundersSection() {
 
   const [hoveredFounder, setHoveredFounder] = useState<string | null>(null);
   const [activeFounder, setActiveFounder] = useState<(typeof FOUNDERS)[number] | null>(null);
+  const [expandOrigin, setExpandOrigin] = useState<{ x: string; y: string }>({
+    x: "50%",
+    y: "50%",
+  });
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const openFounderOverlay = (
+    founder: (typeof FOUNDERS)[number],
+    e?: React.MouseEvent<HTMLElement>
+  ) => {
+    if (e) {
+      setExpandOrigin({ x: `${e.clientX}px`, y: `${e.clientY}px` });
+    } else {
+      setExpandOrigin({ x: "50%", y: "50%" });
+    }
+    setActiveFounder(founder);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsExpanded(true);
+      });
+    });
+  };
+
+  const closeFounderOverlay = () => {
+    setIsExpanded(false);
+    setTimeout(() => {
+      setActiveFounder(null);
+    }, 620);
+  };
 
   // Impact Counter Intersection Observer
   useEffect(() => {
@@ -59,7 +88,7 @@ export default function ImpactFoundersSection() {
     return () => io.disconnect();
   }, []);
 
-  // GSAP: Scroll-Driven Spread Outward from Snug Starting Positions near the text
+  // GSAP: Smooth, conflict-free 1:1 scroll spread without overlapping center text
   useEffect(() => {
     const track = spreadTrackRef.current;
     const sticky = spreadStickyRef.current;
@@ -67,87 +96,49 @@ export default function ImpactFoundersSection() {
     if (!track || !sticky) return;
 
     const ctx = gsap.context(() => {
-      // Configuration for each artifact:
-      // (dx, dy): Inward offset at progress=0 (snug close to text).
-      // As progress -> 1, offset smoothly eases to 0 (spreading out to full Alethia perimeter).
+      // Strictly non-overlapping perimeter drift:
+      // At progress=0 cards rest cleanly framing the center corridor;
+      // as progress -> 1 they gently glide outward to wide perimeter bounds.
       const SPREAD_ITEMS = [
-        { ref: item1Ref, dx: 190, dy: 75, s: 0.94 },   // Top-Far-Left (Mast blueprint)
-        { ref: item2Ref, dx: 55, dy: 70, s: 0.95 },    // Top-Center-Left (Telemetry sensor)
-        { ref: item3Ref, dx: -35, dy: 45, s: 0.94 },   // Top-Center-Right (Aerial photo + chart)
-        { ref: item4Ref, dx: -175, dy: 40, s: 0.94 },  // Top-Far-Right (Ribbed cylinder)
-        { ref: item5Ref, dx: 185, dy: 0, s: 0.94 },    // Mid-Far-Left (3D wireframe contour)
-        { ref: item6Ref, dx: 55, dy: -60, s: 0.94 },   // Bottom-Center-Left (Foliage photo + graph)
-        { ref: item7Ref, dx: -45, dy: -75, s: 0.95 },  // Bottom-Center-Right (Solid lime badge)
-        { ref: item8Ref, dx: -175, dy: -50, s: 0.94 }, // Bottom-Far-Right (3D island & stat)
+        { ref: item1Ref, fromX: 38, fromY: 22, toX: 0, toY: 0, sFrom: 0.92 },
+        { ref: item2Ref, fromX: 18, fromY: 16, toX: 0, toY: 0, sFrom: 0.94 },
+        { ref: item3Ref, fromX: -12, fromY: 12, toX: 16, toY: -8, sFrom: 0.94 },
+        { ref: item4Ref, fromX: -34, fromY: 16, toX: 0, toY: 0, sFrom: 0.92 },
+        { ref: item5Ref, fromX: 32, fromY: 0, toX: 0, toY: 0, sFrom: 0.93 },
+        { ref: item6Ref, fromX: 18, fromY: -18, toX: 0, toY: 0, sFrom: 0.94 },
+        { ref: item7Ref, fromX: -14, fromY: -18, toX: 0, toY: 0, sFrom: 0.94 },
+        { ref: item8Ref, fromX: -34, fromY: -18, toX: 0, toY: 0, sFrom: 0.92 },
       ];
 
       const updatePositions = (progress: number) => {
         const p = Math.max(0, Math.min(1, progress));
         const ease = gsap.parseEase("power2.out")(p);
-        const inward = 1 - ease;
 
-        SPREAD_ITEMS.forEach(({ ref, dx, dy, s }) => {
+        SPREAD_ITEMS.forEach(({ ref, fromX, fromY, toX, toY, sFrom }) => {
           if (!ref.current) return;
-          const currX = (dx * inward).toFixed(1);
-          const currY = (dy * inward).toFixed(1);
-          const currScale = (s + (1 - s) * ease).toFixed(3);
+          const currX = (fromX + (toX - fromX) * ease).toFixed(1);
+          const currY = (fromY + (toY - fromY) * ease).toFixed(1);
+          const currScale = (sFrom + (1 - sFrom) * ease).toFixed(3);
+          const currOpacity = Math.min(1, 0.25 + p * 2.4).toFixed(3);
           ref.current.style.transform = `translate3d(${currX}px, ${currY}px, 0) scale(${currScale})`;
+          ref.current.style.opacity = currOpacity;
         });
 
         if (centerText) {
-          const textScale = (0.98 + 0.03 * ease).toFixed(3);
+          const textScale = (0.96 + 0.04 * ease).toFixed(3);
           centerText.style.transform = `translate(-50%, -48%) scale(${textScale})`;
+          centerText.style.opacity = String(Math.min(1, 0.35 + p * 2.8));
         }
       };
 
-      // Set initial snug starting position immediately (close to text)
+      // Initialize once before scrub attaches — zero competing tweens!
       updatePositions(0);
 
-      // Modern Entrance Animation when section comes into view
-      if (centerText) {
-        gsap.fromTo(
-          centerText,
-          { opacity: 0, y: 25, scale: 0.95 },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 0.98,
-            duration: 0.9,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: track,
-              start: "top 75%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      }
-
-      const activeItemElements = SPREAD_ITEMS.map((item) => item.ref.current).filter(Boolean);
-      if (activeItemElements.length > 0) {
-        gsap.fromTo(
-          activeItemElements,
-          { opacity: 0 },
-          {
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.04,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: track,
-              start: "top 75%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      }
-
-      // Scroll-driven spread scrub: as you scroll down, cards burst outward from snug to wide!
       ScrollTrigger.create({
         trigger: track,
-        start: "top top",
+        start: "top 85%",
         end: "bottom bottom",
-        scrub: 0.5,
+        scrub: true,
         onUpdate: (self) => {
           updatePositions(self.progress);
         },
@@ -157,14 +148,27 @@ export default function ImpactFoundersSection() {
     return () => ctx.revert();
   }, []);
 
-  // Close story modal on Escape key
+  // Close story overlay on Escape key & pause Lenis background scroll while fullscreen view is active
   useEffect(() => {
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+    if (activeFounder) {
+      document.body.style.overflow = "hidden";
+      lenis?.stop();
+    } else {
+      document.body.style.overflow = "";
+      lenis?.start();
+    }
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setActiveFounder(null);
+      if (e.key === "Escape" && activeFounder) closeFounderOverlay();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+      lenis?.start();
+    };
+  }, [activeFounder]);
 
   return (
     <section
@@ -341,10 +345,10 @@ export default function ImpactFoundersSection() {
                 </div>
               </div>
 
-              {/* 3. TOP-CENTER-RIGHT: Aerial photo card + Overlapping floating chart (Alethia style) */}
+              {/* 3. TOP-CENTER-RIGHT: Positioned clearly away from center headline */}
               <div
                 ref={item3Ref}
-                className="absolute left-[54%] top-[2%] z-10 will-change-transform"
+                className="absolute right-[21%] lg:right-[23%] top-[1%] z-10 will-change-transform"
               >
                 <div className="relative">
                   {/* Base Photo Card */}
@@ -594,7 +598,7 @@ export default function ImpactFoundersSection() {
           </h3>
         </div>
 
-        {/* 2 Wide Interactive Cards with STRICT FIXED HEIGHT (Zero layout shift on hover!) */}
+        {/* 2 Wide Interactive Cards — Responsive Auto-Height on Mobile (Zero Clipping!) & Fixed Height on Desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {FOUNDERS.map((founder) => {
             const isHovered = hoveredFounder === founder.name;
@@ -604,11 +608,11 @@ export default function ImpactFoundersSection() {
                 key={founder.name}
                 onMouseEnter={() => setHoveredFounder(founder.name)}
                 onMouseLeave={() => setHoveredFounder(null)}
-                onClick={() => setActiveFounder(founder)}
+                onClick={(e) => openFounderOverlay(founder, e)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && setActiveFounder(founder)}
-                className="group relative rounded-[28px] border border-white/20 bg-[#051e17] overflow-hidden p-7 sm:p-9 h-[540px] sm:h-[580px] flex flex-col justify-between transition-all duration-500 shadow-2xl cursor-pointer select-none focus:outline-none"
+                onKeyDown={(e) => e.key === "Enter" && openFounderOverlay(founder)}
+                className="group relative rounded-[24px] sm:rounded-[28px] border border-white/20 bg-[#051e17] overflow-hidden p-6 sm:p-8 lg:p-9 min-h-[430px] h-auto md:h-[600px] lg:h-[615px] flex flex-col justify-between transition-all duration-500 shadow-2xl cursor-pointer select-none focus:outline-none"
               >
                 {/* Visual Background Photography Layer */}
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -622,10 +626,7 @@ export default function ImpactFoundersSection() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#041d1a] via-[#051e17]/80 to-transparent" />
                 </div>
 
-                {/* THE GROWING CIRCLE ANIMATION (Exact match to Alethia reference)
-                    - Originates directly at the center of the arrow button: calc(100% - 56px) 56px
-                    - Smooth, luxurious liquid wave expansion (700ms easeOutQuint)
-                    - Floods the entire card cleanly without any lag */}
+                {/* Circular Wave Expansion Fill on Hover */}
                 <div
                   className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{
@@ -636,7 +637,7 @@ export default function ImpactFoundersSection() {
                 />
 
                 {/* Card Top Row: Category tag + Arrow Button */}
-                <div className="relative z-20 flex items-center justify-between">
+                <div className="relative z-20 flex items-center justify-between mb-6 md:mb-0">
                   <span
                     className={`font-mono-label text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full border transition-colors duration-500 ${
                       isHovered
@@ -647,9 +648,8 @@ export default function ImpactFoundersSection() {
                     {founder.tag}
                   </span>
 
-                  {/* Circular Arrow Button (Source of the growing circle wave) */}
                   <div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 shadow-md ${
+                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-500 shadow-md ${
                       isHovered
                         ? "bg-[#051f10] text-[#c6f19d] scale-105"
                         : "bg-[#14f884] text-[#050b09] shadow-[0_0_16px_rgba(20,248,132,0.4)]"
@@ -663,7 +663,7 @@ export default function ImpactFoundersSection() {
                   </div>
                 </div>
 
-                {/* Card Bottom: Strictly contained within fixed height (ZERO HEIGHT TWITCH!) */}
+                {/* Card Bottom: CSS Grid stacking prevents clipping at any viewport width */}
                 <div className="relative z-20 mt-auto">
                   <h4
                     className={`text-2xl sm:text-3xl font-black uppercase tracking-tight transition-colors duration-500 ${
@@ -681,11 +681,11 @@ export default function ImpactFoundersSection() {
                     &ldquo;{founder.hook}&rdquo;
                   </p>
 
-                  {/* FIXED-HEIGHT CROSSFADE CONTAINER (h-[240px] - NEVER EXPANDS CARD!) */}
-                  <div className="relative h-[240px] mt-3">
-                    {/* LAYER 1: Unhovered Excerpt Preview */}
+                  {/* Auto-sizing CSS Grid crossfade on mobile, clean fixed crossfade slot on desktop */}
+                  <div className="grid grid-cols-1 md:h-[275px] mt-3">
+                    {/* LAYER 1: Excerpt Preview */}
                     <div
-                      className={`absolute inset-0 flex flex-col justify-between transition-all duration-500 ${
+                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-500 ${
                         isHovered
                           ? "opacity-0 -translate-y-3 pointer-events-none"
                           : "opacity-100 translate-y-0 pointer-events-auto"
@@ -694,26 +694,27 @@ export default function ImpactFoundersSection() {
                       <p className="text-xs sm:text-sm font-light leading-relaxed text-[#a8beb8]">
                         {founder.preview}
                       </p>
-                      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                      <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
                         <span className="font-mono-label text-[10px] text-[#14f884] flex items-center gap-1.5">
-                          Hover to reveal key milestones
+                          <span className="hidden md:inline">Hover or click for story</span>
+                          <span className="md:hidden">Tap to read full journey</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </span>
-                        <span className="font-mono-label text-[9px] text-white/40 uppercase">
-                          PROFILE
+                        <span className="font-mono-label text-[9px] text-white/45 uppercase">
+                          OPEN BIO
                         </span>
                       </div>
                     </div>
 
-                    {/* LAYER 2: Hovered Revealed Milestones + Read Bio Button */}
+                    {/* LAYER 2: Revealed Milestones (visible cleanly on hover without clipping!) */}
                     <div
-                      className={`absolute inset-0 flex flex-col justify-between transition-all duration-500 delay-100 ${
+                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-500 delay-75 ${
                         isHovered
                           ? "opacity-100 translate-y-0 pointer-events-auto"
                           : "opacity-0 translate-y-3 pointer-events-none"
                       }`}
                     >
-                      <div className="space-y-1.5 text-[11px] sm:text-[12px] text-[#051f10] font-medium leading-relaxed">
+                      <div className="space-y-1.5 text-[11px] sm:text-[12px] text-[#051f10] font-medium leading-snug sm:leading-relaxed">
                         {founder.revealedHighlights.map((hl, i) => (
                           <div key={i} className="flex items-start gap-2">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#051f10] shrink-0 mt-1.5" />
@@ -722,13 +723,13 @@ export default function ImpactFoundersSection() {
                         ))}
                       </div>
 
-                      <div className="pt-3 border-t border-[#051f10]/15 flex items-center justify-between">
-                        <span className="font-mono-label text-[10.5px] sm:text-[11px] font-bold text-[#051f10] uppercase tracking-wider underline underline-offset-4 inline-flex items-center gap-1.5 hover:gap-2 transition-all">
-                          READ FULL BIOGRAPHY &amp; INTERVIEW
+                      <div className="mt-4 pt-3 border-t border-[#051f10]/15 flex items-center justify-between gap-2">
+                        <span className="font-mono-label text-[10px] sm:text-[11px] font-bold text-[#051f10] uppercase tracking-wider underline underline-offset-4 inline-flex items-center gap-1.5">
+                          READ FULL BIOGRAPHY
                           <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                         </span>
                         <span className="font-mono-label text-[9px] text-[#051f10]/70 uppercase">
-                          CLICK TO OPEN
+                          EXPAND
                         </span>
                       </div>
                     </div>
@@ -777,41 +778,127 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
-          PART 5: IMMERSIVE FULL STORY MODAL
+          PART 5: FULL-VIEWPORT CIRCULAR-WAVE BIOGRAPHY OVERLAY
+          Expands seamlessly from click coordinates across the entire viewport
       ========================================================================= */}
       {activeFounder && (
         <div
-          className="fixed inset-0 z-[95] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-          onClick={() => setActiveFounder(null)}
+          data-lenis-prevent
+          style={{
+            clipPath: isExpanded
+              ? `circle(165vmax at ${expandOrigin.x} ${expandOrigin.y})`
+              : `circle(0px at ${expandOrigin.x} ${expandOrigin.y})`,
+          }}
+          className="fixed inset-0 z-[110] w-screen h-[100dvh] overflow-y-auto bg-[#031612] text-white transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
         >
+          {/* Ambient radial glow backdrop */}
           <div
-            data-lenis-prevent
-            onClick={(e) => e.stopPropagation()}
-            className="max-w-2xl w-full max-h-[85vh] overflow-y-auto rounded-3xl border border-[#14f884]/40 bg-[#041d1a] p-7 sm:p-10 shadow-2xl relative"
-          >
+            className="pointer-events-none fixed inset-0 opacity-30"
+            style={{
+              background:
+                "radial-gradient(circle at 20% 20%, rgba(20,248,132,0.22) 0%, transparent 55%), radial-gradient(circle at 85% 85%, rgba(198,241,157,0.12) 0%, transparent 50%)",
+            }}
+          />
+
+          {/* Sticky Top Minimal Navigation Bar */}
+          <div className="sticky top-0 z-30 flex items-center justify-between px-5 sm:px-10 py-4 bg-[#031612]/80 backdrop-blur-xl border-b border-white/10">
+            <span className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] font-bold">
+              [ {activeFounder.role} — {activeFounder.name} ]
+            </span>
+
             <button
               type="button"
-              onClick={() => setActiveFounder(null)}
-              aria-label="Close story"
-              className="absolute top-5 right-5 w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/75 hover:text-[#14f884] hover:border-[#14f884] cursor-pointer transition-colors"
+              onClick={closeFounderOverlay}
+              aria-label="Close biography"
+              className="inline-flex items-center gap-2 rounded-full liquid-glass-pill px-4 py-1.5 font-mono-label text-[10px] text-white hover:text-[#14f884] cursor-pointer transition-colors"
             >
-              <X className="w-4 h-4" />
+              <span>CLOSE</span>
+              <X className="w-3.5 h-3.5" />
             </button>
+          </div>
 
-            <span className="font-mono-label text-xs text-[#14f884] mb-1.5 block">
-              {activeFounder.role}
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-black text-white uppercase leading-tight pr-8">
-              {activeFounder.name}
-            </h3>
-            <p className="mt-2 font-mono-label text-xs sm:text-sm text-[#a9f5cf] italic">
-              &ldquo;{activeFounder.hook}&rdquo;
-            </p>
+          {/* Fullscreen Editorial Split Canvas */}
+          <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-10 py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+            {/* Left Monograph Identity & Key Highlights */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
+              <div className="relative h-56 sm:h-64 w-full rounded-3xl overflow-hidden border border-white/15">
+                <Image
+                  src={activeFounder.image}
+                  alt={activeFounder.name}
+                  fill
+                  className="object-cover opacity-80"
+                  sizes="(max-width: 1024px) 100vw, 420px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#031612] via-[#031612]/30 to-transparent" />
+                <span className="absolute bottom-4 left-4 rounded-full bg-[#c6f19d] text-[#051f10] font-mono-label text-[9.5px] font-bold px-3 py-1">
+                  {activeFounder.tag}
+                </span>
+              </div>
 
-            <div className="mt-6 pt-4 border-t border-white/10 space-y-4 text-sm sm:text-base text-[#c7d6d1] font-light leading-relaxed">
-              {activeFounder.bio.map((paragraph, i) => (
-                <p key={i}>{paragraph}</p>
-              ))}
+              <div>
+                <h3 className="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight leading-none">
+                  {activeFounder.name}
+                </h3>
+                <p className="mt-3 text-sm sm:text-base text-[#c6f19d] italic font-medium leading-snug">
+                  &ldquo;{activeFounder.hook}&rdquo;
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 space-y-2.5">
+                <span className="block font-mono-label text-[9px] text-[#14f884] uppercase tracking-widest">
+                  KEY MILESTONES
+                </span>
+                {activeFounder.revealedHighlights.map((hl, i) => (
+                  <div key={i} className="flex items-start gap-2.5 text-xs text-[#cde0da] leading-relaxed">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] shrink-0 mt-1.5" />
+                    <span>{hl}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Full Magazine Biography Narrative */}
+            <div className="lg:col-span-7 space-y-6 pt-2">
+              <div className="font-mono-label text-[10px] text-[#14f884] tracking-widest uppercase">
+                THE JOURNEY IN FULL
+              </div>
+              <div className="space-y-5 text-base sm:text-lg text-[#d8e9e3] font-light leading-[1.78]">
+                {activeFounder.bio.map((paragraph, i) => (
+                  <p
+                    key={i}
+                    className={
+                      i === 0
+                        ? "text-white font-normal text-lg sm:text-xl leading-relaxed"
+                        : i === activeFounder.bio.length - 1
+                        ? "text-[#c6f19d] font-medium pt-4 border-t border-white/10"
+                        : ""
+                    }
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+
+              <div className="pt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/15">
+                {FOUNDERS.filter((f) => f.name !== activeFounder.name).map((other) => (
+                  <button
+                    key={other.name}
+                    type="button"
+                    onClick={() => setActiveFounder(other)}
+                    className="inline-flex items-center gap-2 font-mono-label text-[10.5px] text-[#14f884] hover:underline cursor-pointer"
+                  >
+                    READ {other.name}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={closeFounderOverlay}
+                  className="rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10.5px] font-bold px-5 py-2.5 cursor-pointer hover:bg-[#c6f19d] transition-colors"
+                >
+                  BACK TO PAGE
+                </button>
+              </div>
             </div>
           </div>
         </div>

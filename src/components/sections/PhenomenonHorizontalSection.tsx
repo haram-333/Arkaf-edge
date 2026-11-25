@@ -132,8 +132,8 @@ export default function PhenomenonHorizontalSection() {
           ref={trackRef}
           className="flex items-stretch gap-4 sm:gap-6 pl-4 sm:pl-10 pr-8 sm:pr-16 will-change-transform"
         >
-          {/* Card 00: Dark Lead Manifesto Card (#0b0f0e) — balanced typography so it never clips */}
-          <div className="shrink-0 w-[86vw] sm:w-[430px] lg:w-[460px] h-[60vh] sm:h-[68vh] min-h-[370px] sm:min-h-[410px] max-h-[470px] sm:max-h-[540px] rounded-[20px] sm:rounded-[22px] bg-[#0b0f0e] text-white p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-[0_24px_60px_rgba(9,20,18,0.14)]">
+          {/* Card 00: Dark Lead Manifesto Card (#0b0f0e) — exact unified height across all cards */}
+          <div className="shrink-0 w-[84vw] sm:w-[400px] lg:w-[435px] h-[58vh] sm:h-[65vh] min-h-[385px] sm:min-h-[410px] max-h-[480px] sm:max-h-[520px] rounded-[20px] sm:rounded-[22px] bg-[#0b0f0e] text-white p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-[0_24px_60px_rgba(9,20,18,0.14)]">
             <div>
               <span className="inline-block rounded-[5px] bg-[#14f884] text-[#051a12] font-mono-label text-[9.5px] font-bold px-3 py-1 mb-4 sm:mb-5">
                 {PHENOMENON_LEAD.badge}
@@ -161,11 +161,11 @@ export default function PhenomenonHorizontalSection() {
             </p>
           </div>
 
-          {/* Cards 01–06: Curated Visual Frames + Architectural Principle Plaques */}
+          {/* Cards 01–06: Curated Visual Frames + Architectural Principle Plaques (exact same dimensions!) */}
           {PHENOMENON_CARDS.map((card, idx) => (
             <div
               key={card.num}
-              className={`group shrink-0 relative w-[84vw] sm:w-[400px] lg:w-[435px] h-[58vh] sm:h-[66vh] min-h-[375px] sm:min-h-[410px] max-h-[480px] sm:max-h-[540px] rounded-[20px] sm:rounded-[22px] overflow-hidden bg-gradient-to-br ${card.fallbackGradient} shadow-[0_24px_60px_rgba(9,20,18,0.13)]`}
+              className={`group shrink-0 relative w-[84vw] sm:w-[400px] lg:w-[435px] h-[58vh] sm:h-[65vh] min-h-[385px] sm:min-h-[410px] max-h-[480px] sm:max-h-[520px] rounded-[20px] sm:rounded-[22px] overflow-hidden bg-gradient-to-br ${card.fallbackGradient} shadow-[0_24px_60px_rgba(9,20,18,0.13)]`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
