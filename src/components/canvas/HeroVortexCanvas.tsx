@@ -51,9 +51,9 @@ const VERTEX_SHADER = `
     float zTravel = uTime * 0.32 + uProgress * 6.5;
     pos.z = mod(pos.z + zTravel + 52.0, zSpan) - 52.0;
 
-    // Keep the center hollow like an organic botanical portal
+    // Smoothly feather the inner vortex core so particles never form a hard circular boundary
     float radialDist = length(rotated);
-    float coreMask = smoothstep(0.9, 2.6, radialDist);
+    float coreMask = smoothstep(0.2, 3.8, radialDist);
 
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mvPosition;
@@ -64,15 +64,15 @@ const VERTEX_SHADER = `
 
     float layerPresence = mix(1.0, 0.36 + aLayer * 0.45, calmSpace);
 
-    // Text readability protection: screen-space elliptical corridor clearing in center
+    // Wide feathered screen-space readability corridor (no crisp geometric circle cut-out)
     vec2 ndc = gl_Position.xy / max(gl_Position.w, 0.001);
-    float centerDist = length(vec2(ndc.x / 0.70, ndc.y / 0.52));
+    float centerDist = length(vec2(ndc.x / 0.72, ndc.y / 0.55));
     float whoPhase = smoothstep(0.28, 0.55, uProgress);
-    float clearingCorridor = mix(0.72, 0.96, whoPhase);
-    float sideMask = smoothstep(clearingCorridor * 0.75, clearingCorridor * 1.30, centerDist);
+    float clearingCorridor = mix(0.68, 0.92, whoPhase);
+    float sideMask = smoothstep(clearingCorridor * 0.42, clearingCorridor * 1.48, centerDist);
 
-    // Leaves strictly stay on the sides (fade to 0 in center text area to protect readability)
-    float textProtection = (aLeafType < 0.5) ? sideMask : (0.35 + 0.65 * sideMask);
+    // Leaves primarily sweep along flanks while soft ambient dew speckles drift naturally
+    float textProtection = (aLeafType < 0.5) ? (0.06 + 0.94 * sideMask) : (0.28 + 0.72 * sideMask);
 
     vAlpha = nearFade * farFade * (0.32 + 0.68 * coreMask) * layerPresence * fadeOut * textProtection;
     vGlow = smoothstep(2.2, 6.5, radialDist) * 0.5 + 0.5 * sin(uTime * 1.5 + aPhase * 3.0) * 0.5 + 0.3;
@@ -207,9 +207,9 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
 
       const isRing = layer < 0.72;
       const baseR = isLeaf
-        ? 3.4 + Math.pow(Math.random(), 1.3) * 8.6  // Leaves hug outer radius, keeping center clean
-        : (isRing ? 1.75 + Math.pow(Math.random(), 1.65) * 6.8 : 3.5 + Math.random() * 14.0);
-      const r = baseR + (Math.random() - 0.5) * 0.9;
+        ? 2.8 + Math.pow(Math.random(), 1.25) * 9.2
+        : (isRing ? 1.1 + Math.pow(Math.random(), 1.55) * 7.8 : 2.8 + Math.random() * 14.5);
+      const r = baseR + (Math.random() - 0.5) * 1.5;
       radii[i] = r;
 
       positions[i * 3] = Math.cos(theta) * r;
@@ -251,8 +251,8 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
     const points = new THREE.Points(geometry, material);
     scene.add(points);
 
-    // Subtle glowing radial aura ring behind portal core
-    const ringGeo = new THREE.RingGeometry(1.7, 3.8, 64);
+    // Soft volumetric organic emerald mist aura (unclipped PlaneGeometry eliminates hard inner circle edge)
+    const ringGeo = new THREE.PlaneGeometry(14, 14, 1, 1);
     const ringMat = new THREE.ShaderMaterial({
       uniforms: {
         uTime: uniforms.uTime,
@@ -270,13 +270,30 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
         uniform float uProgress;
         varying vec2 vUv;
         void main() {
-          vec2 c = vUv - 0.5;
-          float d = length(c) * 2.0;
-          float ring = exp(-pow((d - 0.62) * 5.2, 2.0));
-          float pulse = 0.8 + 0.2 * sin(uTime * 1.5);
-          float fade = (1.0 - smoothstep(0.45, 0.78, uProgress));
-          vec3 col = vec3(0.08, 0.97, 0.52);
-          gl_FragColor = vec4(col, ring * 0.28 * pulse * fade);
+          vec2 c = (vUv - 0.5) * 2.0;
+          float r = length(c);
+          if (r > 0.98) discard;
+
+          // Multi-frequency angular swirl dissolves any clean circular geometry into organic mist
+          float angle = (r > 0.0001) ? atan(c.y, c.x) : 0.0;
+          float swirlAmp = smoothstep(0.0, 0.28, r);
+          float w1 = sin(angle * 3.0 + uTime * 0.35 - r * 4.5);
+          float w2 = cos(angle * 2.0 - uTime * 0.25 + r * 3.2);
+          float w3 = sin(angle * 5.0 + uTime * 0.18 + r * 5.5);
+          float organicR = max(0.0, r + swirlAmp * (0.075 * w1 + 0.05 * w2 + 0.03 * w3));
+
+          // Continuous volumetric falloff (zero sharp hole in center, feathers completely to 0 before plane edge)
+          float radialFalloff = exp(-organicR * organicR * 3.4);
+          float centerAttenuation = mix(0.26, 1.0, smoothstep(0.0, 0.72, organicR));
+          float wisps = 0.82 + 0.18 * (w1 * 0.6 + w2 * 0.4);
+          float outerClip = 1.0 - smoothstep(0.55, 0.96, r);
+
+          float pulse = 0.86 + 0.14 * sin(uTime * 1.2);
+          float fade = 1.0 - smoothstep(0.45, 0.80, uProgress);
+
+          float alpha = radialFalloff * centerAttenuation * wisps * outerClip * 0.19 * pulse * fade;
+          vec3 col = mix(vec3(0.03, 0.55, 0.32), vec3(0.08, 0.97, 0.52), smoothstep(0.08, 0.65, organicR));
+          gl_FragColor = vec4(col, alpha);
         }
       `,
       transparent: true,
@@ -285,7 +302,7 @@ export default function HeroVortexCanvas({ progressRef }: HeroVortexCanvasProps)
       side: THREE.DoubleSide,
     });
     const portalHalo = new THREE.Mesh(ringGeo, ringMat);
-    portalHalo.position.set(1.45, -0.1, 1.5);
+    portalHalo.position.set(uniforms.uPortalOffsetX.value, -0.1, 1.5);
     scene.add(portalHalo);
 
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
