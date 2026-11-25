@@ -17,8 +17,9 @@ export const SUSTAINABILITY_CONTENT = {
   headlineWhite: "The future shouldn't need another marketing campaign.",
   headlineGreen: "It needs businesses willing to build it.",
   lead: "Sustainability isn't a green badge we attach to our services. It is one of the reasons ARKAF Edge exists.",
-  story:
-    "Our earliest ambition was to explore how waste itself could become useful, productive and scalable. That idea eventually evolved into a larger question: What if we helped the businesses already building that future?",
+  storyLead:
+    "Our earliest ambition was to explore how waste itself could become useful, productive and scalable. That idea eventually evolved into a larger question:",
+  storyQuestion: "What if we helped the businesses already building that future?",
   affection:
     "Today, ARKAF Edge works across industries. But we have a particular affection for founders and organisations working in:",
   industries: [
@@ -34,7 +35,8 @@ export const SUSTAINABILITY_CONTENT = {
   ],
   closing:
     "We want good businesses to have access to the same quality of strategy, creativity, marketing and technology as the world's largest brands.",
-  cta: "MORE ABOUT ARKAF EDGE (DISCOVER US)",
+  cta: "MORE ABOUT ARKAF EDGE",
+  ctaKicker: "DISCOVER US",
 };
 
 export const BRAND_STATEMENT = {
@@ -51,19 +53,19 @@ export const BRAND_STATEMENT = {
 
 export const SERVICES_CONTENT = {
   eyebrow: "WHAT WE DO — CONNECTED DISCIPLINES",
-  headline: "ONE PARTNER. MANY EDGES.",
+  headline: "One partner. Many edges.",
   subtitle:
     "A brand doesn't experience its problems in departments. Neither do we. We combine disciplines to create connected solutions that move businesses forward.",
 };
 
-export const SERVICES_QUADRANTS = [
+export const SERVICES_DISCIPLINES = [
   {
     num: "01",
     label: "STRATEGY & BRAND",
-    title: "STRATEGY &\nBRAND",
     tagline: "Find what makes you impossible to ignore.",
-    description:
+    paragraphs: [
       "We uncover what your brand stands for, who it should matter to and how it should show up in the world.",
+    ],
     capabilities: [
       "Brand Strategy",
       "Brand Positioning",
@@ -73,60 +75,82 @@ export const SERVICES_QUADRANTS = [
       "Campaign Strategy",
       "Growth Strategy",
     ],
-    align: "left" as const,
   },
   {
     num: "02",
-    label: "ORGANIC & PERFORMANCE",
-    title: "ORGANIC &\nPERFORMANCE",
+    label: "ORGANIC GROWTH",
     tagline: "Build attention you don't have to keep buying.",
-    description:
-      "Compounding SEO, organic ecosystems, and paid campaigns built around real business outcomes, never vanity metrics.",
-    capabilities: [
-      "SEO & Organic Marketing",
-      "Social Media Ecosystems",
-      "Meta & Google Ads",
-      "Performance Marketing",
-      "Conversion Optimisation",
-      "Lead Generation",
-      "Analytics & Reporting",
+    paragraphs: [
+      "Visibility shouldn't disappear the moment an advertising budget stops.",
+      "We create search, social and content ecosystems designed to compound over time.",
     ],
-    align: "right" as const,
+    capabilities: [
+      "SEO",
+      "Organic Marketing",
+      "Social Media Marketing",
+      "Content Strategy",
+      "Content Creation",
+      "Community Building",
+      "Search Visibility",
+    ],
   },
   {
     num: "03",
-    label: "CREATIVE PRODUCTION",
-    title: "CREATIVE\nPRODUCTION",
-    tagline: "Make people stop. Then make them care.",
-    description:
-      "From a single product frame to an entire cinematic campaign, we create visual stories designed around the identity of the brand.",
+    label: "PERFORMANCE",
+    tagline: "Creative thinking. Commercial accountability.",
+    paragraphs: [
+      "Clicks aren't growth. Impressions aren't growth. Vanity metrics certainly aren't growth.",
+      "We build paid campaigns around outcomes that matter to the business.",
+    ],
     capabilities: [
-      "Product & Campaign Photography",
-      "Video Production & Films",
-      "Short-form Reels & Video",
+      "Meta Ads",
+      "Google Ads",
+      "Paid Marketing",
+      "Performance Marketing",
+      "Campaign Optimisation",
+      "Lead Generation",
+      "Conversion Strategy",
+      "Analytics & Reporting",
+    ],
+  },
+  {
+    num: "04",
+    label: "CREATIVE PRODUCTION",
+    tagline: "Make people stop. Then make them care.",
+    paragraphs: [
+      "Good creative earns attention. Great creative makes the brand memorable.",
+      "From a single product frame to an entire campaign, we create visual stories designed around the identity of the brand.",
+    ],
+    capabilities: [
+      "Product Photography",
+      "Campaign Photography",
+      "Video Production",
+      "Short-form Video",
+      "Reels",
       "Editing & Post-production",
       "Creative Direction",
       "Advertising Creatives",
       "Brand Content",
     ],
-    align: "left" as const,
   },
   {
-    num: "04",
+    num: "05",
     label: "DIGITAL & TECHNOLOGY",
-    title: "DIGITAL &\nTECHNOLOGY",
     tagline: "Build the place where your brand lives online.",
-    description:
-      "Your website shouldn't simply explain your company — it should demonstrate it. High-impact experiences where strategy, UX/UI, and code work as one system.",
+    paragraphs: [
+      "Your website shouldn't simply explain your company. It should demonstrate it.",
+      "We design digital experiences where strategy, storytelling, design and technology work as one system.",
+    ],
     capabilities: [
-      "Website Strategy & UX/UI",
-      "Website Development (Next.js)",
-      "Landing Pages & Portals",
+      "Website Strategy",
+      "UX/UI",
+      "Website Design",
+      "Website Development",
+      "Landing Pages",
       "Conversion Optimisation",
-      "Interactive 3D WebGL",
+      "Digital Experiences",
       "Technology Integration",
     ],
-    align: "right" as const,
   },
 ];
 
@@ -137,8 +161,8 @@ export const ROTATING_WORDS = {
 
 export const PHENOMENON_LEAD = {
   badge: "04. OUR PHILOSOPHY",
-  whiteLines: ["GROW. NOT", "SIMPLY", "BIGGER."],
-  greenLines: ["BUILD", "STRONGER."],
+  whiteLines: ["GROW.", "NOT SIMPLY", "BIGGER."],
+  greenLines: ["STRONGER."],
   body: "Strategy gives us direction. Creativity earns attention. Technology creates possibility. Performance proves what works. Purpose determines where we go next — that is the ARKAF Edge.",
 };
 
@@ -147,95 +171,119 @@ export const PHILOSOPHY_PRINCIPLES = [
     num: "01",
     title: "PURPOSE BEFORE NOISE",
     body: "We want to understand why something deserves attention before trying to manufacture attention for it.",
+    image: "/images/art-01.jpg?v=2",
+    fallbackGradient: "from-zinc-800 via-zinc-700 to-zinc-900",
   },
   {
     num: "02",
     title: "THINK BEFORE SPEND",
     body: "A larger advertising budget cannot repair unclear positioning. Strategy comes first.",
-  },
-  {
-    num: "03",
-    title: "CREATE WITH INTENTION",
-    body: "Every frame, word, campaign and interaction should have a reason to exist.",
-  },
-  {
-    num: "04",
-    title: "MEASURE WHAT MATTERS",
-    body: "Numbers should help us make better decisions, not decorate presentations.",
-  },
-  {
-    num: "05",
-    title: "BUILD FOR TOMORROW",
-    body: "Short-term campaigns should contribute to long-term brand value.",
-  },
-  {
-    num: "06",
-    title: "LEAVE SOMETHING GOOD BEHIND",
-    body: "Growth and responsibility don't have to sit on opposite sides of the table. We want to prove they belong together.",
-  },
-];
-
-export const PHENOMENON_CARDS = [
-  {
-    num: "01",
-    alt: "Circular design architecture",
-    image: "/images/art-01.jpg?v=2",
-    fallbackGradient: "from-zinc-700 via-zinc-600 to-zinc-800",
-  },
-  {
-    num: "02",
-    alt: "Abstract 3D emerald torus",
     image: "/images/art-02.jpg?v=2",
     fallbackGradient: "from-indigo-950 via-purple-900 to-rose-950",
   },
   {
     num: "03",
-    alt: "Architectural reflection gallery",
+    title: "CREATE WITH INTENTION",
+    body: "Every frame, word, campaign and interaction should have a reason to exist.",
     image: "/images/art-03.jpg?v=2",
     fallbackGradient: "from-stone-800 via-neutral-700 to-stone-950",
   },
   {
     num: "04",
-    alt: "Vibrant macro iridescent fluid",
+    title: "MEASURE WHAT MATTERS",
+    body: "Numbers should help us make better decisions, not decorate presentations.",
     image: "/images/art-04.jpg?v=2",
-    fallbackGradient: "from-fuchsia-500 via-amber-400 to-cyan-500",
+    fallbackGradient: "from-fuchsia-700 via-amber-500 to-cyan-700",
+  },
+  {
+    num: "05",
+    title: "BUILD FOR TOMORROW",
+    body: "Short-term campaigns should contribute to long-term brand value.",
+    image: "/images/sustainability-landscape.jpg",
+    fallbackGradient: "from-emerald-950 via-teal-900 to-zinc-950",
+  },
+  {
+    num: "06",
+    title: "LEAVE SOMETHING GOOD BEHIND",
+    body: "Growth and responsibility don't have to sit on opposite sides of the table. We want to prove they belong together.",
+    image: "/images/art-01.jpg?v=2",
+    fallbackGradient: "from-emerald-900 via-green-950 to-black",
+  },
+];
+
+export const PHENOMENON_CARDS = PHILOSOPHY_PRINCIPLES;
+
+export const ARKAF_METHOD_HEADER = {
+  badge: "05. THE ARKAF METHOD",
+  line1: "NO PACKAGES. NO COPY-PASTE PLAYBOOKS.",
+  line2Accent: "WE FIND THE EDGE.",
+  repeatLabel: "REPEAT",
+};
+
+export const ARKAF_METHOD = [
+  {
+    step: "01",
+    name: "UNDERSTAND",
+    lead: "Business before marketing.",
+    desc: "We study your company, customer, competition, product, market and ambition.",
+  },
+  {
+    step: "02",
+    name: "DEFINE",
+    lead: "Clarity before creativity.",
+    desc: "We establish positioning, priorities, audience and the problem worth solving.",
+  },
+  {
+    step: "03",
+    name: "CREATE",
+    lead: "Ideas become experiences.",
+    desc: "Brand identity. Content. Campaigns. Photography. Film. Websites.",
+  },
+  {
+    step: "04",
+    name: "DISTRIBUTE",
+    lead: "Good work deserves an audience.",
+    desc: "SEO. Organic. Social. Meta. Google. Performance.",
+  },
+  {
+    step: "05",
+    name: "MEASURE",
+    lead: "Data becomes direction.",
+    desc: "We learn what works, what doesn't and where the next opportunity lives.",
+  },
+  {
+    step: "06",
+    name: "EVOLVE",
+    lead: "Growth isn't a finish line.",
+    desc: "We optimise, experiment and build the next edge.",
   },
 ];
 
 export const APPROACH_STAGES = [
   {
     word: "THINK",
-    num: "01",
+    num: "01 & 02",
     previewLabel: "01 & 02 — UNDERSTAND & DEFINE",
-    title: "Understand the business, audience, market, and opportunity.",
-    body: "Business before marketing, clarity before creativity. We study your company, customer, competition, product, market and ambition.",
     side: "right" as const,
+    steps: [ARKAF_METHOD[0], ARKAF_METHOD[1]],
+    isRepeat: false,
   },
   {
     word: "CREATE",
-    num: "02",
+    num: "03 & 04",
     previewLabel: "03 & 04 — CREATE & DISTRIBUTE",
-    title: "Ideas become experiences. Good work deserves an audience.",
-    body: "Brand identity, content, campaigns, photography, film, and websites, distributed across search, social, and performance channels.",
     side: "left" as const,
+    steps: [ARKAF_METHOD[2], ARKAF_METHOD[3]],
+    isRepeat: false,
   },
   {
     word: "TRANSFORM",
-    num: "03",
+    num: "05 & 06",
     previewLabel: "05 & 06 — MEASURE, EVOLVE & REPEAT",
-    title: "Data becomes direction. Growth isn't a finish line.",
-    body: "We learn what works, what doesn't and where the next opportunity lives. We optimise, experiment and build the next edge.",
     side: "right" as const,
+    steps: [ARKAF_METHOD[4], ARKAF_METHOD[5]],
+    isRepeat: true,
   },
-];
-
-export const ARKAF_METHOD = [
-  { step: "01", name: "UNDERSTAND", desc: "Business before marketing. We study your company, customer, competition, product, market and ambition." },
-  { step: "02", name: "DEFINE", desc: "Clarity before creativity. We establish positioning, priorities, audience and the problem worth solving." },
-  { step: "03", name: "CREATE", desc: "Ideas become experiences. Brand identity. Content. Campaigns. Photography. Film. Websites." },
-  { step: "04", name: "DISTRIBUTE", desc: "Good work deserves an audience. SEO. Organic. Social. Meta. Google. Performance." },
-  { step: "05", name: "MEASURE", desc: "Data becomes direction. We learn what works, what doesn't and where the next opportunity lives." },
-  { step: "06", name: "EVOLVE", desc: "Growth isn't a finish line. We optimise, experiment and build the next edge." },
 ];
 
 export const IMPACT_STATS = [
@@ -244,6 +292,28 @@ export const IMPACT_STATS = [
   { value: 100, suffix: "%", label: "COMMERCIAL ACCOUNTABILITY", display: "100%" },
   { value: null, suffix: "", label: "CIRCULAR VALUE GENERATED", display: "∞" },
 ];
+
+export const ABOUT_CONTENT = {
+  badge: "ABOUT & THE FOUNDERS",
+  headlineWhite: "TWO JOURNEYS.",
+  headlineGreen: "ONE EDGE.",
+  sublead: "We weren't born in a boardroom. We were built through detours.",
+  body: "ARKAF Edge grew from an unusual collection of experiences. And a persistent belief that business can create value without being disconnected from the world around it.",
+  sharedIdeaLabel: "Two different journeys eventually arrived at one shared idea:",
+  sharedIdeaPillars: ["Build something meaningful.", "Help others build theirs."],
+};
+
+export const FEATURED_WORK_CONTENT = {
+  badge: "07. FEATURED WORK — SELECTED WORK",
+  headlineLines: ["WORK WITH A", "REASON TO"],
+  headlineAccent: "EXIST.",
+  intro:
+    "We are particularly drawn to businesses trying to create something better: better products, better systems, better communities or a better relationship with the planet.",
+  clientsHighlight:
+    "We have worked with and have successfully transformed more than 25 brands who were looking for an edge like us. Some of our major clients include Doodlage, Aangrakha, Aakar Gymnastics.",
+  closing:
+    "Our clientele is not limited to a particular sector or category. If you are looking to transform your brand and grow in sustainability, we would be proud to represent you.",
+};
 
 export const FEATURED_WORK = [
   {
@@ -332,9 +402,10 @@ export const FOUNDERS = [
     bio: [
       "Anurag's journey didn't begin in marketing. It began with machines. After completing Aeronautical Engineering in 2012, a medical emergency abruptly changed the direction of his career. The carefully drawn map disappeared. So, he learned to navigate without one.",
       "What followed was experience across customer service, collections, sales, upselling, real estate, team management and business development. Different industries. Different people. Different problems. One education no classroom could have designed.",
-      "Behind it was another constant: an enduring relationship with nature and a growing discomfort with the amount of value the modern economy simply throws away. In 2020, that discomfort became an idea: turning waste into something productive, useful and scalable.",
-      "The deeper he went, the clearer another problem became: the businesses already attempting to build a more sustainable world urgently needed visibility, strategy, storytelling, creativity, technology and growth.",
-      "So the idea evolved: instead of building only one sustainable brand, why not build an organisation capable of helping many of them succeed? That question became part of the foundation of ARKAF Edge.",
+      "Behind it was another constant: an enduring relationship with nature and a growing discomfort with the amount of value the modern economy simply throws away.",
+      "In 2020, that discomfort became an idea. Anurag began exploring a business built around turning waste into something productive, useful and scalable. But the deeper he went, the clearer another problem became.",
+      "The businesses already attempting to build a more sustainable world often needed something just as urgently: Visibility. They needed strategy. They needed storytelling. They needed creativity. They needed technology. They needed growth.",
+      "So the idea evolved. Instead of building only one sustainable brand, why not build an organisation capable of helping many of them succeed? That question became part of the foundation of ARKAF Edge.",
       "Today, Anurag brings together the unlikely combination his career gave him: engineering logic, sales instinct, customer empathy, commercial thinking, curiosity and an appetite for risk.",
     ],
   },
@@ -355,11 +426,11 @@ export const FOUNDERS = [
     image: "/images/art-02.jpg",
     bio: [
       "After completing his SSC in 2006 and HSC in 2009, circumstances pushed him into working life early. With his family moving to the UAE for better opportunities, he stayed in India and learned independence long before it became a professional virtue.",
-      "Faiyaz's career began closer to the ground than most founder stories — literally in a photography studio sweeping floors. Seven months later, he was handling complete shoots himself using film and analogue cameras. That progression captures much of what would follow.",
-      "Photography and editing became some of his earliest practical skills. He worked across diverse environments, including DAKC and multiple commercial studios, always balancing responsibility with craft.",
-      "From 2012 through 2023 he worked across the merchandise industry, customer service, debt collection, and risk management.",
+      "Faiyaz's career began closer to the ground than most founder stories. Literally. It started in a photography studio sweeping floors. Seven months later, he was handling complete shoots himself using film and analogue cameras. That progression captures much of what would follow.",
+      "Photography and editing became some of his earliest practical skills. He later attempted to pursue a bachelor's degree while working across different environments, including DAKC and multiple studios, but responsibility repeatedly took precedence over the conventional path.",
+      "From 2012 through 2023 he has worked in the merchandise industry, customer service, debt collection, and risk management.",
       "And in 2024, after years of work repeatedly interrupting education, he enrolled in a BBA programme. Not because a degree suddenly defined him. Because finishing what you started matters.",
-      "His story brings something irreplaceable to ARKAF Edge: resourcefulness, an understanding of people, an eye trained through photography, experience built across cultures, and the ability to remain useful when the original plan collapses.",
+      "His story brings something important to ARKAF Edge: resourcefulness, an understanding of people, an eye trained through photography, experience built across cultures, and the ability to remain useful when the original plan collapses.",
       "Faiyaz's career was never a straight line. Neither is building a business. Sometimes the edge is knowing how to keep moving.",
     ],
   },
@@ -466,6 +537,21 @@ export const VISION_CONTENT = {
   ],
   quote:
     "THE NEXT GENERATION OF GREAT COMPANIES WON'T BE MEASURED ONLY BY HOW MUCH THEY GROW. BUT BY WHAT GROWS BECAUSE THEY EXISTED.",
+};
+
+export const EDGE_NOTES_CONTENT = {
+  badge: "08. INSIGHTS — EDGE NOTES",
+  headlineWhite: "IDEAS WORTH",
+  headlineGreen: "CARRYING FORWARD.",
+  subtitle:
+    "Not another corporate blog. Edge Notes is where we explore the intersections shaping modern businesses.",
+  intersections: [
+    "Brand × Culture",
+    "Technology × Creativity",
+    "Growth × Responsibility",
+    "Business × Nature",
+    "Marketing × Human Behaviour",
+  ],
 };
 
 export const EDGE_NOTES = [

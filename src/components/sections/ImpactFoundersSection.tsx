@@ -5,7 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, ArrowUpRight, Sparkles, X, Check } from "lucide-react";
-import { IMPACT_STATS, FOUNDERS, VISION_CONTENT } from "@/data/content";
+import { ABOUT_CONTENT, IMPACT_STATS, FOUNDERS, VISION_CONTENT } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -241,20 +241,31 @@ export default function ImpactFoundersSection() {
 
           {/* Spatial Stage calibrated to viewport height */}
           <div className="relative w-full max-w-[1360px] h-[min(730px,88vh)] mx-auto px-4">
-            {/* CENTER TEXT BLOCK (Centered at 50% / 48% with dedicated unobstructed corridor) */}
+            {/* CENTER TEXT BLOCK (Centered with safe margin inside perimeter cards on all viewports) */}
             <div
               ref={centerTextRef}
-              className="absolute left-1/2 top-[48%] -translate-x-1/2 -translate-y-1/2 z-20 max-w-md sm:max-w-lg w-full px-4 text-center select-none pointer-events-none"
+              className="absolute left-1/2 top-[43%] md:top-[48%] -translate-x-1/2 -translate-y-1/2 z-20 max-w-sm md:max-w-[390px] lg:max-w-[500px] xl:max-w-[540px] w-full px-4 text-center select-none pointer-events-none"
             >
-              <span className="inline-block rounded-full border border-[#14f884]/35 bg-[#072924]/90 px-3.5 py-1 font-mono-label text-[9px] sm:text-[10px] text-[#14f884] mb-2.5 shadow-[0_0_16px_rgba(20,248,132,0.2)]">
-                ABOUT &amp; LEADERSHIP
+              <span className="inline-block rounded-full border border-[#14f884]/35 bg-[#072924]/90 px-3.5 py-1 font-mono-label text-[9px] sm:text-[10px] text-[#14f884] mb-2 shadow-[0_0_16px_rgba(20,248,132,0.2)]">
+                {ABOUT_CONTENT.badge}
               </span>
-              <h2 className="text-[clamp(1.75rem,3.4vw,2.9rem)] font-black uppercase tracking-tight leading-[1.08]">
-                <span className="block text-white">TWO JOURNEYS.</span>
-                <span className="block text-[#14f884] neon-text-glow">ONE EDGE.</span>
+              <h2 className="text-[clamp(1.65rem,3.1vw,2.75rem)] font-black uppercase tracking-tight leading-[1.06]">
+                <span className="block text-white">{ABOUT_CONTENT.headlineWhite}</span>
+                <span className="block text-[#14f884] neon-text-glow">
+                  {ABOUT_CONTENT.headlineGreen}
+                </span>
               </h2>
-              <p className="mt-3 text-[clamp(0.78rem,0.95vw,0.88rem)] text-[#d4e4df] font-light leading-relaxed max-w-sm sm:max-w-md mx-auto">
-                We weren&apos;t born in a boardroom. We were built through detours. Two different journeys arrived at one shared idea: build something meaningful and help others build theirs.
+              <p className="mt-2.5 text-xs sm:text-[13.5px] font-semibold text-[#c7f5dd] leading-snug">
+                {ABOUT_CONTENT.sublead}
+              </p>
+              <p className="mt-1.5 text-[11px] sm:text-[12.5px] text-[#d4e4df] font-light leading-relaxed max-w-md mx-auto">
+                {ABOUT_CONTENT.body}
+              </p>
+              <p className="mt-2 text-[10.5px] sm:text-[11.5px] text-[#9ec4b8] font-light">
+                {ABOUT_CONTENT.sharedIdeaLabel}{" "}
+                <span className="text-[#14f884] font-semibold">
+                  {ABOUT_CONTENT.sharedIdeaPillars.join(" ")}
+                </span>
               </p>
             </div>
 
@@ -407,9 +418,9 @@ export default function ImpactFoundersSection() {
               {/* 5. MID-FAR-LEFT: 3D Topographic Wireframe Contour (Alethia style) */}
               <div
                 ref={item5Ref}
-                className="absolute left-[2.5%] top-[48%] z-10 will-change-transform"
+                className="absolute left-[1.5%] lg:left-[2.5%] top-[48%] z-10 will-change-transform"
               >
-                <div className="w-[165px] h-[165px] rounded-3xl border border-white/20 bg-[#051c17]/95 p-3 shadow-2xl backdrop-blur-md flex flex-col justify-between">
+                <div className="w-[140px] lg:w-[165px] h-[155px] lg:h-[165px] rounded-3xl border border-white/20 bg-[#051c17]/95 p-3 shadow-2xl backdrop-blur-md flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="font-mono-label text-[8px] text-[#14f884] font-bold uppercase">
                       [GROUND REALITY]
@@ -575,7 +586,7 @@ export default function ImpactFoundersSection() {
         <div className="mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 font-mono-label text-[10px] text-[#14f884] mb-2 uppercase">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>THE LEADERSHIP BEHIND THE EDGE</span>
+            <span>THE FOUNDERS — TWO JOURNEYS. ONE EDGE.</span>
           </div>
           <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tight">
             <span className="text-white">HOVER CARDS TO </span>

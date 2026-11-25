@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Sparkles, X, CheckCircle2, Copy, Check } from "lucide-react";
-import { EDGE_NOTES } from "@/data/content";
+import { EDGE_NOTES, EDGE_NOTES_CONTENT } from "@/data/content";
 
 const SERVICE_CHIPS = [
   "Brand Strategy",
@@ -76,19 +76,31 @@ export default function InsightsContactFooter() {
       >
         <div className="max-w-[1000px] mx-auto px-5 sm:px-10">
           <span className="inline-block rounded-full border border-[#14f884]/25 bg-[#072924] font-mono-label text-[10px] text-[#14f884] px-4 py-1.5 mb-4">
-            08. INSIGHTS — EDGE NOTES
+            {EDGE_NOTES_CONTENT.badge}
           </span>
 
           <h2 className="text-[clamp(1.65rem,3.3vw,3.15rem)] font-black tracking-[-0.025em] uppercase leading-[1.04] mb-3 md:whitespace-nowrap">
-            <span className="text-white">IDEAS WORTH </span>
+            <span className="text-white">{EDGE_NOTES_CONTENT.headlineWhite} </span>
             <span className="text-[#14f884] neon-text-glow">
-              CARRYING FORWARD.
+              {EDGE_NOTES_CONTENT.headlineGreen}
             </span>
           </h2>
 
-          <p className="max-w-xl text-xs sm:text-sm text-[#99b3ab] font-light mb-7 sm:mb-9">
-            Not another corporate blog. Edge Notes is where we explore the intersections shaping modern businesses: Brand × Culture, Technology × Creativity, and Growth × Responsibility.
+          <p className="max-w-xl text-xs sm:text-sm text-[#99b3ab] font-light mb-5">
+            {EDGE_NOTES_CONTENT.subtitle}
           </p>
+
+          {/* All 5 Doc Intersections displayed cleanly as frosted liquid glass pills */}
+          <div className="flex flex-wrap items-center gap-2 mb-7 sm:mb-9">
+            {EDGE_NOTES_CONTENT.intersections.map((topic) => (
+              <span
+                key={topic}
+                className="px-3 py-1 rounded-full liquid-glass-pill font-mono-label text-[9.5px] sm:text-[10px] text-[#c7f5dd] tracking-wider"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
 
           {/* 3-Column Card Grid matching Screenshot 13 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">

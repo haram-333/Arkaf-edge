@@ -28,7 +28,7 @@ const SENSOR_HOTSPOTS: Hotspot[] = [
     category: "CIRCULAR UP-CYCLING",
     metric: "12,000+ KG RECLAIMED",
     detail: "Repurposing industrial textile & material discard into scalable commercial assets.",
-    top: "50%",
+    top: "56%",
     left: "14%",
     tooltipPos: "right",
   },
@@ -37,7 +37,7 @@ const SENSOR_HOTSPOTS: Hotspot[] = [
     category: "VERIFIABLE METRICS",
     metric: "ZERO GREENWASHING",
     detail: "Scientific clarity & commercial logic translate into verifiable, compliance-ready metrics.",
-    top: "58%",
+    top: "61%",
     left: "36%",
     tooltipPos: "right",
   },
@@ -46,7 +46,7 @@ const SENSOR_HOTSPOTS: Hotspot[] = [
     category: "NATURE-POSITIVE TECH",
     metric: "COMPOUNDING REACH",
     detail: "Organic ecosystems designed to compound over time without endless paid ad spend.",
-    bottom: "16%",
+    bottom: "20%",
     left: "62%",
     tooltipPos: "top",
   },
@@ -348,11 +348,10 @@ export default function SustainabilitySection() {
 
         {/* =====================================================================
             LAYER 4: 4 INTERACTIVE SENSOR NODES (Exact Alethia 5-Dot Matrix + Inline Labels)
-            - Clean & closed by default so they never block text or view
-            - Inline uppercase tag directly beside the dot (matches Alethia reference)
-            - Hovering or tapping smoothly reveals rich data capsule
+            - Shown cleanly on tablet/desktop (sm+) in open lower terrarium zone
+            - Mobile keeps pure uninterrupted typography & pills with zero dot overlap
         ===================================================================== */}
-        <div className="absolute inset-0 z-30 pointer-events-none">
+        <div className="hidden sm:block absolute inset-0 z-30 pointer-events-none">
           {SENSOR_HOTSPOTS.map((spot, idx) => {
             const isActive = activeHotspot === spot.id;
 
@@ -439,60 +438,72 @@ export default function SustainabilitySection() {
 
         {/* =====================================================================
             LAYER 5: FULL-HEIGHT EDITORIAL TYPOGRAPHY & GSAP TEXT REVEAL
-            - Positioned in Upper-Right Quadrant (Alethia Layout)
-            - Leaves Lower 60% of Screen 100% OPEN for Nature & Sensor Nodes
+            - Upper Deck fits comfortably above lower terrarium showcase
+            - Left Column: Impact Intelligence eyebrow + Origin Story pull-quote
+            - Right Column: Core Sustainability headline, closing mission & CTAs
+            - Bottom Dock: Industry focus lead + 9 liquid-glass vertical pills
         ===================================================================== */}
-        <div className="relative z-20 w-full max-w-[1360px] mx-auto px-5 sm:px-12 h-screen h-[100dvh] flex flex-col justify-between pt-24 sm:pt-28 pb-6 sm:pb-8 pointer-events-none">
-          {/* Top Row: Eyebrow on Far-Left + Upper-Right Headline */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Top-Left Eyebrow (Alethia Carbon Intelligence style) */}
-            <div ref={eyebrowRef} className="lg:col-span-4 pointer-events-auto">
-              <span className="block font-mono-label text-[9px] sm:text-[10.5px] text-[#14f884] font-bold uppercase tracking-[0.16em] leading-relaxed">
-                REAL-TIME,<br />
-                CIRCULAR-BACKED<br />
-                IMPACT INTELLIGENCE
+        <div className="relative z-20 w-full max-w-[1360px] mx-auto px-5 sm:px-10 lg:px-12 h-screen h-[100dvh] flex flex-col justify-between pt-20 sm:pt-24 pb-4 sm:pb-7 pointer-events-none">
+          {/* Top Row: Origin Story Pull-Quote (Left) + Core Headline & Mission (Right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start">
+            {/* Top-Left: Eyebrow + Earliest Ambition Origin Story */}
+            <div ref={eyebrowRef} className="lg:col-span-5 pointer-events-auto">
+              <span className="block font-mono-label text-[8.5px] sm:text-[10px] text-[#14f884] font-bold uppercase tracking-[0.16em] leading-relaxed">
+                {SUSTAINABILITY_CONTENT.badge}
               </span>
+
+              <div className="mt-2 sm:mt-3 pl-3 sm:pl-4 border-l border-[#14f884]/55 max-w-md">
+                <p className="text-[11px] sm:text-[12.5px] text-[#c7d6d1] font-light leading-relaxed">
+                  {SUSTAINABILITY_CONTENT.storyLead}
+                </p>
+                <p className="mt-1 text-[11.5px] sm:text-[13px] font-semibold text-white leading-snug">
+                  {SUSTAINABILITY_CONTENT.storyQuestion}
+                </p>
+              </div>
             </div>
 
-            {/* Upper-Right Headline + Subtitle (Alethia Style) */}
-            <div className="lg:col-span-8 lg:pl-6 pointer-events-auto">
+            {/* Upper-Right Headline + Exact Doc Copy + CTAs */}
+            <div className="lg:col-span-7 lg:pl-4 pointer-events-auto">
               <h2
                 ref={headlineRef}
-                className="text-[clamp(1.2rem,1.9vw,1.85rem)] font-medium sm:font-semibold text-[#f5f4f2] tracking-[-0.025em] leading-[1.3]"
+                className="text-[clamp(1.12rem,1.85vw,1.82rem)] font-medium sm:font-semibold text-[#f5f4f2] tracking-[-0.025em] leading-[1.26]"
               >
                 <span className="block overflow-hidden py-0.5">
                   <span className="reveal-line block will-change-transform">
-                    The future shouldn&apos;t need another marketing campaign.
+                    {SUSTAINABILITY_CONTENT.headlineWhite}
                   </span>
                 </span>
                 <span className="block overflow-hidden py-0.5 mt-0.5">
                   <span className="reveal-line block text-[#14f884] font-bold will-change-transform">
-                    It needs businesses willing to build it.
+                    {SUSTAINABILITY_CONTENT.headlineGreen}
                   </span>
                 </span>
               </h2>
 
               <p
                 ref={subtextRef}
-                className="mt-3 max-w-lg text-[clamp(0.8rem,0.95vw,0.88rem)] text-[#d0ded9] font-light leading-relaxed"
+                className="mt-2.5 max-w-xl text-[11.5px] sm:text-[13px] text-[#d4e4df] font-light leading-relaxed"
               >
-                Sustainability isn&apos;t a green badge we attach to our services. It is one of the reasons ARKAF Edge exists. We bring the strategic caliber and technology of global market leaders to founders building what comes next.
+                {SUSTAINABILITY_CONTENT.lead} {SUSTAINABILITY_CONTENT.closing}
               </p>
 
               {/* Clean Action Buttons */}
-              <div ref={ctaRef} className="mt-4 sm:mt-5 flex items-center gap-3">
+              <div ref={ctaRef} className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2.5 sm:gap-3">
                 <a
-                  href="#services"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-5 sm:px-6 py-2.5 sm:py-3 font-mono-label text-[10px] sm:text-[11px] font-bold shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#a9f5cf] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+                  href="#impact"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-4 sm:px-6 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10.5px] font-bold shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#a9f5cf] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
                 >
-                  <span>DISCOVER ARKAF EDGE</span>
+                  <span>{SUSTAINABILITY_CONTENT.cta}</span>
+                  <span className="text-[8.5px] opacity-75 font-semibold hidden sm:inline">
+                    ({SUSTAINABILITY_CONTENT.ctaKicker})
+                  </span>
                   <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
                 </a>
 
                 <div className="liquid-glass-btn-wrap">
                   <a
                     href="#work"
-                    className="liquid-glass-btn px-4 sm:px-5 py-2.5 sm:py-3 font-mono-label text-[9.5px] sm:text-[10.5px] font-medium text-white hover:text-[#14f884]"
+                    className="liquid-glass-btn px-4 sm:px-5 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10px] font-medium text-white hover:text-[#14f884]"
                   >
                     <span className="liquid-glass-btn-shine" />
                     <span className="relative z-10">CIRCULAR WORK ↗</span>
@@ -502,13 +513,13 @@ export default function SustainabilitySection() {
             </div>
           </div>
 
-          {/* Lower Row: 9 Focus Circular Sectors Pills (Discreetly at the bottom edge) */}
-          <div ref={pillsRef} className="pt-3 pointer-events-auto border-t border-white/10">
+          {/* Lower Row: Full Affection Copy + 9 Focus Circular Sectors Pills */}
+          <div ref={pillsRef} className="pt-2.5 sm:pt-3 pointer-events-auto border-t border-white/10">
             <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <span className="font-mono-label text-[8px] sm:text-[9px] text-[#14f884] font-bold uppercase tracking-wider">
-                PARTICULAR AFFECTION FOR:
+              <span className="text-[10.5px] sm:text-xs text-[#d4ede4] font-light leading-snug">
+                {SUSTAINABILITY_CONTENT.affection}
               </span>
-              <span className="hidden sm:inline-block font-mono-label text-[8px] text-white/40">
+              <span className="hidden lg:inline-block font-mono-label text-[8px] text-[#14f884]/75">
                 CIRCULAR &amp; REGENERATIVE VERTICALS
               </span>
             </div>
@@ -517,7 +528,7 @@ export default function SustainabilitySection() {
               {SUSTAINABILITY_CONTENT.industries.map((ind) => (
                 <span
                   key={ind}
-                  className="px-2.5 py-1 rounded-full liquid-glass-pill font-mono-label text-[8px] sm:text-[9px] text-[#d4ede4] hover:text-[#14f884] transition-colors"
+                  className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full liquid-glass-pill font-mono-label text-[8px] sm:text-[9px] text-[#d4ede4] hover:text-[#14f884] transition-colors"
                 >
                   {ind}
                 </span>

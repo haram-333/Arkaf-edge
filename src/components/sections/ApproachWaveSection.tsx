@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ParticleWaveCanvas from "@/components/canvas/ParticleWaveCanvas";
-import { APPROACH_STAGES } from "@/data/content";
+import { APPROACH_STAGES, ARKAF_METHOD_HEADER } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -127,20 +127,22 @@ export default function ApproachWaveSection() {
           }}
         />
 
-        {/* Pinned Top-Left Header */}
-        <div className="relative z-20 w-full max-w-[1380px] mx-auto px-5 sm:px-10 pt-16 sm:pt-24">
+        {/* Pinned Top-Left Header: Full ARKAF Method Identity */}
+        <div className="relative z-20 w-full max-w-[1380px] mx-auto px-5 sm:px-10 pt-16 sm:pt-22">
           <div className="inline-flex items-center gap-2 font-mono-label text-[9.5px] sm:text-[11px] text-[#14f884] mb-1">
             <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-            <span>05. OUR APPROACH — HOW WE WORK</span>
+            <span>{ARKAF_METHOD_HEADER.badge}</span>
           </div>
-          <h2 className="text-[clamp(1.4rem,3.35vw,3.05rem)] font-black tracking-[-0.025em] uppercase leading-tight">
-            <span className="text-white">THINK. CREATE. </span>
-            <span className="text-[#14f884] neon-text-glow">TRANSFORM.</span>
+          <h2 className="text-[clamp(1.1rem,2.35vw,2.2rem)] font-black tracking-[-0.025em] uppercase leading-[1.12] max-w-3xl">
+            <span className="text-white">{ARKAF_METHOD_HEADER.line1} </span>
+            <span className="text-[#14f884] neon-text-glow">
+              {ARKAF_METHOD_HEADER.line2Accent}
+            </span>
           </h2>
         </div>
 
         {/* Center Stacked Words & Stage Controls */}
-        <div className="relative z-20 w-full max-w-[1380px] mx-auto px-5 sm:px-10 flex-1 flex flex-col justify-between lg:justify-center lg:items-center pt-4 pb-5 lg:py-0 lg:pb-8">
+        <div className="relative z-20 w-full max-w-[1380px] mx-auto px-5 sm:px-10 flex-1 flex flex-col justify-between lg:justify-center lg:items-center pt-2 pb-4 lg:py-0 lg:pb-6">
           {/* Center Stacked Words (interactive clickable buttons) */}
           <div className="text-center select-none z-10 my-auto lg:my-0 flex flex-col items-center">
             {APPROACH_STAGES.map((stage, idx) => {
@@ -151,7 +153,7 @@ export default function ApproachWaveSection() {
                   type="button"
                   onClick={() => scrollToStage(idx)}
                   aria-label={`Jump to stage ${stage.word}`}
-                  className={`block text-[clamp(2rem,5.2vw,4.75rem)] font-black tracking-[-0.03em] leading-[1.06] uppercase transition-all duration-300 cursor-pointer focus:outline-none ${
+                  className={`block text-[clamp(1.65rem,4.7vw,4.35rem)] font-black tracking-[-0.03em] leading-[1.06] uppercase transition-all duration-300 cursor-pointer focus:outline-none ${
                     isActive
                       ? "text-white scale-100 drop-shadow-[0_0_24px_rgba(20,248,132,0.4)]"
                       : "text-white/30 hover:text-white/60 scale-[0.97]"
@@ -162,7 +164,7 @@ export default function ApproachWaveSection() {
               );
             })}
 
-            <div className="mt-3 sm:mt-6 inline-flex items-center gap-2 text-[clamp(0.8rem,1.35vw,1.2rem)] text-[#d0dfd9] font-light">
+            <div className="mt-2.5 sm:mt-5 inline-flex items-center gap-2 text-[clamp(0.76rem,1.2vw,1.08rem)] text-[#d0dfd9] font-light">
               <span>Each essential. Each in</span>
               <span className="rounded-full border border-white/40 bg-[#051a12]/55 backdrop-blur-sm px-3 py-0.5 text-[0.88em] text-white font-normal">
                 sync.
@@ -170,58 +172,82 @@ export default function ApproachWaveSection() {
             </div>
           </div>
 
-          {/* Mobile/Tablet Docked Card Slot with Clickable Stage Selector Tabs */}
+          {/* Mobile/Tablet Docked Card Slot using CSS Grid stacking (Zero vertical clipping) */}
           <div className="lg:hidden w-full max-w-md mx-auto mt-2 flex flex-col items-center">
             {/* Quick selector tabs cleanly separated ABOVE the card */}
-            <div className="flex items-center justify-center gap-2 mb-2.5 z-30">
+            <div className="flex items-center justify-center gap-2 mb-2 z-30">
               {APPROACH_STAGES.map((s, idx) => (
                 <button
                   key={s.word}
                   type="button"
                   onClick={() => scrollToStage(idx)}
-                  className={`px-3.5 py-1.5 rounded-full font-mono-label text-[9.5px] font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-full font-mono-label text-[9px] font-bold transition-all cursor-pointer ${
                     activeStage === idx
                       ? "bg-[#14f884] text-[#050b09] shadow-[0_0_14px_rgba(20,248,132,0.85)] scale-105"
                       : "bg-[#060f0c]/90 text-white/60 border border-white/15 hover:text-white hover:border-[#14f884]/40"
                   }`}
                 >
-                  0{idx + 1} {s.word}
+                  {s.num} {s.word}
                 </button>
               ))}
             </div>
 
-            {/* Docked Card Slot */}
-            <div className="relative w-full min-h-[260px] sm:min-h-[240px]">
+            {/* Grid-stacked Docked Card Slot (auto-sizes naturally to tallest stage, overflow-y guard for tiny screens) */}
+            <div className="grid grid-cols-1 w-full">
               {APPROACH_STAGES.map((stage, idx) => {
                 const isActive = activeStage === idx;
                 return (
                   <div
                     key={stage.num}
-                    className={`absolute inset-x-0 top-0 transition-all duration-500 ease-out ${
+                    className={`col-start-1 row-start-1 transition-all duration-500 ease-out ${
                       isActive
-                        ? "opacity-100 translate-y-0 pointer-events-auto"
-                        : "opacity-0 translate-y-4 pointer-events-none"
+                        ? "opacity-100 translate-y-0 pointer-events-auto z-10"
+                        : "opacity-0 translate-y-4 pointer-events-none z-0"
                     }`}
                   >
-                    <div className="rounded-[16px] border border-white/12 bg-[#060f0c]/95 backdrop-blur-xl p-4 shadow-[0_18px_40px_rgba(0,0,0,0.65)]">
-                      <div className="relative h-[82px] rounded-[10px] overflow-hidden border border-white/8 mb-3 bg-black">
+                    <div
+                      data-lenis-prevent
+                      className="rounded-[16px] border border-white/15 bg-[#060f0c]/95 backdrop-blur-xl p-3.5 sm:p-4 shadow-[0_18px_40px_rgba(0,0,0,0.65)] max-h-[45dvh] overflow-y-auto"
+                    >
+                      <div className="relative h-[58px] rounded-[10px] overflow-hidden border border-white/8 mb-2.5 bg-black">
                         <StageTelemetryGraphic index={idx} />
-                        <span className="absolute bottom-1.5 inset-x-0 text-center font-mono-label text-[8.5px] text-[#14f884]/85">
+                        <span className="absolute bottom-1 inset-x-0 text-center font-mono-label text-[8px] text-[#14f884]/90">
                           {stage.previewLabel}
                         </span>
                       </div>
-                      <div className="inline-flex items-center gap-1.5 font-mono-label text-[9px] text-[#14f884] mb-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-                        <span>
-                          {stage.num} — {stage.word}
-                        </span>
+
+                      <div className="space-y-2.5">
+                        {stage.steps.map((st, sIdx) => (
+                          <div
+                            key={st.step}
+                            className={sIdx > 0 ? "pt-2 border-t border-white/10" : ""}
+                          >
+                            <div className="inline-flex items-center gap-1.5 font-mono-label text-[8.5px] text-[#14f884] mb-0.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
+                              <span>
+                                {st.step} — {st.name}
+                              </span>
+                            </div>
+                            <h3 className="text-xs sm:text-sm font-bold text-white leading-snug">
+                              {st.lead}
+                            </h3>
+                            <p className="mt-0.5 text-[11px] sm:text-xs text-[#a9bfb8] font-light leading-relaxed">
+                              {st.desc}
+                            </p>
+                          </div>
+                        ))}
                       </div>
-                      <h3 className="text-sm font-bold text-white leading-snug">
-                        {stage.title}
-                      </h3>
-                      <p className="mt-1.5 text-xs text-[#a9bfb8] font-light leading-relaxed">
-                        {stage.body}
-                      </p>
+
+                      {stage.isRepeat && (
+                        <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
+                          <span className="font-mono-label text-[8px] text-white/50">
+                            CONTINUOUS CYCLE
+                          </span>
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[8.5px] font-bold text-[#14f884]">
+                            ↻ {ARKAF_METHOD_HEADER.repeatLabel}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -234,8 +260,8 @@ export default function ApproachWaveSection() {
             const isActive = activeStage === idx;
             const sideClass =
               stage.side === "right"
-                ? "right-10 left-auto"
-                : "left-10 right-auto";
+                ? "right-8 xl:right-10 left-auto"
+                : "left-8 xl:left-10 right-auto";
 
             return (
               <div
@@ -244,34 +270,55 @@ export default function ApproachWaveSection() {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && scrollToStage(idx)}
-                className={`hidden lg:block absolute top-1/2 -translate-y-1/2 w-[310px] xl:w-[345px] ${sideClass} z-20 cursor-pointer transition-all duration-500 ease-out ${
+                className={`hidden lg:block absolute top-[55%] -translate-y-1/2 w-[335px] xl:w-[375px] ${sideClass} z-20 cursor-pointer transition-all duration-500 ease-out ${
                   isActive
                     ? "opacity-100 -translate-y-1/2 pointer-events-auto"
                     : "opacity-0 translate-y-[-43%] pointer-events-none"
                 }`}
               >
-                <div className="rounded-[18px] border border-white/10 bg-[#060f0c]/92 backdrop-blur-xl p-5 shadow-[0_24px_60px_rgba(0,0,0,0.68)] hover:border-[#14f884]/60 transition-colors">
-                  <div className="relative h-[145px] rounded-[12px] overflow-hidden border border-white/8 mb-4 bg-black">
+                <div
+                  data-lenis-prevent
+                  className="rounded-[18px] border border-white/15 bg-[#060f0c]/92 backdrop-blur-xl p-4 xl:p-5 shadow-[0_24px_60px_rgba(0,0,0,0.68)] hover:border-[#14f884]/60 transition-colors max-h-[68dvh] overflow-y-auto"
+                >
+                  <div className="relative h-[88px] xl:h-[104px] rounded-[12px] overflow-hidden border border-white/8 mb-3 bg-black">
                     <StageTelemetryGraphic index={idx} />
-                    <span className="absolute bottom-2.5 inset-x-0 text-center font-mono-label text-[9px] text-[#14f884]/85">
+                    <span className="absolute bottom-2 inset-x-0 text-center font-mono-label text-[8.5px] text-[#14f884]/85">
                       {stage.previewLabel}
                     </span>
                   </div>
 
-                  <div className="inline-flex items-center gap-1.5 font-mono-label text-[9.5px] text-[#14f884] mb-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
-                    <span>
-                      {stage.num} — {stage.word}
-                    </span>
+                  <div className="space-y-3">
+                    {stage.steps.map((st, sIdx) => (
+                      <div
+                        key={st.step}
+                        className={sIdx > 0 ? "pt-2.5 border-t border-white/10" : ""}
+                      >
+                        <div className="inline-flex items-center gap-1.5 font-mono-label text-[9px] text-[#14f884] mb-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
+                          <span>
+                            {st.step} — {st.name}
+                          </span>
+                        </div>
+                        <h3 className="text-[13.5px] xl:text-[15px] font-bold text-white leading-snug">
+                          {st.lead}
+                        </h3>
+                        <p className="mt-0.5 text-[11.5px] xl:text-[12.5px] text-[#a9bfb8] font-light leading-relaxed">
+                          {st.desc}
+                        </p>
+                      </div>
+                    ))}
                   </div>
 
-                  <h3 className="text-[clamp(0.95rem,1.35vw,1.25rem)] font-bold text-white leading-[1.28]">
-                    {stage.title}
-                  </h3>
-
-                  <p className="mt-2.5 text-[clamp(0.75rem,0.98vw,0.88rem)] text-[#a9bfb8] font-light leading-[1.52]">
-                    {stage.body}
-                  </p>
+                  {stage.isRepeat && (
+                    <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between">
+                      <span className="font-mono-label text-[8.5px] text-white/50">
+                        CONTINUOUS CYCLE
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[9px] font-bold text-[#14f884]">
+                        ↻ {ARKAF_METHOD_HEADER.repeatLabel}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             );

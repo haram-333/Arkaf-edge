@@ -28,9 +28,9 @@ export default function PhenomenonHorizontalSection() {
 
       const getPinDistance = () => {
         if (window.innerWidth < 768) {
-          return Math.max(getScrollAmount() * 1.85, window.innerHeight * 2.4);
+          return Math.max(getScrollAmount() * 1.65, window.innerHeight * 2.5);
         }
-        return Math.max(getScrollAmount() * 4.6, window.innerHeight * 4.4);
+        return Math.max(getScrollAmount() * 3.1, window.innerHeight * 4.4);
       };
 
       gsap.to(track, {
@@ -161,24 +161,45 @@ export default function PhenomenonHorizontalSection() {
             </p>
           </div>
 
-          {/* Cards 01–04: Pure Clean Edge-to-Edge Artwork + Top-Left Number Pill ONLY */}
-          {PHENOMENON_CARDS.map((card) => (
+          {/* Cards 01–06: Curated Visual Frames + Architectural Principle Plaques */}
+          {PHENOMENON_CARDS.map((card, idx) => (
             <div
               key={card.num}
-              className={`group shrink-0 relative w-[84vw] sm:w-[420px] lg:w-[450px] h-[60vh] sm:h-[68vh] min-h-[370px] sm:min-h-[410px] max-h-[470px] sm:max-h-[540px] rounded-[20px] sm:rounded-[22px] overflow-hidden bg-gradient-to-br ${card.fallbackGradient} shadow-[0_24px_60px_rgba(9,20,18,0.13)]`}
+              className={`group shrink-0 relative w-[84vw] sm:w-[400px] lg:w-[435px] h-[58vh] sm:h-[66vh] min-h-[375px] sm:min-h-[410px] max-h-[480px] sm:max-h-[540px] rounded-[20px] sm:rounded-[22px] overflow-hidden bg-gradient-to-br ${card.fallbackGradient} shadow-[0_24px_60px_rgba(9,20,18,0.13)]`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={card.image}
-                alt={card.alt}
+                alt={card.title}
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${
+                  idx === 5 ? "scale-x-[-1] hue-rotate-[-16deg] brightness-90" : ""
+                }`}
               />
 
-              {/* Top-left compact dark pill badge matching Screenshot 4 */}
-              <span className="absolute top-5 left-5 inline-flex items-center justify-center rounded-full bg-[#0b1311]/90 text-[#14f884] font-mono-label text-[10.5px] font-bold px-3.5 py-1.5">
+              {/* Dark gradient scrim keeping top art vibrant and bottom copy crystal clear */}
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(6,17,14,0.12) 0%, rgba(6,17,14,0.10) 42%, rgba(4,16,13,0.88) 78%, rgba(3,12,10,0.97) 100%)",
+                }}
+              />
+
+              {/* Top-left compact dark pill badge */}
+              <span className="absolute top-5 left-5 inline-flex items-center justify-center rounded-full bg-[#0b1311]/90 text-[#14f884] font-mono-label text-[10.5px] font-bold px-3.5 py-1.5 border border-[#14f884]/25">
                 {card.num}
               </span>
+
+              {/* Bottom Minimal Editorial Principle Plaque */}
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
+                <span className="block font-mono-label text-[10px] sm:text-[11px] font-bold text-[#14f884] tracking-[0.12em] uppercase mb-1.5">
+                  {card.num} — {card.title}
+                </span>
+                <p className="text-[clamp(0.9rem,1.2vw,1.1rem)] text-[#f1f6f4] font-medium leading-[1.45]">
+                  {card.body}
+                </p>
+              </div>
             </div>
           ))}
         </div>

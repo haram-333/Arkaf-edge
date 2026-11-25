@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, X, Sparkles, CheckCircle2 } from "lucide-react";
-import { FEATURED_WORK } from "@/data/content";
+import { ArrowRight, X, CheckCircle2 } from "lucide-react";
+import { FEATURED_WORK, FEATURED_WORK_CONTENT } from "@/data/content";
 
 export default function FeaturedWorkSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -61,22 +61,28 @@ export default function FeaturedWorkSection() {
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8 mb-10 sm:mb-16">
           <div className="shrink-0 max-w-xl">
             <span className="inline-block rounded-full border border-[#14f884]/25 bg-[#072924] font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884] px-3.5 sm:px-4 py-1.5 mb-4 sm:mb-5">
-              07. FEATURED WORK — SELECTED WORK
+              {FEATURED_WORK_CONTENT.badge}
             </span>
             <h2 className="text-[clamp(2.35rem,5.3vw,4.85rem)] font-black tracking-[-0.03em] leading-[0.95] uppercase">
-              <span className="block text-white sm:whitespace-nowrap">
-                WORK WITH A
-              </span>
-              <span className="block text-white">REASON TO</span>
+              {FEATURED_WORK_CONTENT.headlineLines.map((line) => (
+                <span key={line} className="block text-white sm:whitespace-nowrap">
+                  {line}
+                </span>
+              ))}
               <span className="block text-[#14f884] neon-text-glow sm:whitespace-nowrap">
-                EXIST.
+                {FEATURED_WORK_CONTENT.headlineAccent}
               </span>
             </h2>
           </div>
 
-          <p className="max-w-[420px] text-[clamp(0.85rem,1.1vw,0.98rem)] text-[#a8beb8] font-light leading-[1.58] lg:pb-1.5">
-            We are particularly drawn to businesses creating something better: better products, better systems, or a better relationship with the planet. Transformed 25+ brands including Doodlage, Aangrakha, and Aakar Gymnastics.
-          </p>
+          <div className="max-w-[460px] space-y-2.5 lg:pb-1.5">
+            <p className="text-[clamp(0.85rem,1.08vw,0.98rem)] text-[#d0ded9] font-light leading-[1.58]">
+              {FEATURED_WORK_CONTENT.intro}
+            </p>
+            <p className="text-[clamp(0.8rem,0.98vw,0.9rem)] text-[#97b8ad] font-light leading-[1.55]">
+              {FEATURED_WORK_CONTENT.clientsHighlight}
+            </p>
+          </div>
         </div>
 
         {/* 3 Full-Width Split Horizontal Case Study Cards */}
@@ -134,6 +140,21 @@ export default function FeaturedWorkSection() {
               </div>
             </article>
           ))}
+        </div>
+
+        {/* Closing Client Callout Strip (Exact doc copy, clean modern architectural frame) */}
+        <div className="mt-10 sm:mt-14 rounded-[18px] sm:rounded-[20px] liquid-glass p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <p className="max-w-2xl text-sm sm:text-base text-[#d4ede4] font-light leading-relaxed">
+            {FEATURED_WORK_CONTENT.closing}
+          </p>
+          <button
+            type="button"
+            onClick={handleStartSimilarProject}
+            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10px] sm:text-[11px] font-bold px-6 py-3.5 neon-box-glow hover:scale-[1.03] active:scale-[0.98] transition-transform cursor-pointer"
+          >
+            PARTNER WITH US
+            <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          </button>
         </div>
       </div>
 
