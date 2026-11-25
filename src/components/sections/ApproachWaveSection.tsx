@@ -239,10 +239,7 @@ export default function ApproachWaveSection() {
                       </div>
 
                       {stage.isRepeat && (
-                        <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
-                          <span className="font-mono-label text-[8px] text-white/50">
-                            CONTINUOUS CYCLE
-                          </span>
+                        <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-end">
                           <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[8.5px] font-bold text-[#14f884]">
                             ↻ {ARKAF_METHOD_HEADER.repeatLabel}
                           </span>
@@ -310,10 +307,7 @@ export default function ApproachWaveSection() {
                   </div>
 
                   {stage.isRepeat && (
-                    <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-between">
-                      <span className="font-mono-label text-[8.5px] text-white/50">
-                        CONTINUOUS CYCLE
-                      </span>
+                    <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-end">
                       <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[9px] font-bold text-[#14f884]">
                         ↻ {ARKAF_METHOD_HEADER.repeatLabel}
                       </span>

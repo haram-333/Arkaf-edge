@@ -239,18 +239,15 @@ export default function InsightsContactFooter() {
                   </div>
 
                   <div
-                    className={`relative z-20 mt-7 pt-3 border-t flex items-center justify-between transition-colors duration-500 ${
+                    className={`relative z-20 mt-7 pt-3 border-t flex items-center justify-end transition-colors duration-500 ${
                       isHovered ? "border-[#051f10]/15" : "border-white/10"
                     }`}
                   >
-                    <span
-                      className={`font-mono-label text-[10px] font-bold inline-flex items-center gap-1.5 transition-colors duration-500 ${
-                        isHovered ? "text-[#051f10]" : "text-[#14f884]"
+                    <ArrowUpRight
+                      className={`w-4 h-4 transition-all duration-500 ${
+                        isHovered ? "text-[#051f10] translate-x-0.5 -translate-y-0.5" : "text-[#14f884]"
                       }`}
-                    >
-                      EXPLORE NOTE
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </span>
+                    />
                   </div>
                 </article>
               );
@@ -443,14 +440,9 @@ export default function InsightsContactFooter() {
             <div className="lg:col-span-7">
               <div className="rounded-[24px] sm:rounded-[28px] liquid-glass p-6 sm:p-9 lg:p-10 relative overflow-hidden">
                 <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
-                  <div>
-                    <span className="font-mono-label text-[9px] text-[#14f884] tracking-widest block mb-1">
-                      DIRECT BRIEF
-                    </span>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                      Start a Conversation
-                    </h3>
-                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                    Start a Conversation
+                  </h3>
                   <span className="w-2.5 h-2.5 rounded-full bg-[#14f884] shadow-[0_0_10px_#14f884] animate-pulse" />
                 </div>
 

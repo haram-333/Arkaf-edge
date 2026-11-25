@@ -244,23 +244,21 @@ export default function ServicesFlowerSection() {
           </div>
         </div>
 
-        {/* Bottom Optical Sequence Bar (Desktop) */}
-        <div className="hidden md:flex relative z-20 w-full max-w-[1400px] mx-auto px-8 lg:px-14 pb-5 items-center justify-between text-[9px] font-mono-label text-white/40 pointer-events-auto">
-          <span>DISCIPLINE 0{activeIdx + 1} / 05</span>
+        {/* Minimal Optical Sequence Dots (Desktop — no guide text) */}
+        <div className="hidden md:flex relative z-20 w-full max-w-[1400px] mx-auto px-8 lg:px-14 pb-5 items-center justify-center pointer-events-auto">
           <div className="flex items-center gap-2">
             {SERVICES_DISCIPLINES.map((d, i) => (
               <button
                 key={d.num}
                 type="button"
                 onClick={() => scrollToDiscipline(i)}
-                aria-label={`Jump to ${d.label}`}
+                aria-label={`Select ${d.label}`}
                 className={`h-1 rounded-full transition-all duration-300 cursor-pointer ${
                   activeIdx === i ? "w-8 bg-[#14f884]" : "w-3 bg-white/20 hover:bg-white/45"
                 }`}
               />
             ))}
           </div>
-          <span>SCROLL OR SELECT TO EXPLORE</span>
         </div>
       </div>
     </section>

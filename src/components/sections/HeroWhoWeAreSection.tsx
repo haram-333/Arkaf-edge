@@ -175,8 +175,9 @@ export default function HeroWhoWeAreSection() {
 
           {/* Clean Borderless Bottom Utility Row */}
           <div className="flex items-center justify-between gap-4">
-            <span className="font-mono-label text-[9.5px] sm:text-[11px] text-[#8fa8a0]">
-              {HERO_CONTENT.bottomLeft}
+            <span className="inline-flex items-center gap-2 font-mono-label text-[9.5px] sm:text-[10.5px] text-[#8fa8a0]">
+              <span className="w-4 h-[1px] bg-[#14f884]/70" />
+              <span>ARKAF EDGE</span>
             </span>
             <span className="hidden sm:inline-flex items-center gap-2 font-mono-label text-[10px] sm:text-[11px] text-[#8fa8a0]">
               <span className="w-2 h-2 rounded-full bg-[#14f884] animate-pulse-dot" />

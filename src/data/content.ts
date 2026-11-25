@@ -8,7 +8,6 @@ export const HERO_CONTENT = {
   primaryCta: "WHAT WE DO",
   secondaryCta: "EXPLORE OUR WORK ↗",
   discoverCta: "DISCOVER ARKAF EDGE",
-  bottomLeft: "SCROLL DOWN TO REVEAL SUSTAINABILITY & WHO WE ARE",
   bottomRight: "STRATEGY × CREATIVE × TECHNOLOGY",
 };
 

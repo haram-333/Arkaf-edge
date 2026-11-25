@@ -18,14 +18,12 @@ gsap.registerPlugin(ScrollTrigger);
 export default function ImpactFoundersSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const journeyRef = useRef<HTMLDivElement | null>(null);
+  const timelineWrapRef = useRef<HTMLDivElement | null>(null);
+  const spineProgressRef = useRef<HTMLDivElement | null>(null);
   const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Interactive Journey Explorer State
-  const [journeyFilter, setJourneyFilter] = useState<"all" | "anurag" | "faiyaz">("all");
-  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>(
-    FOUNDER_SPREAD_ITEMS[0].id
-  );
+  // Active Milestone Focus on Hover
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
 
   // Hover & Slow Full-Viewport Circular Expand Overlay State
   const [hoveredFounder, setHoveredFounder] = useState<string | null>(null);
@@ -49,7 +47,6 @@ export default function ImpactFoundersSection() {
     setIsExpanded(false);
     setActiveFounder(founder);
 
-    // Guarantee initial circle(0px) frame commits before triggering the slow 1.35s expansion
     overlayTimerRef.current = setTimeout(() => {
       setIsExpanded(true);
     }, 28);
@@ -63,7 +60,6 @@ export default function ImpactFoundersSection() {
     }, 980);
   };
 
-  // Cleanup pending timer on unmount
   useEffect(() => {
     return () => {
       if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
@@ -99,35 +95,54 @@ export default function ImpactFoundersSection() {
     return () => io.disconnect();
   }, []);
 
-  // Clean one-way entrance animation for Journey Matrix (zero conflict, zero position snap!)
+  // Scroll-scrubbed Central Luminous Convergence Spine + Node Reveal
   useEffect(() => {
-    const journeyEl = journeyRef.current;
-    if (!journeyEl) return;
+    const wrap = timelineWrapRef.current;
+    const spine = spineProgressRef.current;
+    if (!wrap) return;
 
     const ctx = gsap.context(() => {
-      const cards = journeyEl.querySelectorAll(".journey-card");
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 24 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: 0.06,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: journeyEl,
-            start: "top 80%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }, journeyEl);
+      if (spine) {
+        gsap.fromTo(
+          spine,
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: wrap,
+              start: "top 70%",
+              end: "bottom 75%",
+              scrub: true,
+            },
+          }
+        );
+      }
+
+      const beats = wrap.querySelectorAll(".convergence-beat");
+      beats.forEach((beat) => {
+        gsap.fromTo(
+          beat,
+          { opacity: 0, y: 22 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: beat,
+              start: "top 86%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+    }, wrap);
 
     return () => ctx.revert();
   }, []);
 
-  // Close story overlay on Escape & lock background scroll cleanly
+  // Lock page scroll while fullscreen monograph is active
   useEffect(() => {
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
     if (activeFounder) {
@@ -149,24 +164,9 @@ export default function ImpactFoundersSection() {
     };
   }, [activeFounder]);
 
-  const filteredMilestones = FOUNDER_SPREAD_ITEMS.filter((item) => {
-    if (journeyFilter === "all") return true;
-    return item.founderKey === journeyFilter || item.founderKey === "shared";
-  });
-
-  const activeMilestone =
-    FOUNDER_SPREAD_ITEMS.find((m) => m.id === selectedMilestoneId) ||
-    FOUNDER_SPREAD_ITEMS[0];
-
-  const handleFilterChange = (filter: "all" | "anurag" | "faiyaz") => {
-    setJourneyFilter(filter);
-    const nextList = FOUNDER_SPREAD_ITEMS.filter(
-      (item) => filter === "all" || item.founderKey === filter || item.founderKey === "shared"
-    );
-    if (nextList.length > 0 && !nextList.some((m) => m.id === selectedMilestoneId)) {
-      setSelectedMilestoneId(nextList[0].id);
-    }
-  };
+  // Separate timeline beats cleanly while preserving chronological interplay
+  const timelineBeats = FOUNDER_SPREAD_ITEMS.filter((item) => item.founderKey !== "shared");
+  const convergenceBeat = FOUNDER_SPREAD_ITEMS.find((item) => item.founderKey === "shared");
 
   return (
     <section
@@ -188,7 +188,6 @@ export default function ImpactFoundersSection() {
           </h2>
         </div>
 
-        {/* 4-Column Wide Stat Boxes */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {IMPACT_STATS.map((stat, idx) => (
             <div
@@ -212,203 +211,210 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
-          PART 2: MODERN INTERACTIVE "TWO JOURNEYS. ONE EDGE." TIMELINE STAGE
-          - Clean architectural split manifesto + interactive milestone matrix
-          - Zero overlapping absolute coordinates or scroll jitter!
-          - Filterable by Founder (All / Anurag / Faiyaz) with live detail rail
+          PART 2: ABOUT — OPEN ARCHITECTURAL PROSE + LUMINOUS CONVERGENCE SPINE
+          - Frameless sculptural typography (zero admin filter boxes or truncated text!)
+          - Scroll-drawn central emerald spine tracing two paths merging into one edge
       ========================================================================= */}
-      <div
-        ref={journeyRef}
-        className="relative border-t border-white/10 bg-gradient-to-b from-[#031815] via-[#041d1a] to-[#041d1a] py-14 sm:py-20 overflow-hidden"
-      >
+      <div className="relative border-t border-white/10 bg-gradient-to-b from-[#031613] via-[#041d1a] to-[#041d1a] py-16 sm:py-24 overflow-hidden">
         <div
-          className="pointer-events-none absolute inset-0 opacity-40"
+          className="pointer-events-none absolute inset-0 opacity-35"
           style={{
             background:
-              "radial-gradient(ellipse 65% 45% at 50% 15%, rgba(20,248,132,0.08) 0%, transparent 70%)",
+              "radial-gradient(ellipse 65% 40% at 50% 10%, rgba(20,248,132,0.08) 0%, transparent 70%)",
           }}
         />
 
         <div className="relative z-10 max-w-[1140px] mx-auto px-5 sm:px-10">
-          {/* Editorial Manifesto Header Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end mb-10 sm:mb-12">
-            <div className="lg:col-span-6">
-              <span className="inline-block rounded-full liquid-glass-pill px-3.5 py-1 font-mono-label text-[9.5px] text-[#14f884] mb-3.5">
-                {ABOUT_CONTENT.badge}
-              </span>
-
-              <h2 className="text-[clamp(2rem,4vw,3.4rem)] font-black uppercase tracking-[-0.03em] leading-[1.02]">
-                <span className="block text-white">{ABOUT_CONTENT.headlineWhite}</span>
-                <span className="block text-[#14f884] neon-text-glow">
-                  {ABOUT_CONTENT.headlineGreen}
-                </span>
-              </h2>
-
-              <p className="mt-3 text-sm sm:text-base font-semibold text-[#c7f5dd]">
-                {ABOUT_CONTENT.sublead}
-              </p>
-            </div>
-
-            <div className="lg:col-span-6 space-y-4">
-              <p className="text-sm sm:text-[15px] text-[#cde0da] font-light leading-relaxed">
-                {ABOUT_CONTENT.body}
-              </p>
-
-              <div className="rounded-2xl liquid-glass p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <span className="text-xs text-[#a9bfb8] font-light">
-                  {ABOUT_CONTENT.sharedIdeaLabel}
-                </span>
-                <div className="flex flex-wrap gap-2 shrink-0">
-                  {ABOUT_CONTENT.sharedIdeaPillars.map((pillar) => (
-                    <span
-                      key={pillar}
-                      className="px-3 py-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 font-mono-label text-[9px] font-bold text-[#14f884]"
-                    >
-                      {pillar}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Interactive Journey Filter Controls + Convergence Spotlight Strip */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/10">
-            <div className="flex flex-wrap items-center gap-2">
-              {[
-                { key: "all" as const, label: "ALL MILESTONES" },
-                { key: "anurag" as const, label: "ANURAG RAVIKUMAR" },
-                { key: "faiyaz" as const, label: "FAIYAZ ANSARI" },
-              ].map((tab) => {
-                const active = journeyFilter === tab.key;
-                return (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    onClick={() => handleFilterChange(tab.key)}
-                    className={`px-4 py-1.5 rounded-full font-mono-label text-[9.5px] font-bold transition-all cursor-pointer ${
-                      active
-                        ? "bg-[#14f884] text-[#050b09] shadow-[0_0_16px_rgba(20,248,132,0.4)]"
-                        : "liquid-glass-pill text-white/75 hover:text-[#14f884]"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            <span className="font-mono-label text-[9.5px] text-white/50">
-              SELECT ANY DETOUR TO INSPECT · {filteredMilestones.length} NODES
+          {/* Open Manifesto Header — Zero boxed clutter */}
+          <div className="max-w-4xl">
+            <span className="inline-block font-mono-label text-[10px] text-[#14f884] tracking-[0.2em] mb-4">
+              ABOUT
             </span>
-          </div>
 
-          {/* Interactive Responsive Timeline Grid (Uniform, Clean, Zero Collision) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {filteredMilestones.map((item) => {
-              const isSelected = activeMilestone.id === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setSelectedMilestoneId(item.id)}
-                  className={`journey-card group text-left rounded-[20px] p-5 min-h-[195px] flex flex-col justify-between transition-all duration-300 cursor-pointer focus:outline-none ${
-                    isSelected
-                      ? "border border-[#14f884]/75 bg-[#06241d]/90 shadow-[0_0_28px_rgba(20,248,132,0.16)] -translate-y-0.5"
-                      : "liquid-glass hover:border-[#14f884]/40 hover:-translate-y-0.5"
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span
-                        className={`font-mono-label text-[9px] font-bold px-2.5 py-0.5 rounded-full ${
-                          isSelected
-                            ? "bg-[#14f884] text-[#050b09]"
-                            : "bg-white/5 border border-white/15 text-[#14f884]"
-                        }`}
-                      >
-                        {item.year}
-                      </span>
-                      <span className="font-mono-label text-[8px] text-white/45 truncate">
-                        {item.badge}
-                      </span>
-                    </div>
-
-                    <h3 className="text-base font-extrabold text-white leading-snug group-hover:text-[#c6f19d] transition-colors">
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-2 text-xs text-[#a9bfb8] font-light leading-relaxed line-clamp-3">
-                      {item.subtitle}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-2.5 border-t border-white/10 flex items-center justify-between">
-                    <span className="font-mono-label text-[8.5px] text-[#14f884]">
-                      {item.founderName}
-                    </span>
-                    <span
-                      className={`w-2 h-2 rounded-full transition-all ${
-                        isSelected
-                          ? "bg-[#14f884] shadow-[0_0_10px_#14f884] scale-110"
-                          : "bg-white/20 group-hover:bg-[#14f884]/60"
-                      }`}
-                    />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Interactive Selected Milestone Convergence Strip */}
-          <div className="mt-5 rounded-2xl border border-[#14f884]/30 bg-[#031512]/90 backdrop-blur-md px-5 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-start sm:items-center gap-3.5">
-              <span className="shrink-0 w-9 h-9 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 flex items-center justify-center font-mono-label text-[10px] font-bold text-[#14f884]">
-                →
+            <h2 className="text-[clamp(1.85rem,4.2vw,3.75rem)] font-black uppercase tracking-[-0.03em] leading-[1.03]">
+              <span className="block text-white">{ABOUT_CONTENT.sublead.split(".")[0]}.</span>
+              <span className="block text-[#14f884] neon-text-glow">
+                We were built through detours.
               </span>
-              <div>
-                <span className="block font-mono-label text-[9px] text-[#14f884] uppercase">
-                  {activeMilestone.founderName} · {activeMilestone.year} · {activeMilestone.badge}
-                </span>
-                <p className="text-sm text-[#e1efe9] font-light leading-snug mt-0.5">
-                  {activeMilestone.subtitle}
+            </h2>
+          </div>
+
+          {/* Spacious 2-Column Editorial Narrative (ZERO crushed boxes) */}
+          <div className="mt-8 sm:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start pb-14 sm:pb-16 border-b border-white/10">
+            <p className="lg:col-span-6 text-base sm:text-lg text-[#cde0da] font-light leading-[1.72]">
+              {ABOUT_CONTENT.body}
+            </p>
+
+            <div className="lg:col-span-6 lg:border-l lg:border-[#14f884]/30 lg:pl-8 space-y-2.5">
+              <p className="text-sm sm:text-base text-[#9abbb0] font-light">
+                {ABOUT_CONTENT.sharedIdeaLabel}
+              </p>
+              <div className="space-y-1">
+                <p className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  {ABOUT_CONTENT.sharedIdeaPillars[0]}
+                </p>
+                <p className="text-xl sm:text-2xl font-black text-[#14f884] tracking-tight">
+                  {ABOUT_CONTENT.sharedIdeaPillars[1]}
                 </p>
               </div>
             </div>
+          </div>
 
-            {activeMilestone.founderKey !== "shared" && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  const targetFounder =
-                    activeMilestone.founderKey === "anurag" ? FOUNDERS[0] : FOUNDERS[1];
-                  openFounderOverlay(targetFounder, e);
-                }}
-                className="shrink-0 inline-flex items-center gap-2 rounded-full liquid-glass-pill px-4 py-2 font-mono-label text-[9.5px] font-bold text-[#14f884] hover:text-white cursor-pointer transition-colors"
-              >
-                READ {activeMilestone.founderName} STORY
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </button>
-            )}
+          {/* Scroll-Animated Central Luminous Convergence Timeline */}
+          <div ref={timelineWrapRef} className="relative pt-14 sm:pt-18">
+            {/* Top Track Legend Labels */}
+            <div className="hidden md:grid grid-cols-2 gap-16 mb-10 text-xs font-mono-label">
+              <div className="text-right pr-6 text-[#8eb6a8]">ANURAG RAVIKUMAR</div>
+              <div className="text-left pl-6 text-[#8eb6a8]">FAIYAZ ANSARI</div>
+            </div>
+
+            {/* Vertical Spine Conduit (Centered on md+, left-aligned on mobile) */}
+            <div className="relative">
+              {/* Background static track */}
+              <div className="absolute left-3 md:left-1/2 top-0 bottom-8 w-[1.5px] bg-white/10 -translate-x-1/2" />
+              {/* Active scroll-drawn emerald laser line */}
+              <div
+                ref={spineProgressRef}
+                style={{ transformOrigin: "top center" }}
+                className="absolute left-3 md:left-1/2 top-0 bottom-8 w-[2px] bg-gradient-to-b from-[#14f884] via-[#14f884] to-[#c6f19d] shadow-[0_0_14px_rgba(20,248,132,0.85)] -translate-x-1/2 will-change-transform"
+              />
+
+              <div className="space-y-10 sm:space-y-12">
+                {timelineBeats.map((item) => {
+                  const isLeft = item.founderKey === "anurag";
+                  const isActive = hoveredNodeId === item.id;
+                  const targetFounder = isLeft ? FOUNDERS[0] : FOUNDERS[1];
+
+                  return (
+                    <div
+                      key={item.id}
+                      onMouseEnter={() => setHoveredNodeId(item.id)}
+                      onMouseLeave={() => setHoveredNodeId(null)}
+                      onClick={(e) => openFounderOverlay(targetFounder, e)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => e.key === "Enter" && openFounderOverlay(targetFounder)}
+                      className="convergence-beat group relative grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-16 items-start pl-10 md:pl-0 cursor-pointer focus:outline-none"
+                    >
+                      {/* Spine Node Indicator */}
+                      <div
+                        className={`absolute left-3 md:left-1/2 top-2 -translate-x-1/2 z-10 w-3 h-3 rounded-full border transition-all duration-500 ${
+                          isActive
+                            ? "bg-[#14f884] border-white scale-125 shadow-[0_0_16px_#14f884]"
+                            : "bg-[#041d1a] border-[#14f884]/75 group-hover:bg-[#14f884]"
+                        }`}
+                      />
+
+                      {/* Left Slot (Anurag) */}
+                      <div
+                        className={`md:pr-8 ${
+                          isLeft ? "md:text-right block" : "hidden md:block"
+                        }`}
+                      >
+                        {isLeft && (
+                          <div className="relative transition-transform duration-500 group-hover:-translate-x-1">
+                            {/* Subtle horizontal connector line on desktop */}
+                            <div
+                              className={`hidden md:block absolute top-3.5 -right-8 w-8 h-[1px] transition-colors duration-500 ${
+                                isActive ? "bg-[#14f884]" : "bg-white/15 group-hover:bg-[#14f884]/60"
+                              }`}
+                            />
+                            <div className="flex flex-wrap items-center md:justify-end gap-2.5 mb-1.5">
+                              <span className="font-mono-label text-[10px] text-white/45 md:hidden">
+                                {item.founderName} ·
+                              </span>
+                              <span className="font-mono-label text-[10px] text-white/50">
+                                {item.badge}
+                              </span>
+                              <span className="font-mono-label text-[10.5px] font-bold text-[#14f884]">
+                                {item.year}
+                              </span>
+                            </div>
+                            <h3 className="text-xl sm:text-2xl font-black text-white group-hover:text-[#c6f19d] transition-colors leading-tight">
+                              {item.title}
+                            </h3>
+                            <p className="mt-2 text-sm sm:text-[15px] text-[#b8cec6] font-light leading-relaxed md:ml-auto max-w-md">
+                              {item.subtitle}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Right Slot (Faiyaz) */}
+                      <div
+                        className={`md:pl-8 ${
+                          !isLeft ? "md:text-left block" : "hidden md:block"
+                        }`}
+                      >
+                        {!isLeft && (
+                          <div className="relative transition-transform duration-500 group-hover:translate-x-1">
+                            <div
+                              className={`hidden md:block absolute top-3.5 -left-8 w-8 h-[1px] transition-colors duration-500 ${
+                                isActive ? "bg-[#14f884]" : "bg-white/15 group-hover:bg-[#14f884]/60"
+                              }`}
+                            />
+                            <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
+                              <span className="font-mono-label text-[10.5px] font-bold text-[#14f884]">
+                                {item.year}
+                              </span>
+                              <span className="font-mono-label text-[10px] text-white/50">
+                                {item.badge}
+                              </span>
+                              <span className="font-mono-label text-[10px] text-white/45 md:hidden">
+                                · {item.founderName}
+                              </span>
+                            </div>
+                            <h3 className="text-xl sm:text-2xl font-black text-white group-hover:text-[#c6f19d] transition-colors leading-tight">
+                              {item.title}
+                            </h3>
+                            <p className="mt-2 text-sm sm:text-[15px] text-[#b8cec6] font-light leading-relaxed max-w-md">
+                              {item.subtitle}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Luminous Convergence Keystone at Bottom of Spine */}
+              {convergenceBeat && (
+                <div className="convergence-beat relative pt-12 sm:pt-14 flex justify-start md:justify-center pl-10 md:pl-0">
+                  <div className="relative rounded-full liquid-glass px-6 sm:px-8 py-4 text-left md:text-center max-w-xl">
+                    <span className="block font-mono-label text-[9.5px] text-[#14f884] tracking-[0.18em] mb-1">
+                      {convergenceBeat.badge}
+                    </span>
+                    <p className="text-base sm:text-lg font-extrabold text-white">
+                      {convergenceBeat.title}
+                    </p>
+                    <p className="mt-1 text-xs sm:text-sm text-[#c7d6d1] font-light">
+                      {convergenceBeat.subtitle}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
           PART 3: INTERACTIVE FOUNDER CARDS
+          - Exact doc heading (NO patronizing hover guide text!)
           - Slow, silky circular wave on hover (1200ms)
           - Responsive mobile auto-height + CSS Grid crossfade (zero clipping!)
-          - Clicking launches slow, hypnotic 1.35s full-viewport circular-wave reveal
+          - Clicking launches slow 1.35s full-viewport circular-wave monograph
       ========================================================================= */}
       <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-10 sm:py-16">
         <div className="mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 font-mono-label text-[10px] text-[#14f884] mb-2 uppercase">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>THE FOUNDERS — TWO JOURNEYS. ONE EDGE.</span>
+            <span>THE FOUNDERS</span>
           </div>
           <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tight">
-            <span className="text-white">HOVER CARDS TO </span>
-            <span className="text-[#14f884] neon-text-glow">REVEAL THE JOURNEY.</span>
+            <span className="text-white">TWO JOURNEYS. </span>
+            <span className="text-[#14f884] neon-text-glow">ONE EDGE.</span>
           </h3>
         </div>
 
@@ -449,7 +455,7 @@ export default function ImpactFoundersSection() {
                   }}
                 />
 
-                {/* Card Top Row: Category tag + Arrow Button */}
+                {/* Card Top Row: Role tag + Arrow Button */}
                 <div className="relative z-20 flex items-center justify-between mb-6 md:mb-0">
                   <span
                     className={`font-mono-label text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full border transition-colors duration-700 ${
@@ -508,18 +514,14 @@ export default function ImpactFoundersSection() {
                         {founder.preview}
                       </p>
                       <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
-                        <span className="font-mono-label text-[10px] text-[#14f884] flex items-center gap-1.5">
-                          <span className="hidden md:inline">Hover or click for story</span>
-                          <span className="md:hidden">Tap to read full journey</span>
-                          <ArrowRight className="w-3.5 h-3.5" />
+                        <span className="font-mono-label text-[9.5px] text-white/50">
+                          {founder.role}
                         </span>
-                        <span className="font-mono-label text-[9px] text-white/45 uppercase">
-                          OPEN BIO
-                        </span>
+                        <ArrowUpRight className="w-4 h-4 text-[#14f884]" />
                       </div>
                     </div>
 
-                    {/* LAYER 2: Revealed Milestones */}
+                    {/* LAYER 2: Revealed Highlights */}
                     <div
                       className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-700 delay-150 ${
                         isHovered
@@ -537,13 +539,10 @@ export default function ImpactFoundersSection() {
                       </div>
 
                       <div className="mt-4 pt-3 border-t border-[#051f10]/15 flex items-center justify-between gap-2">
-                        <span className="font-mono-label text-[10px] sm:text-[11px] font-bold text-[#051f10] uppercase tracking-wider underline underline-offset-4 inline-flex items-center gap-1.5">
-                          READ FULL BIOGRAPHY
-                          <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                        <span className="font-mono-label text-[9.5px] text-[#051f10]/70">
+                          {founder.role}
                         </span>
-                        <span className="font-mono-label text-[9px] text-[#051f10]/70 uppercase">
-                          EXPAND
-                        </span>
+                        <ArrowUpRight className="w-4 h-4 text-[#051f10] stroke-[2.5]" />
                       </div>
                     </div>
                   </div>
@@ -611,7 +610,6 @@ export default function ImpactFoundersSection() {
               : "duration-[950ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
           }`}
         >
-          {/* Ambient radial glow backdrop */}
           <div
             className="pointer-events-none fixed inset-0 opacity-30"
             style={{
@@ -620,7 +618,6 @@ export default function ImpactFoundersSection() {
             }}
           />
 
-          {/* Sticky Top Minimal Navigation Bar */}
           <div className="sticky top-0 z-30 flex items-center justify-between px-5 sm:px-10 py-4 bg-[#031612]/80 backdrop-blur-xl border-b border-white/10">
             <span className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] font-bold">
               [ {activeFounder.role} — {activeFounder.name} ]
@@ -632,18 +629,15 @@ export default function ImpactFoundersSection() {
               aria-label="Close biography"
               className="inline-flex items-center gap-2 rounded-full liquid-glass-pill px-4 py-1.5 font-mono-label text-[10px] text-white hover:text-[#14f884] cursor-pointer transition-colors"
             >
-              <span>CLOSE</span>
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Fullscreen Editorial Split Canvas with smooth delayed content fade */}
           <div
             className={`relative z-10 max-w-6xl mx-auto px-5 sm:px-10 py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start transition-opacity duration-700 ${
               isExpanded ? "opacity-100 delay-300" : "opacity-0"
             }`}
           >
-            {/* Left Monograph Identity & Key Highlights */}
             <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
               <div className="relative h-56 sm:h-64 w-full rounded-3xl overflow-hidden border border-white/15">
                 <Image
@@ -667,41 +661,23 @@ export default function ImpactFoundersSection() {
                   &ldquo;{activeFounder.hook}&rdquo;
                 </p>
               </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 space-y-2.5">
-                <span className="block font-mono-label text-[9px] text-[#14f884] uppercase tracking-widest">
-                  KEY MILESTONES
-                </span>
-                {activeFounder.revealedHighlights.map((hl, i) => (
-                  <div key={i} className="flex items-start gap-2.5 text-xs text-[#cde0da] leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] shrink-0 mt-1.5" />
-                    <span>{hl}</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            {/* Right Full Magazine Biography Narrative */}
-            <div className="lg:col-span-7 space-y-6 pt-2">
-              <div className="font-mono-label text-[10px] text-[#14f884] tracking-widest uppercase">
-                THE JOURNEY IN FULL
-              </div>
-              <div className="space-y-5 text-base sm:text-lg text-[#d8e9e3] font-light leading-[1.78]">
-                {activeFounder.bio.map((paragraph, i) => (
-                  <p
-                    key={i}
-                    className={
-                      i === 0
-                        ? "text-white font-normal text-lg sm:text-xl leading-relaxed"
-                        : i === activeFounder.bio.length - 1
-                        ? "text-[#c6f19d] font-medium pt-4 border-t border-white/10"
-                        : ""
-                    }
-                  >
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
+            <div className="lg:col-span-7 space-y-5 text-base sm:text-lg text-[#d8e9e3] font-light leading-[1.78]">
+              {activeFounder.bio.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className={
+                    i === 0
+                      ? "text-white font-normal text-lg sm:text-xl leading-relaxed"
+                      : i === activeFounder.bio.length - 1
+                      ? "text-[#c6f19d] font-medium pt-4 border-t border-white/10"
+                      : ""
+                  }
+                >
+                  {paragraph}
+                </p>
+              ))}
 
               <div className="pt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/15">
                 {FOUNDERS.filter((f) => f.name !== activeFounder.name).map((other) => (
@@ -711,17 +687,10 @@ export default function ImpactFoundersSection() {
                     onClick={() => setActiveFounder(other)}
                     className="inline-flex items-center gap-2 font-mono-label text-[10.5px] text-[#14f884] hover:underline cursor-pointer"
                   >
-                    READ {other.name}
+                    {other.name}
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 ))}
-                <button
-                  type="button"
-                  onClick={closeFounderOverlay}
-                  className="rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10.5px] font-bold px-5 py-2.5 cursor-pointer hover:bg-[#c6f19d] transition-colors"
-                >
-                  BACK TO PAGE
-                </button>
               </div>
             </div>
           </div>
