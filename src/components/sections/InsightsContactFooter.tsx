@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowUpRight, Sparkles, X, CheckCircle2, Copy, Check } from "lucide-react";
 import ContactNatureCanvas from "@/components/canvas/ContactNatureCanvas";
+import FooterSection from "./FooterSection";
 import { EDGE_NOTES, EDGE_NOTES_CONTENT } from "@/data/content";
 
 const SERVICE_CHIPS = [
@@ -575,29 +576,8 @@ export default function InsightsContactFooter() {
         </div>
       </section>
 
-      {/* Clean Minimal Footer + .docx Easter Egg */}
-      <footer className="border-t border-white/15 py-9 bg-[#041d1a]">
-        <div className="max-w-[1180px] mx-auto px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8db5a8]">
-          <div className="flex items-center gap-2.5">
-            <span className="w-6 h-6 rounded-md bg-[#17f888] text-[#050b09] font-black text-xs flex items-center justify-center">
-              A
-            </span>
-            <span className="font-black tracking-tight text-white">
-              ARKAF<span className="text-[#14f884]">EDGE.</span>
-            </span>
-            <span className="text-white/30">·</span>
-            <span>© {new Date().getFullYear()}</span>
-          </div>
-
-          <a
-            href="mailto:hello@arkafedge.com?subject=Curious%20Explorer%20—%20Saying%20Hello"
-            className="font-mono-label text-[10px] text-[#a8beb8] hover:text-[#14f884] transition-colors text-center sm:text-right"
-          >
-            Still scrolling? We like curious people. →{" "}
-            <span className="text-[#14f884]">Careers / Say Hello</span>
-          </a>
-        </div>
-      </footer>
+      {/* Editorial Nature-Video Footer */}
+      <FooterSection />
     </div>
   );
 }
