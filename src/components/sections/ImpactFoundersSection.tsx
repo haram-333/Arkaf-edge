@@ -4,29 +4,30 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, ArrowUpRight, Sparkles, X, Check } from "lucide-react";
-import { ABOUT_CONTENT, IMPACT_STATS, FOUNDERS, VISION_CONTENT } from "@/data/content";
+import { ArrowRight, ArrowUpRight, Sparkles, X } from "lucide-react";
+import {
+  ABOUT_CONTENT,
+  IMPACT_STATS,
+  FOUNDERS,
+  FOUNDER_SPREAD_ITEMS,
+  VISION_CONTENT,
+} from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ImpactFoundersSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const spreadTrackRef = useRef<HTMLDivElement | null>(null);
-  const spreadStickyRef = useRef<HTMLDivElement | null>(null);
-  const centerTextRef = useRef<HTMLDivElement | null>(null);
-  const artifactsContainerRef = useRef<HTMLDivElement | null>(null);
+  const journeyRef = useRef<HTMLDivElement | null>(null);
+  const overlayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Individual refs for the 8 Alethia-positioned artifacts
-  const item1Ref = useRef<HTMLDivElement | null>(null);
-  const item2Ref = useRef<HTMLDivElement | null>(null);
-  const item3Ref = useRef<HTMLDivElement | null>(null);
-  const item4Ref = useRef<HTMLDivElement | null>(null);
-  const item5Ref = useRef<HTMLDivElement | null>(null);
-  const item6Ref = useRef<HTMLDivElement | null>(null);
-  const item7Ref = useRef<HTMLDivElement | null>(null);
-  const item8Ref = useRef<HTMLDivElement | null>(null);
+  // Interactive Journey Explorer State
+  const [journeyFilter, setJourneyFilter] = useState<"all" | "anurag" | "faiyaz">("all");
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>(
+    FOUNDER_SPREAD_ITEMS[0].id
+  );
 
+  // Hover & Slow Full-Viewport Circular Expand Overlay State
   const [hoveredFounder, setHoveredFounder] = useState<string | null>(null);
   const [activeFounder, setActiveFounder] = useState<(typeof FOUNDERS)[number] | null>(null);
   const [expandOrigin, setExpandOrigin] = useState<{ x: string; y: string }>({
@@ -39,25 +40,35 @@ export default function ImpactFoundersSection() {
     founder: (typeof FOUNDERS)[number],
     e?: React.MouseEvent<HTMLElement>
   ) => {
+    if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
     if (e) {
       setExpandOrigin({ x: `${e.clientX}px`, y: `${e.clientY}px` });
     } else {
       setExpandOrigin({ x: "50%", y: "50%" });
     }
+    setIsExpanded(false);
     setActiveFounder(founder);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setIsExpanded(true);
-      });
-    });
+
+    // Guarantee initial circle(0px) frame commits before triggering the slow 1.35s expansion
+    overlayTimerRef.current = setTimeout(() => {
+      setIsExpanded(true);
+    }, 28);
   };
 
   const closeFounderOverlay = () => {
+    if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
     setIsExpanded(false);
-    setTimeout(() => {
+    overlayTimerRef.current = setTimeout(() => {
       setActiveFounder(null);
-    }, 620);
+    }, 980);
   };
+
+  // Cleanup pending timer on unmount
+  useEffect(() => {
+    return () => {
+      if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
+    };
+  }, []);
 
   // Impact Counter Intersection Observer
   useEffect(() => {
@@ -88,67 +99,35 @@ export default function ImpactFoundersSection() {
     return () => io.disconnect();
   }, []);
 
-  // GSAP: Smooth, conflict-free 1:1 scroll spread without overlapping center text
+  // Clean one-way entrance animation for Journey Matrix (zero conflict, zero position snap!)
   useEffect(() => {
-    const track = spreadTrackRef.current;
-    const sticky = spreadStickyRef.current;
-    const centerText = centerTextRef.current;
-    if (!track || !sticky) return;
+    const journeyEl = journeyRef.current;
+    if (!journeyEl) return;
 
     const ctx = gsap.context(() => {
-      // Strictly non-overlapping perimeter drift:
-      // At progress=0 cards rest cleanly framing the center corridor;
-      // as progress -> 1 they gently glide outward to wide perimeter bounds.
-      const SPREAD_ITEMS = [
-        { ref: item1Ref, fromX: 38, fromY: 22, toX: 0, toY: 0, sFrom: 0.92 },
-        { ref: item2Ref, fromX: 18, fromY: 16, toX: 0, toY: 0, sFrom: 0.94 },
-        { ref: item3Ref, fromX: -12, fromY: 12, toX: 16, toY: -8, sFrom: 0.94 },
-        { ref: item4Ref, fromX: -34, fromY: 16, toX: 0, toY: 0, sFrom: 0.92 },
-        { ref: item5Ref, fromX: 32, fromY: 0, toX: 0, toY: 0, sFrom: 0.93 },
-        { ref: item6Ref, fromX: 18, fromY: -18, toX: 0, toY: 0, sFrom: 0.94 },
-        { ref: item7Ref, fromX: -14, fromY: -18, toX: 0, toY: 0, sFrom: 0.94 },
-        { ref: item8Ref, fromX: -34, fromY: -18, toX: 0, toY: 0, sFrom: 0.92 },
-      ];
-
-      const updatePositions = (progress: number) => {
-        const p = Math.max(0, Math.min(1, progress));
-        const ease = gsap.parseEase("power2.out")(p);
-
-        SPREAD_ITEMS.forEach(({ ref, fromX, fromY, toX, toY, sFrom }) => {
-          if (!ref.current) return;
-          const currX = (fromX + (toX - fromX) * ease).toFixed(1);
-          const currY = (fromY + (toY - fromY) * ease).toFixed(1);
-          const currScale = (sFrom + (1 - sFrom) * ease).toFixed(3);
-          const currOpacity = Math.min(1, 0.25 + p * 2.4).toFixed(3);
-          ref.current.style.transform = `translate3d(${currX}px, ${currY}px, 0) scale(${currScale})`;
-          ref.current.style.opacity = currOpacity;
-        });
-
-        if (centerText) {
-          const textScale = (0.96 + 0.04 * ease).toFixed(3);
-          centerText.style.transform = `translate(-50%, -48%) scale(${textScale})`;
-          centerText.style.opacity = String(Math.min(1, 0.35 + p * 2.8));
+      const cards = journeyEl.querySelectorAll(".journey-card");
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          stagger: 0.06,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: journeyEl,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
         }
-      };
-
-      // Initialize once before scrub attaches — zero competing tweens!
-      updatePositions(0);
-
-      ScrollTrigger.create({
-        trigger: track,
-        start: "top 85%",
-        end: "bottom bottom",
-        scrub: true,
-        onUpdate: (self) => {
-          updatePositions(self.progress);
-        },
-      });
-    }, track);
+      );
+    }, journeyEl);
 
     return () => ctx.revert();
   }, []);
 
-  // Close story overlay on Escape key & pause Lenis background scroll while fullscreen view is active
+  // Close story overlay on Escape & lock background scroll cleanly
   useEffect(() => {
     const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
     if (activeFounder) {
@@ -170,6 +149,25 @@ export default function ImpactFoundersSection() {
     };
   }, [activeFounder]);
 
+  const filteredMilestones = FOUNDER_SPREAD_ITEMS.filter((item) => {
+    if (journeyFilter === "all") return true;
+    return item.founderKey === journeyFilter || item.founderKey === "shared";
+  });
+
+  const activeMilestone =
+    FOUNDER_SPREAD_ITEMS.find((m) => m.id === selectedMilestoneId) ||
+    FOUNDER_SPREAD_ITEMS[0];
+
+  const handleFilterChange = (filter: "all" | "anurag" | "faiyaz") => {
+    setJourneyFilter(filter);
+    const nextList = FOUNDER_SPREAD_ITEMS.filter(
+      (item) => filter === "all" || item.founderKey === filter || item.founderKey === "shared"
+    );
+    if (nextList.length > 0 && !nextList.some((m) => m.id === selectedMilestoneId)) {
+      setSelectedMilestoneId(nextList[0].id);
+    }
+  };
+
   return (
     <section
       id="impact"
@@ -179,8 +177,8 @@ export default function ImpactFoundersSection() {
       {/* =========================================================================
           PART 1: IMPACT & NUMBERS COUNTER
       ========================================================================= */}
-      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pt-10 sm:pt-14 pb-6 sm:pb-8">
-        <div className="text-center mb-6 sm:mb-8">
+      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 pt-12 sm:pt-16 pb-10 sm:pb-12">
+        <div className="text-center mb-7 sm:mb-9">
           <p className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] mb-1.5 sm:mb-2">
             06. IMPACT &amp; NUMBERS
           </p>
@@ -195,7 +193,7 @@ export default function ImpactFoundersSection() {
           {IMPACT_STATS.map((stat, idx) => (
             <div
               key={stat.label}
-              className="rounded-[16px] border border-white/20 bg-[#05211e]/90 backdrop-blur-sm py-4 sm:py-6 px-3 sm:px-4 text-center hover:border-[#14f884]/60 transition-colors shadow-lg"
+              className="rounded-[18px] liquid-glass py-5 sm:py-6 px-3 sm:px-4 text-center hover:border-[#14f884]/55 transition-colors"
             >
               <span
                 ref={(el) => {
@@ -214,377 +212,193 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
-          PART 2: SPREAD-OUT FOUNDERS SHOWCASE (EXACT ALETHIA COMPOSITION)
-          Modeled 1:1 on Alethia Solves ("The Biggest Problem in Climate Action: Trust"):
-          - 1. Top-Far-Left: Tall vertical card + detached pill badge
-          - 2. Top-Center-Left: Horizontal sensor card with checkmark & green equalizer
-          - 3. Top-Center-Right: Aerial photo card + overlapping floating chart card!
-          - 4. Top-Far-Right: Vertical cylinder component card
-          - 5. Mid-Far-Left: Square 3D wireframe contour model card
-          - 6. Bottom-Center-Left: Foliage photo card + overlapping line graph card
-          - 7. Bottom-Center-Right: High-contrast solid lime badge (shifted right, well clear of text!)
-          - 8. Bottom-Far-Right: Dark card with stat & 3D graphic
-          - Center Text: 100% CLEAR, UNOBSTRUCTED & OPEN CORRIDOR!
+          PART 2: MODERN INTERACTIVE "TWO JOURNEYS. ONE EDGE." TIMELINE STAGE
+          - Clean architectural split manifesto + interactive milestone matrix
+          - Zero overlapping absolute coordinates or scroll jitter!
+          - Filterable by Founder (All / Anurag / Faiyaz) with live detail rail
       ========================================================================= */}
       <div
-        ref={spreadTrackRef}
-        className="relative h-[160vh] w-full border-t border-white/10"
+        ref={journeyRef}
+        className="relative border-t border-white/10 bg-gradient-to-b from-[#031815] via-[#041d1a] to-[#041d1a] py-14 sm:py-20 overflow-hidden"
       >
         <div
-          ref={spreadStickyRef}
-          className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#041d1a] via-[#031916] to-[#041d1a]"
-        >
-          {/* Subtle radial focus vignette behind center */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(ellipse 65% 65% at 50% 50%, rgba(20,248,132,0.05) 0%, transparent 75%)",
-            }}
-          />
+          className="pointer-events-none absolute inset-0 opacity-40"
+          style={{
+            background:
+              "radial-gradient(ellipse 65% 45% at 50% 15%, rgba(20,248,132,0.08) 0%, transparent 70%)",
+          }}
+        />
 
-          {/* Spatial Stage calibrated to viewport height */}
-          <div className="relative w-full max-w-[1360px] h-[min(730px,88vh)] mx-auto px-4">
-            {/* CENTER TEXT BLOCK (Centered with safe margin inside perimeter cards on all viewports) */}
-            <div
-              ref={centerTextRef}
-              className="absolute left-1/2 top-[43%] md:top-[48%] -translate-x-1/2 -translate-y-1/2 z-20 max-w-sm md:max-w-[390px] lg:max-w-[500px] xl:max-w-[540px] w-full px-4 text-center select-none pointer-events-none"
-            >
-              <span className="inline-block rounded-full border border-[#14f884]/35 bg-[#072924]/90 px-3.5 py-1 font-mono-label text-[9px] sm:text-[10px] text-[#14f884] mb-2 shadow-[0_0_16px_rgba(20,248,132,0.2)]">
+        <div className="relative z-10 max-w-[1140px] mx-auto px-5 sm:px-10">
+          {/* Editorial Manifesto Header Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-end mb-10 sm:mb-12">
+            <div className="lg:col-span-6">
+              <span className="inline-block rounded-full liquid-glass-pill px-3.5 py-1 font-mono-label text-[9.5px] text-[#14f884] mb-3.5">
                 {ABOUT_CONTENT.badge}
               </span>
-              <h2 className="text-[clamp(1.65rem,3.1vw,2.75rem)] font-black uppercase tracking-tight leading-[1.06]">
+
+              <h2 className="text-[clamp(2rem,4vw,3.4rem)] font-black uppercase tracking-[-0.03em] leading-[1.02]">
                 <span className="block text-white">{ABOUT_CONTENT.headlineWhite}</span>
                 <span className="block text-[#14f884] neon-text-glow">
                   {ABOUT_CONTENT.headlineGreen}
                 </span>
               </h2>
-              <p className="mt-2.5 text-xs sm:text-[13.5px] font-semibold text-[#c7f5dd] leading-snug">
+
+              <p className="mt-3 text-sm sm:text-base font-semibold text-[#c7f5dd]">
                 {ABOUT_CONTENT.sublead}
               </p>
-              <p className="mt-1.5 text-[11px] sm:text-[12.5px] text-[#d4e4df] font-light leading-relaxed max-w-md mx-auto">
+            </div>
+
+            <div className="lg:col-span-6 space-y-4">
+              <p className="text-sm sm:text-[15px] text-[#cde0da] font-light leading-relaxed">
                 {ABOUT_CONTENT.body}
               </p>
-              <p className="mt-2 text-[10.5px] sm:text-[11.5px] text-[#9ec4b8] font-light">
-                {ABOUT_CONTENT.sharedIdeaLabel}{" "}
-                <span className="text-[#14f884] font-semibold">
-                  {ABOUT_CONTENT.sharedIdeaPillars.join(" ")}
+
+              <div className="rounded-2xl liquid-glass p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <span className="text-xs text-[#a9bfb8] font-light">
+                  {ABOUT_CONTENT.sharedIdeaLabel}
                 </span>
-              </p>
+                <div className="flex flex-wrap gap-2 shrink-0">
+                  {ABOUT_CONTENT.sharedIdeaPillars.map((pillar) => (
+                    <span
+                      key={pillar}
+                      className="px-3 py-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 font-mono-label text-[9px] font-bold text-[#14f884]"
+                    >
+                      {pillar}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interactive Journey Filter Controls + Convergence Spotlight Strip */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-white/10">
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { key: "all" as const, label: "ALL MILESTONES" },
+                { key: "anurag" as const, label: "ANURAG RAVIKUMAR" },
+                { key: "faiyaz" as const, label: "FAIYAZ ANSARI" },
+              ].map((tab) => {
+                const active = journeyFilter === tab.key;
+                return (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => handleFilterChange(tab.key)}
+                    className={`px-4 py-1.5 rounded-full font-mono-label text-[9.5px] font-bold transition-all cursor-pointer ${
+                      active
+                        ? "bg-[#14f884] text-[#050b09] shadow-[0_0_16px_rgba(20,248,132,0.4)]"
+                        : "liquid-glass-pill text-white/75 hover:text-[#14f884]"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
 
-            {/* DESKTOP/TABLET (>=768px): 8 ASYMMETRICAL ARTIFACTS IN EXACT ALETHIA POSITIONS */}
-            <div ref={artifactsContainerRef} className="hidden md:block">
-              {/* 1. TOP-FAR-LEFT: Tall vertical card + detached pill (Alethia weather mast style) */}
-              <div
-                ref={item1Ref}
-                className="absolute left-[2.5%] top-[3%] z-10 will-change-transform flex items-end gap-2"
-              >
-                <div className="w-[185px] sm:w-[195px] h-[250px] sm:h-[265px] rounded-3xl border border-white/20 bg-[#051c17]/95 p-3.5 shadow-2xl backdrop-blur-md flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono-label text-[8px] text-[#14f884] font-semibold tracking-wider">
-                      [AERONAUTICAL 2012]
-                    </span>
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
-                  </div>
-                  {/* Vertical mast schematic (Alethia mast style) */}
-                  <div className="relative h-28 w-full rounded-2xl bg-black/70 border border-white/10 flex items-center justify-center overflow-hidden my-1">
-                    <svg viewBox="0 0 100 120" className="w-full h-full stroke-[#14f884] fill-none">
-                      <line x1="50" y1="10" x2="50" y2="110" strokeWidth="1.8" />
-                      <line x1="20" y1="35" x2="80" y2="35" strokeWidth="1.4" />
-                      <circle cx="25" cy="35" r="7" strokeWidth="1.2" />
-                      <circle cx="35" cy="25" r="5" strokeWidth="1" />
-                      <circle cx="75" cy="35" r="7" strokeWidth="1.2" />
-                      <line x1="30" y1="110" x2="50" y2="70" strokeWidth="1" strokeOpacity="0.4" />
-                      <line x1="70" y1="110" x2="50" y2="70" strokeWidth="1" strokeOpacity="0.4" />
-                      <circle cx="50" cy="15" r="2.5" fill="#14f884" />
-                    </svg>
-                  </div>
+            <span className="font-mono-label text-[9.5px] text-white/50">
+              SELECT ANY DETOUR TO INSPECT · {filteredMilestones.length} NODES
+            </span>
+          </div>
+
+          {/* Interactive Responsive Timeline Grid (Uniform, Clean, Zero Collision) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {filteredMilestones.map((item) => {
+              const isSelected = activeMilestone.id === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setSelectedMilestoneId(item.id)}
+                  className={`journey-card group text-left rounded-[20px] p-5 min-h-[195px] flex flex-col justify-between transition-all duration-300 cursor-pointer focus:outline-none ${
+                    isSelected
+                      ? "border border-[#14f884]/75 bg-[#06241d]/90 shadow-[0_0_28px_rgba(20,248,132,0.16)] -translate-y-0.5"
+                      : "liquid-glass hover:border-[#14f884]/40 hover:-translate-y-0.5"
+                  }`}
+                >
                   <div>
-                    <p className="text-[11px] font-bold text-white leading-tight">Navigating Without a Map</p>
-                    <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">Built on-ground commercial resilience.</p>
-                  </div>
-                </div>
-                {/* Floating detached pill (Alethia 1 tCO2e style) */}
-                <span className="mb-3 px-2 py-0.5 rounded-full bg-[#14f884] text-[#051f10] font-mono-label text-[8px] font-black shadow-[0_0_12px_rgba(20,248,132,0.45)]">
-                  LOGIC
-                </span>
-              </div>
-
-              {/* 2. TOP-CENTER-LEFT: Horizontal telemetry card (Alethia CLIMAVUE style) */}
-              <div
-                ref={item2Ref}
-                className="absolute left-[26%] top-[7%] z-10 will-change-transform"
-              >
-                <div className="w-[215px] h-[105px] rounded-2xl border border-white/20 bg-black/90 backdrop-blur-md p-3.5 shadow-xl flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="block font-mono-label text-[7.5px] text-[#14f884] uppercase font-bold tracking-wider">
-                        CORE PHILOSOPHY
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span
+                        className={`font-mono-label text-[9px] font-bold px-2.5 py-0.5 rounded-full ${
+                          isSelected
+                            ? "bg-[#14f884] text-[#050b09]"
+                            : "bg-white/5 border border-white/15 text-[#14f884]"
+                        }`}
+                      >
+                        {item.year}
                       </span>
-                      <span className="block text-[8px] text-white/50">COMMERCIAL LOGIC</span>
-                    </div>
-                    <div className="w-5 h-5 rounded-full bg-[#14f884] flex items-center justify-center">
-                      <Check className="w-3 h-3 text-[#051f10] stroke-[3]" />
-                    </div>
-                  </div>
-                  <p className="text-[11.5px] font-bold text-white leading-snug">
-                    &ldquo;Why can&apos;t business do both?&rdquo;
-                  </p>
-                  <div className="flex items-end justify-between pt-1 border-t border-white/10">
-                    <span className="font-mono-label text-[9px] font-bold text-[#14f884]">
-                      2.4X VALUE
-                    </span>
-                    <div className="flex items-end gap-1 h-3.5">
-                      <span className="w-1 h-2 rounded-sm bg-[#14f884]" />
-                      <span className="w-1 h-3.5 rounded-sm bg-[#14f884]" />
-                      <span className="w-1 h-2.5 rounded-sm bg-[#14f884]" />
-                      <span className="w-1 h-3.5 rounded-sm bg-[#14f884]" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. TOP-CENTER-RIGHT: Positioned clearly away from center headline */}
-              <div
-                ref={item3Ref}
-                className="absolute right-[21%] lg:right-[23%] top-[1%] z-10 will-change-transform"
-              >
-                <div className="relative">
-                  {/* Base Photo Card */}
-                  <div className="w-[195px] h-[220px] rounded-3xl overflow-hidden border border-white/20 bg-[#05221b] p-3 shadow-2xl relative flex flex-col justify-between">
-                    <div className="relative h-28 w-full rounded-2xl overflow-hidden">
-                      <Image
-                        src="/images/art-01.jpg"
-                        alt="Circularity"
-                        fill
-                        className="object-cover opacity-75"
-                        sizes="195px"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#05221b] via-transparent to-transparent" />
-                      <span className="absolute top-2 right-2 font-mono-label text-[7px] font-bold px-1.5 py-0.5 rounded bg-black/85 text-[#14f884] border border-[#14f884]/35">
-                        2020 • VALUE
+                      <span className="font-mono-label text-[8px] text-white/45 truncate">
+                        {item.badge}
                       </span>
                     </div>
-                    <div>
-                      <p className="text-[11px] font-bold text-white leading-tight">Waste Into Scalable Value</p>
-                      <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">
-                        Turning discard into commercial treasure.
-                      </p>
-                    </div>
-                  </div>
 
-                  {/* Overlapping Floating Dark Bar Chart Card (Exact Alethia 8.3 chart layout!) */}
-                  <div className="absolute -bottom-2.5 -right-12 w-[160px] h-[80px] rounded-2xl bg-black/92 border border-white/20 p-2.5 shadow-2xl backdrop-blur-md flex flex-col justify-between z-20">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono-label text-[8px] text-[#14f884] font-bold">8.5x</span>
-                      <span className="font-mono-label text-[7.5px] text-white/50">CIRCULAR VALUE</span>
-                    </div>
-                    <div className="flex items-end gap-1.5 h-6">
-                      <span className="w-1.5 h-2.5 rounded-sm bg-[#14f884]" />
-                      <span className="w-1.5 h-5 rounded-sm bg-[#14f884]" />
-                      <span className="w-1.5 h-3.5 rounded-sm bg-[#14f884]" />
-                      <span className="w-1.5 h-6 rounded-sm bg-[#14f884]" />
-                      <span className="w-1.5 h-4.5 rounded-sm bg-[#14f884]" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                    <h3 className="text-base font-extrabold text-white leading-snug group-hover:text-[#c6f19d] transition-colors">
+                      {item.title}
+                    </h3>
 
-              {/* 4. TOP-FAR-RIGHT: Vertical Component Card (Alethia 3D ribbed cylinder style) */}
-              <div
-                ref={item4Ref}
-                className="absolute right-[2.5%] top-[18%] z-10 will-change-transform"
-              >
-                <div className="w-[175px] h-[215px] rounded-3xl border border-white/20 bg-[#051d18]/95 p-3.5 shadow-2xl backdrop-blur-md flex flex-col justify-between">
-                  <span className="font-mono-label text-[8px] text-[#14f884] font-semibold">
-                    [STUDIO FLOOR 2009]
-                  </span>
-                  {/* Fluted/ribbed cylinder graphic */}
-                  <div className="relative h-24 w-full rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center overflow-hidden my-1">
-                    <svg viewBox="0 0 80 80" className="w-full h-full stroke-[#14f884] fill-none">
-                      <ellipse cx="40" cy="18" rx="25" ry="8" strokeWidth="1.2" />
-                      <line x1="15" y1="18" x2="15" y2="62" strokeWidth="1" />
-                      <line x1="65" y1="18" x2="65" y2="62" strokeWidth="1" />
-                      <ellipse cx="40" cy="30" rx="25" ry="8" strokeWidth="1" strokeOpacity="0.7" />
-                      <ellipse cx="40" cy="42" rx="25" ry="8" strokeWidth="1" strokeOpacity="0.7" />
-                      <ellipse cx="40" cy="54" rx="25" ry="8" strokeWidth="1" strokeOpacity="0.7" />
-                      <ellipse cx="40" cy="62" rx="25" ry="8" strokeWidth="1.2" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-[11px] font-bold text-white leading-tight">Swept Floors to Full Shoots</p>
-                    <p className="text-[9px] text-[#9cb5ad] leading-snug mt-0.5">7 months to master film cameras.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* 5. MID-FAR-LEFT: 3D Topographic Wireframe Contour (Alethia style) */}
-              <div
-                ref={item5Ref}
-                className="absolute left-[1.5%] lg:left-[2.5%] top-[48%] z-10 will-change-transform"
-              >
-                <div className="w-[140px] lg:w-[165px] h-[155px] lg:h-[165px] rounded-3xl border border-white/20 bg-[#051c17]/95 p-3 shadow-2xl backdrop-blur-md flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono-label text-[8px] text-[#14f884] font-bold uppercase">
-                      [GROUND REALITY]
-                    </span>
-                    <span className="font-mono-label text-[7.5px] text-white/50">8 SECTORS</span>
-                  </div>
-                  <div className="relative w-full h-16 flex items-center justify-center my-0.5">
-                    <svg viewBox="0 0 140 60" className="w-full h-full stroke-[#14f884] fill-none opacity-85">
-                      <ellipse cx="70" cy="30" rx="60" ry="20" strokeWidth="1" strokeOpacity="0.3" strokeDasharray="3 3" />
-                      <ellipse cx="70" cy="29" rx="44" ry="15" strokeWidth="1" strokeOpacity="0.5" />
-                      <ellipse cx="70" cy="28" rx="28" ry="10" strokeWidth="1.2" strokeOpacity="0.75" />
-                      <ellipse cx="70" cy="26" rx="14" ry="5.5" strokeWidth="1.4" strokeOpacity="0.95" />
-                      <ellipse cx="70" cy="24" rx="6" ry="2.5" fill="#14f884" fillOpacity="0.4" strokeWidth="1.5" />
-                    </svg>
-                  </div>
-                  <p className="text-[9.5px] text-[#c7d6d1] font-medium leading-snug">
-                    Collections • Real Estate • BD • Risk
-                  </p>
-                </div>
-              </div>
-
-              {/* 6. BOTTOM-CENTER-LEFT: Foliage photo card + Overlapping Line Graph Card (Alethia style) */}
-              <div
-                ref={item6Ref}
-                className="absolute left-[23%] bottom-[1%] z-10 will-change-transform"
-              >
-                <div className="relative">
-                  {/* Floating Dark Line Graph Card (Alethia 4 tCO2e style overlapping on left) */}
-                  <div className="absolute -top-3.5 -left-8 w-[155px] h-[72px] rounded-2xl bg-black/92 border border-white/20 p-2.5 shadow-2xl backdrop-blur-md flex flex-col justify-between z-20">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono-label text-[7.5px] text-[#14f884] font-bold uppercase">+14 YRS</span>
-                      <span className="font-mono-label text-[7px] text-white/50">REPUTATION</span>
-                    </div>
-                    {/* Line Graph with dots */}
-                    <div className="relative w-full h-5 flex items-center">
-                      <svg viewBox="0 0 120 20" className="w-full h-full overflow-visible">
-                        <polyline
-                          fill="none"
-                          stroke="#14f884"
-                          strokeWidth="1.5"
-                          points="5,16 35,14 65,10 95,5 115,2"
-                        />
-                        <circle cx="5" cy="16" r="2" fill="#fff" />
-                        <circle cx="35" cy="14" r="2" fill="#fff" />
-                        <circle cx="65" cy="10" r="2" fill="#fff" />
-                        <circle cx="95" cy="5" r="2.5" fill="#14f884" />
-                        <circle cx="115" cy="2" r="3" fill="#14f884" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Base Leaf Photo Card */}
-                  <div className="w-[195px] h-[155px] rounded-3xl overflow-hidden border border-white/20 bg-[#05211b] p-3 shadow-2xl flex flex-col justify-between relative">
-                    <div className="relative h-18 w-full rounded-2xl overflow-hidden">
-                      <Image
-                        src="/images/art-02.jpg"
-                        alt="Ground reality"
-                        fill
-                        className="object-cover opacity-60"
-                        sizes="195px"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#05211b] via-transparent to-transparent" />
-                    </div>
-                    <div>
-                      <span className="font-mono-label text-[7.5px] text-[#14f884] font-semibold">
-                        THE SHARED PURPOSE
-                      </span>
-                      <p className="text-[10.5px] font-bold text-white leading-tight mt-0.5">
-                        &ldquo;Help good businesses get seen.&rdquo;
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 7. BOTTOM-CENTER-RIGHT: Solid Lime Badge peeking up (Alethia Carbon Balance style!)
-                  CRITICAL: Positioned at left-[53%] bottom-[2%] - completely clear of center text! */}
-              <div
-                ref={item7Ref}
-                className="absolute left-[53%] bottom-[2%] z-10 will-change-transform"
-              >
-                <div className="w-[210px] h-[110px] rounded-2xl bg-[#c6f19d] text-[#051f10] p-3.5 shadow-2xl border border-[#c6f19d] flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono-label text-[8px] font-bold uppercase tracking-wider text-[#051f10]/80">
-                      BBA 2024 • RESILIENCE
-                    </span>
-                    <span className="font-mono-label text-[7.5px] font-black px-1.5 py-0.5 rounded bg-[#051f10] text-[#c6f19d]">
-                      NO EXCUSES
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-[13px] font-black leading-tight text-[#051f10]">
-                      Finish What You Started
-                    </p>
-                    <p className="text-[9.5px] text-[#051f10]/80 leading-snug mt-0.5">
-                      Completing education because follow-through defines character.
+                    <p className="mt-2 text-xs text-[#a9bfb8] font-light leading-relaxed line-clamp-3">
+                      {item.subtitle}
                     </p>
                   </div>
-                </div>
-              </div>
 
-              {/* 8. BOTTOM-FAR-RIGHT: Dark card with stat & 3D island element (Alethia 42.152 style) */}
-              <div
-                ref={item8Ref}
-                className="absolute right-[2.5%] bottom-[4%] z-10 will-change-transform"
+                  <div className="mt-4 pt-2.5 border-t border-white/10 flex items-center justify-between">
+                    <span className="font-mono-label text-[8.5px] text-[#14f884]">
+                      {item.founderName}
+                    </span>
+                    <span
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        isSelected
+                          ? "bg-[#14f884] shadow-[0_0_10px_#14f884] scale-110"
+                          : "bg-white/20 group-hover:bg-[#14f884]/60"
+                      }`}
+                    />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Interactive Selected Milestone Convergence Strip */}
+          <div className="mt-5 rounded-2xl border border-[#14f884]/30 bg-[#031512]/90 backdrop-blur-md px-5 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <span className="shrink-0 w-9 h-9 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 flex items-center justify-center font-mono-label text-[10px] font-bold text-[#14f884]">
+                →
+              </span>
+              <div>
+                <span className="block font-mono-label text-[9px] text-[#14f884] uppercase">
+                  {activeMilestone.founderName} · {activeMilestone.year} · {activeMilestone.badge}
+                </span>
+                <p className="text-sm text-[#e1efe9] font-light leading-snug mt-0.5">
+                  {activeMilestone.subtitle}
+                </p>
+              </div>
+            </div>
+
+            {activeMilestone.founderKey !== "shared" && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  const targetFounder =
+                    activeMilestone.founderKey === "anurag" ? FOUNDERS[0] : FOUNDERS[1];
+                  openFounderOverlay(targetFounder, e);
+                }}
+                className="shrink-0 inline-flex items-center gap-2 rounded-full liquid-glass-pill px-4 py-2 font-mono-label text-[9.5px] font-bold text-[#14f884] hover:text-white cursor-pointer transition-colors"
               >
-                <div className="w-[185px] h-[160px] rounded-3xl border border-white/20 bg-[#051e17]/95 p-3.5 shadow-2xl flex flex-col justify-between">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono-label text-[7.5px] text-[#14f884] uppercase">
-                      [THE EDGE]
-                    </span>
-                    <span className="font-mono-label text-[7.5px] text-[#14f884] font-bold px-1.5 py-0.5 rounded bg-[#14f884]/15">
-                      GRIT
-                    </span>
-                  </div>
-                  <div className="my-1">
-                    <span className="block text-[22px] font-black text-[#14f884] leading-none">
-                      42+
-                    </span>
-                    <span className="block font-mono-label text-[8px] text-white/50">
-                      FOUNDERS BACKED
-                    </span>
-                  </div>
-                  <p className="text-[10.5px] font-bold text-white leading-tight">
-                    &ldquo;Keep moving.&rdquo;
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* MOBILE VIEW (<768px): Clean horizontal swipe pill carousel */}
-            <div className="absolute bottom-4 inset-x-2 md:hidden z-20 flex gap-2.5 overflow-x-auto pb-2 pointer-events-auto">
-              <div className="shrink-0 w-52 rounded-xl border border-white/20 bg-[#05211e]/90 p-3">
-                <span className="font-mono-label text-[8px] text-[#14f884]">[AERONAUTICAL 2012]</span>
-                <p className="text-xs font-bold text-white mt-1">Navigating Without a Map</p>
-                <p className="text-[10px] text-[#9cb5ad]">Sudden medical detour built frontline logic.</p>
-              </div>
-              <div className="shrink-0 w-52 rounded-xl border border-white/20 bg-[#05211e]/90 p-3">
-                <span className="font-mono-label text-[8px] text-[#14f884]">[STUDIO FLOOR 2009]</span>
-                <p className="text-xs font-bold text-white mt-1">Swept Floors to Full Shoots</p>
-                <p className="text-[10px] text-[#9cb5ad]">7 months to master film cameras.</p>
-              </div>
-              <div className="shrink-0 w-52 rounded-xl bg-[#c6f19d] text-[#051f10] p-3">
-                <span className="font-mono-label text-[8px] font-bold">[BBA 2024]</span>
-                <p className="text-xs font-black mt-1">Finish What You Started</p>
-                <p className="text-[10px] text-[#051f10]/80">Follow-through defines character.</p>
-              </div>
-            </div>
+                READ {activeMilestone.founderName} STORY
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          PART 3: INTERACTIVE FOUNDER CARDS (Alethia Style)
-          - STRICT FIXED HEIGHT: h-[540px] sm:h-[580px] (ZERO height jump on hover!)
-          - Crossfade container prevents any layout expansion
-          - Smooth liquid circular wave expansion originating directly from the arrow button:
-            clip-path: circle(...) centered at calc(100% - 56px) 56px
-          - Duration calibrated to 700ms with easeOutQuint curve (luxurious & smooth, never too fast!)
-          - Clean header without patronizing explanatory subtext
+          PART 3: INTERACTIVE FOUNDER CARDS
+          - Slow, silky circular wave on hover (1200ms)
+          - Responsive mobile auto-height + CSS Grid crossfade (zero clipping!)
+          - Clicking launches slow, hypnotic 1.35s full-viewport circular-wave reveal
       ========================================================================= */}
       <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-10 sm:py-16">
         <div className="mb-8 sm:mb-10">
@@ -598,7 +412,6 @@ export default function ImpactFoundersSection() {
           </h3>
         </div>
 
-        {/* 2 Wide Interactive Cards — Responsive Auto-Height on Mobile (Zero Clipping!) & Fixed Height on Desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {FOUNDERS.map((founder) => {
             const isHovered = hoveredFounder === founder.name;
@@ -612,7 +425,7 @@ export default function ImpactFoundersSection() {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === "Enter" && openFounderOverlay(founder)}
-                className="group relative rounded-[24px] sm:rounded-[28px] border border-white/20 bg-[#051e17] overflow-hidden p-6 sm:p-8 lg:p-9 min-h-[430px] h-auto md:h-[600px] lg:h-[615px] flex flex-col justify-between transition-all duration-500 shadow-2xl cursor-pointer select-none focus:outline-none"
+                className="group relative rounded-[24px] sm:rounded-[28px] border border-white/20 bg-[#051e17] overflow-hidden p-6 sm:p-8 lg:p-9 min-h-[430px] h-auto md:h-[600px] lg:h-[615px] flex flex-col justify-between transition-all duration-700 shadow-2xl cursor-pointer select-none focus:outline-none"
               >
                 {/* Visual Background Photography Layer */}
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -620,18 +433,18 @@ export default function ImpactFoundersSection() {
                     src={founder.image}
                     alt={founder.name}
                     fill
-                    className="object-cover opacity-20 group-hover:opacity-10 scale-100 group-hover:scale-105 transition-all duration-700 ease-out"
+                    className="object-cover opacity-20 group-hover:opacity-10 scale-100 group-hover:scale-105 transition-all duration-1000 ease-out"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#041d1a] via-[#051e17]/80 to-transparent" />
                 </div>
 
-                {/* Circular Wave Expansion Fill on Hover */}
+                {/* Slow & Smooth Circular Wave Fill on Hover (1200ms) */}
                 <div
-                  className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{
                     clipPath: isHovered
-                      ? "circle(160% at calc(100% - 56px) 56px)"
+                      ? "circle(165% at calc(100% - 56px) 56px)"
                       : "circle(0px at calc(100% - 56px) 56px)",
                   }}
                 />
@@ -639,7 +452,7 @@ export default function ImpactFoundersSection() {
                 {/* Card Top Row: Category tag + Arrow Button */}
                 <div className="relative z-20 flex items-center justify-between mb-6 md:mb-0">
                   <span
-                    className={`font-mono-label text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full border transition-colors duration-500 ${
+                    className={`font-mono-label text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full border transition-colors duration-700 ${
                       isHovered
                         ? "border-[#051f10]/30 bg-white/45 text-[#051f10]"
                         : "border-[#14f884]/40 bg-[#051a12]/80 text-[#14f884]"
@@ -649,14 +462,14 @@ export default function ImpactFoundersSection() {
                   </span>
 
                   <div
-                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-500 shadow-md ${
+                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-700 shadow-md ${
                       isHovered
                         ? "bg-[#051f10] text-[#c6f19d] scale-105"
                         : "bg-[#14f884] text-[#050b09] shadow-[0_0_16px_rgba(20,248,132,0.4)]"
                     }`}
                   >
                     <ArrowRight
-                      className={`w-4 h-4 stroke-[2.5] transition-transform duration-500 ${
+                      className={`w-4 h-4 stroke-[2.5] transition-transform duration-700 ${
                         isHovered ? "rotate-[-45deg]" : "rotate-0"
                       }`}
                     />
@@ -666,7 +479,7 @@ export default function ImpactFoundersSection() {
                 {/* Card Bottom: CSS Grid stacking prevents clipping at any viewport width */}
                 <div className="relative z-20 mt-auto">
                   <h4
-                    className={`text-2xl sm:text-3xl font-black uppercase tracking-tight transition-colors duration-500 ${
+                    className={`text-2xl sm:text-3xl font-black uppercase tracking-tight transition-colors duration-700 ${
                       isHovered ? "text-[#051f10]" : "text-white"
                     }`}
                   >
@@ -674,18 +487,18 @@ export default function ImpactFoundersSection() {
                   </h4>
 
                   <p
-                    className={`mt-1 font-mono-label text-[11px] sm:text-[12px] italic transition-colors duration-500 ${
+                    className={`mt-1 font-mono-label text-[11px] sm:text-[12px] italic transition-colors duration-700 ${
                       isHovered ? "text-[#0b3322] font-semibold" : "text-[#c7f5dd]/90"
                     }`}
                   >
                     &ldquo;{founder.hook}&rdquo;
                   </p>
 
-                  {/* Auto-sizing CSS Grid crossfade on mobile, clean fixed crossfade slot on desktop */}
-                  <div className="grid grid-cols-1 md:h-[275px] mt-3">
+                  {/* Auto-sizing CSS Grid crossfade on mobile, clean fixed slot on desktop */}
+                  <div className="grid grid-cols-1 md:h-[280px] mt-3">
                     {/* LAYER 1: Excerpt Preview */}
                     <div
-                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-500 ${
+                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-700 ${
                         isHovered
                           ? "opacity-0 -translate-y-3 pointer-events-none"
                           : "opacity-100 translate-y-0 pointer-events-auto"
@@ -706,9 +519,9 @@ export default function ImpactFoundersSection() {
                       </div>
                     </div>
 
-                    {/* LAYER 2: Revealed Milestones (visible cleanly on hover without clipping!) */}
+                    {/* LAYER 2: Revealed Milestones */}
                     <div
-                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-500 delay-75 ${
+                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-700 delay-150 ${
                         isHovered
                           ? "opacity-100 translate-y-0 pointer-events-auto"
                           : "opacity-0 translate-y-3 pointer-events-none"
@@ -763,7 +576,10 @@ export default function ImpactFoundersSection() {
 
             <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5 sm:gap-5 font-mono-label text-[10.5px] sm:text-xs text-[#a9f5cf]">
               {VISION_CONTENT.pillars.map((p) => (
-                <span key={p} className="flex items-center gap-1.5 bg-[#05261f]/80 px-3 py-1 rounded-full border border-[#14f884]/25">
+                <span
+                  key={p}
+                  className="flex items-center gap-1.5 bg-[#05261f]/80 px-3 py-1 rounded-full border border-[#14f884]/25"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
                   {p}
                 </span>
@@ -778,8 +594,8 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
-          PART 5: FULL-VIEWPORT CIRCULAR-WAVE BIOGRAPHY OVERLAY
-          Expands seamlessly from click coordinates across the entire viewport
+          PART 5: SLOW, SILKY FULL-VIEWPORT CIRCULAR-WAVE BIOGRAPHY OVERLAY
+          1.35s smooth circular flood from exact click coordinates
       ========================================================================= */}
       {activeFounder && (
         <div
@@ -789,7 +605,11 @@ export default function ImpactFoundersSection() {
               ? `circle(165vmax at ${expandOrigin.x} ${expandOrigin.y})`
               : `circle(0px at ${expandOrigin.x} ${expandOrigin.y})`,
           }}
-          className="fixed inset-0 z-[110] w-screen h-[100dvh] overflow-y-auto bg-[#031612] text-white transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className={`fixed inset-0 z-[110] w-screen h-[100dvh] overflow-y-auto bg-[#031612] text-white will-change-[clip-path] transition-[clip-path] ${
+            isExpanded
+              ? "duration-[1350ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              : "duration-[950ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+          }`}
         >
           {/* Ambient radial glow backdrop */}
           <div
@@ -817,8 +637,12 @@ export default function ImpactFoundersSection() {
             </button>
           </div>
 
-          {/* Fullscreen Editorial Split Canvas */}
-          <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-10 py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          {/* Fullscreen Editorial Split Canvas with smooth delayed content fade */}
+          <div
+            className={`relative z-10 max-w-6xl mx-auto px-5 sm:px-10 py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start transition-opacity duration-700 ${
+              isExpanded ? "opacity-100 delay-300" : "opacity-0"
+            }`}
+          >
             {/* Left Monograph Identity & Key Highlights */}
             <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
               <div className="relative h-56 sm:h-64 w-full rounded-3xl overflow-hidden border border-white/15">

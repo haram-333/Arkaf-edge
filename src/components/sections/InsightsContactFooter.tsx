@@ -17,6 +17,7 @@ const SERVICE_CHIPS = [
 export default function InsightsContactFooter() {
   const insightsRef = useRef<HTMLElement | null>(null);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const noteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [cardsVisible, setCardsVisible] = useState(false);
 
   // Hover & Fullscreen Circular Wave Reader State for Edge Notes
@@ -41,25 +42,32 @@ export default function InsightsContactFooter() {
     note: (typeof EDGE_NOTES)[number],
     e?: React.MouseEvent<HTMLElement>
   ) => {
+    if (noteTimerRef.current) clearTimeout(noteTimerRef.current);
     if (e) {
       setNoteOrigin({ x: `${e.clientX}px`, y: `${e.clientY}px` });
     } else {
       setNoteOrigin({ x: "50%", y: "50%" });
     }
+    setNoteExpanded(false);
     setActiveNote(note);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setNoteExpanded(true);
-      });
-    });
+    noteTimerRef.current = setTimeout(() => {
+      setNoteExpanded(true);
+    }, 28);
   };
 
   const closeNoteOverlay = () => {
+    if (noteTimerRef.current) clearTimeout(noteTimerRef.current);
     setNoteExpanded(false);
-    setTimeout(() => {
+    noteTimerRef.current = setTimeout(() => {
       setActiveNote(null);
-    }, 620);
+    }, 980);
   };
+
+  useEffect(() => {
+    return () => {
+      if (noteTimerRef.current) clearTimeout(noteTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const el = insightsRef.current;
@@ -176,9 +184,9 @@ export default function InsightsContactFooter() {
                     cardsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                   }`}
                 >
-                  {/* Signature Circular Wave Fill on Hover */}
+                  {/* Signature Slow Circular Wave Fill on Hover (1200ms) */}
                   <div
-                    className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                     style={{
                       clipPath: isHovered
                         ? "circle(165% at calc(100% - 40px) 40px)"
@@ -263,7 +271,11 @@ export default function InsightsContactFooter() {
               ? `circle(165vmax at ${noteOrigin.x} ${noteOrigin.y})`
               : `circle(0px at ${noteOrigin.x} ${noteOrigin.y})`,
           }}
-          className="fixed inset-0 z-[110] w-screen h-[100dvh] overflow-y-auto bg-[#031612] text-white transition-[clip-path] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className={`fixed inset-0 z-[110] w-screen h-[100dvh] overflow-y-auto bg-[#031612] text-white will-change-[clip-path] transition-[clip-path] ${
+            noteExpanded
+              ? "duration-[1350ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+              : "duration-[950ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
+          }`}
         >
           <div
             className="pointer-events-none fixed inset-0 opacity-30"
@@ -289,7 +301,11 @@ export default function InsightsContactFooter() {
             </button>
           </div>
 
-          <div className="relative z-10 max-w-3xl mx-auto px-5 sm:px-10 py-14 sm:py-20">
+          <div
+            className={`relative z-10 max-w-3xl mx-auto px-5 sm:px-10 py-14 sm:py-20 transition-opacity duration-700 ${
+              noteExpanded ? "opacity-100 delay-300" : "opacity-0"
+            }`}
+          >
             <span className="inline-block rounded-full bg-[#c6f19d] text-[#051f10] font-mono-label text-[10px] font-bold px-3.5 py-1 mb-5">
               {activeNote.category}
             </span>
