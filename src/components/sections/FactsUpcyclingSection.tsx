@@ -9,13 +9,19 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function FactsUpcyclingSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const reelWrapRef = useRef<HTMLDivElement | null>(null);
   const indiaPathRef = useRef<SVGPathElement | null>(null);
   const globalPathRef = useRef<SVGPathElement | null>(null);
   const [regionView, setRegionView] = useState<"compare" | "india" | "global">("compare");
   const [hoverPoint, setHoverPoint] = useState<number | null>(null);
+  const [scrollReelIdx, setScrollReelIdx] = useState(0);
+  const [hoveredReelIdx, setHoveredReelIdx] = useState<number | null>(null);
+
+  const activeReelIdx = hoveredReelIdx !== null ? hoveredReelIdx : scrollReelIdx;
 
   useEffect(() => {
     const section = sectionRef.current;
+    const reelWrap = reelWrapRef.current;
     const iPath = indiaPathRef.current;
     const gPath = globalPathRef.current;
     if (!section || !iPath || !gPath) return;
@@ -47,6 +53,20 @@ export default function FactsUpcyclingSection() {
           toggleActions: "play none none none",
         },
       });
+
+      if (reelWrap) {
+        ScrollTrigger.create({
+          trigger: reelWrap,
+          start: "top 88%",
+          end: "bottom 22%",
+          scrub: true,
+          onUpdate: (self) => {
+            const count = FACTS_CONTENT.reelImages.length;
+            const next = Math.min(count - 1, Math.max(0, Math.floor(self.progress * count)));
+            setScrollReelIdx(next);
+          },
+        });
+      }
     }, section);
 
     return () => ctx.revert();
@@ -348,24 +368,61 @@ export default function FactsUpcyclingSection() {
             ))}
           </div>
 
-          {/* BENTO CARD 3 (12 Cols): Animated Scrolling Pre-Rolled Visual Reel (min-w-0 prevents grid blowout!) */}
-          <div className="lg:col-span-12 min-w-0 w-full rounded-[24px] border border-white/15 bg-[#02100d] p-4 sm:p-5 overflow-hidden">
-            <div className="flex w-max animate-marquee-slow gap-4">
-              {[...FACTS_CONTENT.reelImages, ...FACTS_CONTENT.reelImages].map((img, i) => (
-                <div
-                  key={`${img.label}-${i}`}
-                  className="group relative shrink-0 w-56 sm:w-64 h-32 sm:h-36 rounded-2xl overflow-hidden border border-white/10"
+          {/* BENTO ROW 3 (12 Cols): Scroll-Choreographed Expanding Architectural Film Deck */}
+          <div
+            ref={reelWrapRef}
+            onMouseLeave={() => setHoveredReelIdx(null)}
+            className="lg:col-span-12 min-w-0 w-full flex flex-col sm:flex-row gap-2.5 sm:gap-3 h-[340px] sm:h-[235px] md:h-[270px]"
+          >
+            {FACTS_CONTENT.reelImages.map((img, i) => {
+              const isFocused = activeReelIdx === i;
+              return (
+                <button
+                  key={img.label}
+                  type="button"
+                  onMouseEnter={() => setHoveredReelIdx(i)}
+                  onClick={() => setHoveredReelIdx(i)}
+                  aria-label={img.label}
+                  className={`group relative overflow-hidden rounded-[20px] transition-[flex,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] cursor-pointer focus:outline-none ${
+                    isFocused
+                      ? "flex-[3.4] border border-[#14f884]/55 shadow-[0_18px_45px_rgba(20,248,132,0.12)]"
+                      : "flex-[0.65] sm:flex-[0.85] border border-white/12"
+                  }`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={img.src}
                     alt={img.label}
                     loading="lazy"
-                    className="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                    className={`w-full h-full object-cover transition-all duration-700 ease-out ${
+                      isFocused
+                        ? "opacity-100 saturate-100 scale-100"
+                        : "opacity-50 saturate-50 scale-110 group-hover:opacity-75"
+                    }`}
                   />
-                </div>
-              ))}
-            </div>
+
+                  <div
+                    className={`pointer-events-none absolute inset-0 transition-opacity duration-500 ${
+                      isFocused ? "opacity-25" : "opacity-65"
+                    }`}
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(3,22,19,0.2) 0%, rgba(3,22,19,0.85) 100%)",
+                    }}
+                  />
+
+                  <span
+                    className={`absolute bottom-3 left-3 font-mono-label text-[9px] font-bold px-2.5 py-0.5 rounded-full transition-all duration-500 ${
+                      isFocused
+                        ? "bg-[#14f884] text-[#050b09]"
+                        : "bg-black/60 text-white/60 border border-white/15"
+                    }`}
+                  >
+                    0{i + 1}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
