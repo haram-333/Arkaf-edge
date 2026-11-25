@@ -563,3 +563,95 @@ export const EDGE_NOTES = [
       "Clicks aren't growth. Impressions aren't growth. Vanity metrics certainly aren't growth. The next generation of great companies won't be measured only by how much they grow, but by what grows because they existed.",
   },
 ];
+
+export const FACTS_CONTENT = {
+  badge: "FACTS — CIRCULAR TRAJECTORY",
+  headlineWhite: "UPCYCLING",
+  headlineGreen: "GROWTH.",
+  subtitle: "Upcycling & circular resource economy growth trajectory — India and Global.",
+  metrics: [
+    {
+      label: "INDIA CIRCULAR TEXTILE CAGR",
+      value: "~11%",
+      detail: "Ministry of Textiles projects India’s textile recycling economy reaching US$ 3.5B by 2030.",
+    },
+    {
+      label: "GLOBAL UPCYCLED GROWTH",
+      value: "~7.8%",
+      detail: "Global upcycled products & circular feedstocks expanding toward US$ 79B–124B+ over the decade.",
+    },
+  ],
+  series: [
+    { year: "2020", india: 100, global: 100, note: "Baseline Index (100)" },
+    { year: "2022", india: 123, global: 116, note: "EPR & Circular Mandates" },
+    { year: "2024", india: 152, global: 135, note: "Formal Supply Acceleration" },
+    { year: "2026", india: 187, global: 157, note: "D2C & Industrial Recovery" },
+    { year: "2028", india: 230, global: 182, note: "Export Traceability Shift" },
+    { year: "2030", india: 284, global: 212, note: "Compounding Circular Scale" },
+  ],
+  reelImages: [
+    { src: "/images/sustainability-landscape.jpg", label: "CIRCULAR ECOSYSTEMS" },
+    { src: "/images/art-01.jpg?v=2", label: "MATERIAL RECOVERY" },
+    { src: "/images/art-02.jpg?v=2", label: "REGENERATIVE DESIGN" },
+    { src: "/images/art-03.jpg?v=2", label: "CONSCIOUS CRAFT" },
+    { src: "/images/art-04.jpg?v=2", label: "GROWTH VELOCITY" },
+  ],
+};
+
+export const CLIENT_APPROACH_CONTENT = {
+  badge: "OUR APPROACH TO CLIENTS",
+  headlineWhite: "DON'T HIRE US.",
+  headlineGreen: "BUILD WITH US.",
+  traditionalLead: "The traditional client-agency relationship creates distance.",
+  traditionalSteps: ["Brief.", "Deliver.", "Invoice.", "Repeat."],
+  deeperLead: "We're interested in something deeper.",
+  commitments: [
+    "We want to understand the business behind the brief.",
+    "Challenge assumptions.",
+    "Bring ideas you didn't request.",
+    "Tell you when we think something won't work.",
+    "Celebrate when it does.",
+    "And become useful enough that the relationship grows alongside the company.",
+  ],
+  triad: [
+    { primary: "Partnership,", secondary: "not servitude." },
+    { primary: "Collaboration,", secondary: "not transactions." },
+    { primary: "Outcomes,", secondary: "not output." },
+  ],
+};
+
+export const WHO_WE_BUILD_WITH_CONTENT = {
+  badge: "WHO WE WANT TO BUILD WITH",
+  polarityLeft: "The company nobody knows yet.",
+  polarityRight: "The global brand everybody already does.",
+  qualWhite: "Size isn't the qualification.",
+  qualGreen: "Intent is.",
+  intro:
+    "We want to work with founders, teams and organisations trying to move their industry forward.",
+  archetypes: [
+    { num: "01", text: "Startups finding their first audience." },
+    { num: "02", text: "Established companies rediscovering their relevance." },
+    { num: "03", text: "Sustainable brands challenging conventional industries." },
+    { num: "04", text: "International businesses entering new markets." },
+    { num: "05", text: "Innovators turning difficult ideas into useful products." },
+  ],
+  closing:
+    "If what you're building deserves to exist, we want to help make sure it gets seen.",
+};
+
+export const SELECTED_ECOSYSTEM_CONTENT = {
+  badge: "SELECTED BRAND ECOSYSTEM",
+  headlineWhite: "NOT EVERY COLLABORATION",
+  headlineGreen: "LOOKS THE SAME.",
+  items: [
+    { num: "01", line: "Sometimes we build.", href: "#services" },
+    { num: "02", line: "Sometimes we market.", href: "#services" },
+    { num: "03", line: "Sometimes we photograph.", href: "#services" },
+    { num: "04", line: "Sometimes we strategize.", href: "#approach" },
+    {
+      num: "05",
+      line: "Sometimes we simply help a good idea find its next edge.",
+      href: "#contact",
+    },
+  ],
+};
