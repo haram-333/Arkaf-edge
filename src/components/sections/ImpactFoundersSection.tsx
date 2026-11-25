@@ -268,18 +268,18 @@ export default function ImpactFoundersSection() {
               <div className="text-left pl-6 text-[#8eb6a8]">FAIYAZ ANSARI</div>
             </div>
 
-            {/* Vertical Spine Conduit (Centered on md+, left-aligned on mobile) */}
+            {/* Vertical Spine Conduit capped above Convergence Keystone */}
             <div className="relative">
               {/* Background static track */}
-              <div className="absolute left-3 md:left-1/2 top-0 bottom-8 w-[1.5px] bg-white/10 -translate-x-1/2" />
+              <div className="absolute left-3 md:left-1/2 top-2 bottom-0 w-[1.5px] bg-white/10 -translate-x-1/2" />
               {/* Active scroll-drawn emerald laser line */}
               <div
                 ref={spineProgressRef}
                 style={{ transformOrigin: "top center" }}
-                className="absolute left-3 md:left-1/2 top-0 bottom-8 w-[2px] bg-gradient-to-b from-[#14f884] via-[#14f884] to-[#c6f19d] shadow-[0_0_14px_rgba(20,248,132,0.85)] -translate-x-1/2 will-change-transform"
+                className="absolute left-3 md:left-1/2 top-2 bottom-0 w-[2px] bg-gradient-to-b from-[#14f884] via-[#14f884] to-[#c6f19d] shadow-[0_0_14px_rgba(20,248,132,0.85)] -translate-x-1/2 will-change-transform"
               />
 
-              <div className="space-y-10 sm:space-y-12">
+              <div className="space-y-10 sm:space-y-12 pb-6 sm:pb-8">
                 {timelineBeats.map((item) => {
                   const isLeft = item.founderKey === "anurag";
                   const isActive = hoveredNodeId === item.id;
@@ -377,24 +377,28 @@ export default function ImpactFoundersSection() {
                   );
                 })}
               </div>
-
-              {/* Luminous Convergence Keystone at Bottom of Spine */}
-              {convergenceBeat && (
-                <div className="convergence-beat relative pt-12 sm:pt-14 flex justify-start md:justify-center pl-10 md:pl-0">
-                  <div className="relative rounded-full liquid-glass px-6 sm:px-8 py-4 text-left md:text-center max-w-xl">
-                    <span className="block font-mono-label text-[9.5px] text-[#14f884] tracking-[0.18em] mb-1">
-                      {convergenceBeat.badge}
-                    </span>
-                    <p className="text-base sm:text-lg font-extrabold text-white">
-                      {convergenceBeat.title}
-                    </p>
-                    <p className="mt-1 text-xs sm:text-sm text-[#c7d6d1] font-light">
-                      {convergenceBeat.subtitle}
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
+
+            {/* Luminous Convergence Keystone — Spacious architectural glass card below spine */}
+            {convergenceBeat && (
+              <div className="convergence-beat relative pt-6 sm:pt-8 flex justify-center">
+                <span
+                  aria-hidden="true"
+                  className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#14f884] border-2 border-[#041d1a] shadow-[0_0_16px_rgba(20,248,132,0.9)]"
+                />
+                <div className="w-full max-w-2xl rounded-2xl sm:rounded-[24px] liquid-glass px-6 sm:px-10 py-6 sm:py-8 text-left sm:text-center">
+                  <span className="inline-block font-mono-label text-[10px] text-[#14f884] tracking-[0.2em] mb-2">
+                    {convergenceBeat.badge}
+                  </span>
+                  <p className="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-snug">
+                    {convergenceBeat.title}
+                  </p>
+                  <p className="mt-2.5 text-sm sm:text-[15px] text-[#c7d6d1] font-light leading-relaxed max-w-xl sm:mx-auto">
+                    {convergenceBeat.subtitle}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

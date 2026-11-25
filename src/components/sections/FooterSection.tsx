@@ -184,7 +184,7 @@ export default function FooterSection() {
         {/* Monumental Edge-to-Edge Wordmark */}
         <div
           ref={wordmarkRef}
-          className="group/brand relative w-full overflow-hidden mt-14 sm:mt-20 lg:mt-24 mb-8 sm:mb-12 px-3 sm:px-6 lg:px-10"
+          className="group/brand relative w-full overflow-x-clip py-3 sm:py-5 mt-12 sm:mt-16 lg:mt-20 mb-6 sm:mb-10 px-4 sm:px-6 lg:px-10"
         >
           <div
             onClick={scrollToTop}
@@ -199,7 +199,7 @@ export default function FooterSection() {
             aria-label="Scroll back to top"
             className="cursor-pointer w-full text-center transition-transform duration-700 ease-out group-hover/brand:scale-[1.008]"
           >
-            <span className="inline-block text-[clamp(2.95rem,15.8vw,14.8rem)] font-bold leading-[0.88] tracking-[-0.055em] lowercase whitespace-nowrap text-[#c6f19d] drop-shadow-[0_12px_36px_rgba(2,14,10,0.55)] transition-colors duration-500 group-hover/brand:text-[#d6f9b0]">
+            <span className="inline-block text-[clamp(2.8rem,15.2vw,14.2rem)] font-bold leading-[1.12] pb-[0.08em] tracking-[-0.055em] lowercase whitespace-nowrap text-[#c6f19d] drop-shadow-[0_12px_36px_rgba(2,14,10,0.55)] transition-colors duration-500 group-hover/brand:text-[#d6f9b0]">
               arkafedge
               <span className="text-[#14f884] transition-transform duration-500 inline-block group-hover/brand:scale-110">
                 .
