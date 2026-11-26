@@ -167,15 +167,17 @@ export default function PhenomenonHorizontalSection() {
               key={card.num}
               className={`group shrink-0 relative w-[84vw] sm:w-[400px] lg:w-[435px] h-[58vh] sm:h-[65vh] min-h-[385px] sm:min-h-[410px] max-h-[480px] sm:max-h-[520px] rounded-[20px] sm:rounded-[22px] overflow-hidden bg-gradient-to-br ${card.fallbackGradient} shadow-[0_24px_60px_rgba(9,20,18,0.13)]`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={card.image}
-                alt={card.title}
-                loading="lazy"
-                className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${
-                  idx === 5 ? "scale-x-[-1] hue-rotate-[-16deg] brightness-90" : ""
-                }`}
-              />
+              <div className={`w-full h-full ${idx === 5 ? "[transform:scaleX(-1)]" : ""}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={card.image}
+                  alt={card.title}
+                  loading="lazy"
+                  className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${
+                    idx === 5 ? "hue-rotate-[-16deg] brightness-90" : ""
+                  }`}
+                />
+              </div>
 
               {/* Dark gradient scrim keeping top art vibrant and bottom copy crystal clear */}
               <div
