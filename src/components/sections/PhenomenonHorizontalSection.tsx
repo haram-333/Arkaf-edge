@@ -93,7 +93,7 @@ export default function PhenomenonHorizontalSection() {
         aria-hidden="true"
         className="pointer-events-none select-none absolute inset-y-0 left-0 flex items-center whitespace-nowrap will-change-transform"
       >
-        <span className="text-[30vh] font-black tracking-[-0.04em] text-[#091412]/[0.055] uppercase">
+        <span className="text-[30vh] font-medium tracking-[-0.04em] text-[#091412]/[0.055] uppercase">
           ARKAF EDGE · STRATEGIC INSIGHT
         </span>
       </div>
@@ -135,11 +135,11 @@ export default function PhenomenonHorizontalSection() {
           {/* Card 00: Dark Lead Manifesto Card (#0b0f0e) — exact unified height across all cards */}
           <div className="shrink-0 w-[84vw] sm:w-[400px] lg:w-[435px] h-[58vh] sm:h-[65vh] min-h-[385px] sm:min-h-[410px] max-h-[480px] sm:max-h-[520px] rounded-[20px] sm:rounded-[22px] bg-[#0b0f0e] text-white p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-[0_24px_60px_rgba(9,20,18,0.14)]">
             <div>
-              <span className="inline-block rounded-[5px] bg-[#14f884] text-[#051a12] font-mono-label text-[9.5px] font-bold px-3 py-1 mb-4 sm:mb-5">
+              <span className="inline-block rounded-[5px] bg-[#14f884] text-[#051a12] font-mono-label text-[9.5px] font-semibold px-3 py-1 mb-4 sm:mb-5">
                 {PHENOMENON_LEAD.badge}
               </span>
 
-              <h2 className="text-[clamp(1.55rem,2.65vw,2.6rem)] font-black tracking-[-0.03em] leading-[0.99] uppercase">
+              <h2 className="text-[clamp(1.55rem,2.65vw,2.6rem)] font-medium tracking-[-0.035em] leading-[0.99] uppercase">
                 {PHENOMENON_LEAD.whiteLines.map((line) => (
                   <span key={line} className="block text-white">
                     {line}
@@ -187,13 +187,13 @@ export default function PhenomenonHorizontalSection() {
               />
 
               {/* Top-left compact dark pill badge */}
-              <span className="absolute top-5 left-5 inline-flex items-center justify-center rounded-full bg-[#0b1311]/90 text-[#14f884] font-mono-label text-[10.5px] font-bold px-3.5 py-1.5 border border-[#14f884]/25">
+              <span className="absolute top-5 left-5 inline-flex items-center justify-center rounded-full bg-[#0b1311]/90 text-[#14f884] font-mono-label text-[10.5px] font-semibold px-3.5 py-1.5 border border-[#14f884]/25">
                 {card.num}
               </span>
 
               {/* Bottom Minimal Editorial Principle Plaque */}
               <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7">
-                <span className="block font-mono-label text-[10px] sm:text-[11px] font-bold text-[#14f884] tracking-[0.12em] uppercase mb-1.5">
+                <span className="block font-mono-label text-[10px] sm:text-[11px] font-semibold text-[#14f884] tracking-[0.12em] uppercase mb-1.5">
                   {card.num} — {card.title}
                 </span>
                 <p className="text-[clamp(0.9rem,1.2vw,1.1rem)] text-[#f1f6f4] font-medium leading-[1.45]">

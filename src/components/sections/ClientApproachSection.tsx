@@ -17,7 +17,7 @@ export default function ClientApproachSection() {
           <span className="inline-block rounded-full border border-[#14f884]/25 bg-[#072924] font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884] px-3.5 py-1.5 mb-4">
             {CLIENT_APPROACH_CONTENT.badge}
           </span>
-          <h2 className="text-[clamp(2rem,4.5vw,3.9rem)] font-black tracking-[-0.03em] leading-[0.98] uppercase">
+          <h2 className="text-[clamp(2rem,4.5vw,3.9rem)] font-medium tracking-[-0.038em] leading-[0.98] uppercase">
             <span className="block text-white">
               {CLIENT_APPROACH_CONTENT.headlineWhite}
             </span>
@@ -44,7 +44,7 @@ export default function ClientApproachSection() {
                   <span className="font-mono-label text-[10px] text-white/30">
                     0{i + 1}
                   </span>
-                  <span className="text-xl sm:text-2xl font-bold text-white/35 line-through decoration-white/25 tracking-tight">
+                  <span className="text-xl sm:text-2xl font-medium text-white/35 line-through decoration-white/25 tracking-tight">
                     {step}
                   </span>
                 </div>
@@ -54,7 +54,7 @@ export default function ClientApproachSection() {
 
           {/* Right Bento: Deeper Partnership Commitments */}
           <div className="lg:col-span-7 rounded-[24px] liquid-glass p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
-            <h3 className="text-xl sm:text-2xl font-bold text-[#14f884] mb-6">
+            <h3 className="text-xl sm:text-2xl font-medium text-[#14f884] mb-6 tracking-[-0.025em]">
               {CLIENT_APPROACH_CONTENT.deeperLead}
             </h3>
 
@@ -100,7 +100,7 @@ export default function ClientApproachSection() {
               key={pair.primary}
               className="rounded-[20px] liquid-glass p-6 sm:p-7 hover:border-[#14f884]/55 transition-colors"
             >
-              <span className="block text-2xl sm:text-[26px] font-black text-white tracking-tight leading-tight">
+              <span className="block text-2xl sm:text-[26px] font-semibold text-white tracking-[-0.025em] leading-tight">
                 {pair.primary}
               </span>
               <span className="mt-1 block text-lg sm:text-xl font-light text-[#8cb1a5]">

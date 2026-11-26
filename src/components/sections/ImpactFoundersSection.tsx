@@ -182,7 +182,7 @@ export default function ImpactFoundersSection() {
           <p className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] mb-1.5 sm:mb-2">
             06. IMPACT &amp; NUMBERS
           </p>
-          <h2 className="text-[clamp(1.75rem,3.4vw,2.9rem)] font-black tracking-[-0.025em] uppercase leading-tight">
+          <h2 className="text-[clamp(1.75rem,3.4vw,2.9rem)] font-medium tracking-[-0.035em] uppercase leading-tight">
             <span className="text-white">MEASURED BY </span>
             <span className="text-[#14f884] neon-text-glow">RESULTS.</span>
           </h2>
@@ -198,7 +198,7 @@ export default function ImpactFoundersSection() {
                 ref={(el) => {
                   numberRefs.current[idx] = el;
                 }}
-                className="block text-[clamp(1.85rem,3.6vw,3.1rem)] font-black text-[#14f884] neon-text-glow tracking-tight leading-none"
+                className="block text-[clamp(1.85rem,3.6vw,3.1rem)] font-medium text-[#14f884] neon-text-glow tracking-[-0.03em] leading-none"
               >
                 {stat.display}
               </span>
@@ -231,7 +231,7 @@ export default function ImpactFoundersSection() {
               ABOUT
             </span>
 
-            <h2 className="text-[clamp(1.85rem,4.2vw,3.75rem)] font-black uppercase tracking-[-0.03em] leading-[1.03]">
+            <h2 className="text-[clamp(1.85rem,4.2vw,3.75rem)] font-medium uppercase tracking-[-0.038em] leading-[1.03]">
               <span className="block text-white">{ABOUT_CONTENT.sublead.split(".")[0]}.</span>
               <span className="block text-[#14f884] neon-text-glow">
                 We were built through detours.
@@ -250,10 +250,10 @@ export default function ImpactFoundersSection() {
                 {ABOUT_CONTENT.sharedIdeaLabel}
               </p>
               <div className="space-y-1">
-                <p className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                <p className="text-xl sm:text-2xl font-semibold text-white tracking-[-0.025em]">
                   {ABOUT_CONTENT.sharedIdeaPillars[0]}
                 </p>
-                <p className="text-xl sm:text-2xl font-black text-[#14f884] tracking-tight">
+                <p className="text-xl sm:text-2xl font-semibold text-[#14f884] tracking-[-0.025em]">
                   {ABOUT_CONTENT.sharedIdeaPillars[1]}
                 </p>
               </div>
@@ -326,11 +326,11 @@ export default function ImpactFoundersSection() {
                               <span className="font-mono-label text-[10px] text-white/50">
                                 {item.badge}
                               </span>
-                              <span className="font-mono-label text-[10.5px] font-bold text-[#14f884]">
+                              <span className="font-mono-label text-[10.5px] font-semibold text-[#14f884]">
                                 {item.year}
                               </span>
                             </div>
-                            <h3 className="text-xl sm:text-2xl font-black text-white group-hover:text-[#c6f19d] transition-colors leading-tight">
+                            <h3 className="text-xl sm:text-2xl font-medium text-white group-hover:text-[#c6f19d] transition-colors leading-tight tracking-[-0.025em]">
                               {item.title}
                             </h3>
                             <p className="mt-2 text-sm sm:text-[15px] text-[#b8cec6] font-light leading-relaxed md:ml-auto max-w-md">
@@ -354,7 +354,7 @@ export default function ImpactFoundersSection() {
                               }`}
                             />
                             <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                              <span className="font-mono-label text-[10.5px] font-bold text-[#14f884]">
+                              <span className="font-mono-label text-[10.5px] font-semibold text-[#14f884]">
                                 {item.year}
                               </span>
                               <span className="font-mono-label text-[10px] text-white/50">
@@ -364,7 +364,7 @@ export default function ImpactFoundersSection() {
                                 · {item.founderName}
                               </span>
                             </div>
-                            <h3 className="text-xl sm:text-2xl font-black text-white group-hover:text-[#c6f19d] transition-colors leading-tight">
+                            <h3 className="text-xl sm:text-2xl font-medium text-white group-hover:text-[#c6f19d] transition-colors leading-tight tracking-[-0.025em]">
                               {item.title}
                             </h3>
                             <p className="mt-2 text-sm sm:text-[15px] text-[#b8cec6] font-light leading-relaxed max-w-md">
@@ -390,7 +390,7 @@ export default function ImpactFoundersSection() {
                   <span className="inline-block font-mono-label text-[10px] text-[#14f884] tracking-[0.2em] mb-2">
                     {convergenceBeat.badge}
                   </span>
-                  <p className="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-snug">
+                  <p className="text-lg sm:text-2xl font-semibold text-white tracking-[-0.025em] leading-snug">
                     {convergenceBeat.title}
                   </p>
                   <p className="mt-2.5 text-sm sm:text-[15px] text-[#c7d6d1] font-light leading-relaxed max-w-xl sm:mx-auto">
@@ -416,7 +416,7 @@ export default function ImpactFoundersSection() {
             <Sparkles className="w-3.5 h-3.5" />
             <span>THE FOUNDERS</span>
           </div>
-          <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tight">
+          <h3 className="text-2xl sm:text-4xl font-medium uppercase tracking-[-0.035em]">
             <span className="text-white">TWO JOURNEYS. </span>
             <span className="text-[#14f884] neon-text-glow">ONE EDGE.</span>
           </h3>
@@ -462,7 +462,7 @@ export default function ImpactFoundersSection() {
                 {/* Card Top Row: Role tag + Arrow Button */}
                 <div className="relative z-20 flex items-center justify-between mb-6 md:mb-0">
                   <span
-                    className={`font-mono-label text-[10px] sm:text-[11px] font-bold px-3 py-1 rounded-full border transition-colors duration-700 ${
+                    className={`font-mono-label text-[10px] sm:text-[11px] font-semibold px-3 py-1 rounded-full border transition-colors duration-700 ${
                       isHovered
                         ? "border-[#051f10]/30 bg-white/45 text-[#051f10]"
                         : "border-[#14f884]/40 bg-[#051a12]/80 text-[#14f884]"
@@ -489,7 +489,7 @@ export default function ImpactFoundersSection() {
                 {/* Card Bottom: CSS Grid stacking prevents clipping at any viewport width */}
                 <div className="relative z-20 mt-auto">
                   <h4
-                    className={`text-2xl sm:text-3xl font-black uppercase tracking-tight transition-colors duration-700 ${
+                    className={`text-2xl sm:text-3xl font-medium uppercase tracking-[-0.03em] transition-colors duration-700 ${
                       isHovered ? "text-[#051f10]" : "text-white"
                     }`}
                   >
@@ -573,7 +573,7 @@ export default function ImpactFoundersSection() {
             <span className="inline-block rounded-full border border-[#14f884]/40 bg-[#051a12] px-3.5 py-1 font-mono-label text-[9.5px] text-[#14f884] mb-3.5">
               OUR VISION
             </span>
-            <h4 className="text-xl sm:text-3xl font-black tracking-tight text-white uppercase leading-snug">
+            <h4 className="text-xl sm:text-3xl font-medium tracking-[-0.03em] text-white uppercase leading-snug">
               {VISION_CONTENT.headline}
             </h4>
 
@@ -623,7 +623,7 @@ export default function ImpactFoundersSection() {
           />
 
           <div className="sticky top-0 z-30 flex items-center justify-between px-5 sm:px-10 py-4 bg-[#031612]/80 backdrop-blur-xl border-b border-white/10">
-            <span className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] font-bold">
+            <span className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884] font-semibold">
               [ {activeFounder.role} — {activeFounder.name} ]
             </span>
 
@@ -652,13 +652,13 @@ export default function ImpactFoundersSection() {
                   sizes="(max-width: 1024px) 100vw, 420px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#031612] via-[#031612]/30 to-transparent" />
-                <span className="absolute bottom-4 left-4 rounded-full bg-[#c6f19d] text-[#051f10] font-mono-label text-[9.5px] font-bold px-3 py-1">
+                <span className="absolute bottom-4 left-4 rounded-full bg-[#c6f19d] text-[#051f10] font-mono-label text-[9.5px] font-semibold px-3 py-1">
                   {activeFounder.tag}
                 </span>
               </div>
 
               <div>
-                <h3 className="text-3xl sm:text-5xl font-black text-white uppercase tracking-tight leading-none">
+                <h3 className="text-3xl sm:text-5xl font-medium text-white uppercase tracking-[-0.035em] leading-none">
                   {activeFounder.name}
                 </h3>
                 <p className="mt-3 text-sm sm:text-base text-[#c6f19d] italic font-medium leading-snug">

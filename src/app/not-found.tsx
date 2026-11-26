@@ -13,7 +13,7 @@ export default function NotFound() {
       <span className="font-mono-label text-[11px] px-4 py-1.5 rounded-full border border-[#14f884]/40 text-[#14f884] bg-[#072624]/60 mb-8 relative z-10">
         404 — OFF THE MAP
       </span>
-      <h1 className="text-4xl sm:text-6xl font-black tracking-tight max-w-2xl leading-[1.05] relative z-10">
+      <h1 className="text-4xl sm:text-6xl font-medium tracking-[-0.035em] max-w-2xl leading-[1.05] relative z-10">
         You&apos;ve wandered{" "}
         <span className="text-[#14f884] neon-text-glow">off the edge.</span>
       </h1>

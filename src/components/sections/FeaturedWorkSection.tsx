@@ -63,7 +63,7 @@ export default function FeaturedWorkSection() {
             <span className="inline-block rounded-full border border-[#14f884]/25 bg-[#072924] font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884] px-3.5 sm:px-4 py-1.5 mb-4 sm:mb-5">
               {FEATURED_WORK_CONTENT.badge}
             </span>
-            <h2 className="text-[clamp(2.35rem,5.3vw,4.85rem)] font-black tracking-[-0.03em] leading-[0.95] uppercase">
+            <h2 className="text-[clamp(2.35rem,5.3vw,4.85rem)] font-medium tracking-[-0.038em] leading-[0.95] uppercase">
               {FEATURED_WORK_CONTENT.headlineLines.map((line) => (
                 <span key={line} className="block text-white sm:whitespace-nowrap">
                   {line}
@@ -123,7 +123,7 @@ export default function FeaturedWorkSection() {
                   <p className="font-mono-label text-[9.5px] sm:text-[10px] text-[#2fb880] mb-2.5 sm:mb-3">
                     {project.tags}
                   </p>
-                  <h3 className="text-[clamp(1.35rem,2.35vw,2.15rem)] font-black tracking-[-0.02em] uppercase text-white leading-[1.08] group-hover:text-[#14f884] transition-colors">
+                  <h3 className="text-[clamp(1.35rem,2.35vw,2.15rem)] font-medium tracking-[-0.03em] uppercase text-white leading-[1.08] group-hover:text-[#14f884] transition-colors">
                     {project.title}
                   </h3>
                   <p className="mt-3 sm:mt-4 text-[clamp(0.85rem,1.18vw,1.02rem)] text-[#a8beb8] font-light leading-[1.58]">
@@ -150,7 +150,7 @@ export default function FeaturedWorkSection() {
           <button
             type="button"
             onClick={handleStartSimilarProject}
-            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10px] sm:text-[11px] font-bold px-6 py-3.5 neon-box-glow hover:scale-[1.03] active:scale-[0.98] transition-transform cursor-pointer"
+            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10px] sm:text-[11px] font-semibold px-6 py-3.5 neon-box-glow hover:scale-[1.03] active:scale-[0.98] transition-transform cursor-pointer"
           >
             PARTNER WITH US
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -181,7 +181,7 @@ export default function FeaturedWorkSection() {
 
             {/* Header Tags */}
             <div className="flex items-center gap-2 mb-3">
-              <span className="rounded-full bg-[#14f884]/15 border border-[#14f884]/30 px-3 py-1 font-mono-label text-[9.5px] font-bold text-[#14f884]">
+              <span className="rounded-full bg-[#14f884]/15 border border-[#14f884]/30 px-3 py-1 font-mono-label text-[9.5px] font-semibold text-[#14f884]">
                 {activeProject.year}
               </span>
               <span className="font-mono-label text-[9.5px] text-[#2fb880]">
@@ -189,7 +189,7 @@ export default function FeaturedWorkSection() {
               </span>
             </div>
 
-            <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight pr-8">
+            <h3 className="text-2xl sm:text-3xl font-medium text-white uppercase tracking-[-0.03em] pr-8">
               {activeProject.title}
             </h3>
 
@@ -240,7 +240,7 @@ export default function FeaturedWorkSection() {
                   key={s.label}
                   className="rounded-xl border border-white/10 bg-[#031513] p-3 text-center"
                 >
-                  <span className="block text-lg sm:text-xl font-black text-[#14f884] neon-text-glow leading-none">
+                  <span className="block text-lg sm:text-xl font-semibold text-[#14f884] neon-text-glow leading-none">
                     {s.val}
                   </span>
                   <span className="mt-1 block font-mono-label text-[8px] sm:text-[9px] text-[#8db5a8]">
@@ -258,7 +258,7 @@ export default function FeaturedWorkSection() {
               <button
                 type="button"
                 onClick={handleStartSimilarProject}
-                className="inline-flex items-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10.5px] font-bold px-5 py-2.5 neon-box-glow hover:scale-[1.02] cursor-pointer transition-transform"
+                className="inline-flex items-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10.5px] font-semibold px-5 py-2.5 neon-box-glow hover:scale-[1.02] cursor-pointer transition-transform"
               >
                 START A PROJECT
                 <ArrowRight className="w-3.5 h-3.5" />

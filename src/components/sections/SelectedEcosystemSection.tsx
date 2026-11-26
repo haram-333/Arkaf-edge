@@ -15,7 +15,7 @@ export default function SelectedEcosystemSection() {
           <span className="inline-block rounded-full border border-[#14f884]/25 bg-[#072924] font-mono-label text-[9.5px] sm:text-[10px] text-[#14f884] px-3.5 py-1.5 mb-4">
             {SELECTED_ECOSYSTEM_CONTENT.badge}
           </span>
-          <h2 className="text-[clamp(1.85rem,4vw,3.4rem)] font-black tracking-[-0.03em] leading-[1.02] uppercase">
+          <h2 className="text-[clamp(1.85rem,4vw,3.4rem)] font-medium tracking-[-0.038em] leading-[1.02] uppercase">
             <span className="block text-white">
               {SELECTED_ECOSYSTEM_CONTENT.headlineWhite}
             </span>
@@ -62,7 +62,7 @@ export default function SelectedEcosystemSection() {
 
                 <div className="relative z-10 flex items-center justify-between">
                   <span
-                    className={`font-mono-label text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
+                    className={`font-mono-label text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${
                       isHeroTile
                         ? "border-[#051f10]/25 bg-white/40 text-[#051f10]"
                         : "border-[#14f884]/35 bg-[#14f884]/10 text-[#14f884]"
@@ -87,7 +87,7 @@ export default function SelectedEcosystemSection() {
                 </div>
 
                 <p
-                  className={`relative z-10 font-black tracking-[-0.02em] leading-[1.15] mt-8 ${
+                  className={`relative z-10 font-medium tracking-[-0.03em] leading-[1.15] mt-8 ${
                     isHeroTile
                       ? "text-xl sm:text-2xl lg:text-[26px] text-[#051f10]"
                       : "text-xl sm:text-2xl text-white group-hover:text-[#c6f19d] transition-colors"

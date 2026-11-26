@@ -396,7 +396,7 @@ export default function SustainabilitySection() {
                   {/* Inline Tag beside dot with Liquid Glass pill */}
                   <div
                     onClick={() => setActiveHotspot(isActive ? null : spot.id)}
-                    className="hidden sm:inline-block cursor-pointer select-none font-mono-label text-[8px] uppercase tracking-wider font-bold text-[#c6f19d] liquid-glass-pill px-2.5 py-1 rounded-full whitespace-nowrap hover:text-[#14f884] hover:scale-105 transition-all"
+                    className="hidden sm:inline-block cursor-pointer select-none font-mono-label text-[8px] uppercase tracking-wider font-medium text-[#c6f19d] liquid-glass-pill px-2.5 py-1 rounded-full whitespace-nowrap hover:text-[#14f884] hover:scale-105 transition-all"
                   >
                     {spot.metric}
                   </div>
@@ -419,10 +419,10 @@ export default function SustainabilitySection() {
                   <div className="flex items-center gap-2.5 rounded-2xl liquid-glass px-3.5 py-2.5 min-w-[210px] max-w-[270px]">
                     <div className="w-2 h-2 rounded-full bg-[#14f884] shrink-0 animate-pulse" />
                     <div className="text-left">
-                      <span className="block font-mono-label text-[7.5px] text-[#14f884] font-bold tracking-wider uppercase">
+                      <span className="block font-mono-label text-[7.5px] text-[#14f884] font-semibold tracking-wider uppercase">
                         {spot.category}
                       </span>
-                      <span className="block text-[10.5px] font-black text-white leading-tight mt-0.5">
+                      <span className="block text-[10.5px] font-semibold text-white leading-tight mt-0.5">
                         {spot.metric}
                       </span>
                       <span className="block text-[8.5px] text-[#c7d6d1] font-light leading-snug mt-0.5">
@@ -448,7 +448,7 @@ export default function SustainabilitySection() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start">
             {/* Top-Left: Eyebrow + Earliest Ambition Origin Story */}
             <div ref={eyebrowRef} className="lg:col-span-5 pointer-events-auto">
-              <span className="block font-mono-label text-[8.5px] sm:text-[10px] text-[#14f884] font-bold uppercase tracking-[0.16em] leading-relaxed">
+              <span className="block font-mono-label text-[8.5px] sm:text-[10px] text-[#14f884] font-semibold uppercase tracking-[0.16em] leading-relaxed">
                 {SUSTAINABILITY_CONTENT.badge}
               </span>
 
@@ -474,7 +474,7 @@ export default function SustainabilitySection() {
                   </span>
                 </span>
                 <span className="block overflow-hidden py-0.5 mt-0.5">
-                  <span className="reveal-line block text-[#14f884] font-bold will-change-transform">
+                  <span className="reveal-line block text-[#14f884] font-semibold will-change-transform">
                     {SUSTAINABILITY_CONTENT.headlineGreen}
                   </span>
                 </span>
@@ -491,7 +491,7 @@ export default function SustainabilitySection() {
               <div ref={ctaRef} className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2.5 sm:gap-3">
                 <a
                   href="#impact"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-4 sm:px-6 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10.5px] font-bold shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#a9f5cf] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-4 sm:px-6 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10.5px] font-semibold shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#a9f5cf] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
                 >
                   <span>{SUSTAINABILITY_CONTENT.cta}</span>
                   <span className="text-[8.5px] opacity-75 font-semibold hidden sm:inline">

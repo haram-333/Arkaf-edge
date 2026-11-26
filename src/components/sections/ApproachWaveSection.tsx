@@ -133,7 +133,7 @@ export default function ApproachWaveSection() {
             <span className="w-1.5 h-1.5 rounded-full bg-[#14f884]" />
             <span>{ARKAF_METHOD_HEADER.badge}</span>
           </div>
-          <h2 className="text-[clamp(1.1rem,2.35vw,2.2rem)] font-black tracking-[-0.025em] uppercase leading-[1.12] max-w-3xl">
+          <h2 className="text-[clamp(1.1rem,2.35vw,2.2rem)] font-medium tracking-[-0.035em] uppercase leading-[1.12] max-w-3xl">
             <span className="text-white">{ARKAF_METHOD_HEADER.line1} </span>
             <span className="text-[#14f884] neon-text-glow">
               {ARKAF_METHOD_HEADER.line2Accent}
@@ -153,7 +153,7 @@ export default function ApproachWaveSection() {
                   type="button"
                   onClick={() => scrollToStage(idx)}
                   aria-label={`Jump to stage ${stage.word}`}
-                  className={`block text-[clamp(1.65rem,4.7vw,4.35rem)] font-black tracking-[-0.03em] leading-[1.06] uppercase transition-all duration-300 cursor-pointer focus:outline-none ${
+                  className={`block text-[clamp(1.65rem,4.7vw,4.35rem)] font-medium tracking-[-0.038em] leading-[1.06] uppercase transition-all duration-300 cursor-pointer focus:outline-none ${
                     isActive
                       ? "text-white scale-100 drop-shadow-[0_0_24px_rgba(20,248,132,0.4)]"
                       : "text-white/30 hover:text-white/60 scale-[0.97]"
@@ -181,7 +181,7 @@ export default function ApproachWaveSection() {
                   key={s.word}
                   type="button"
                   onClick={() => scrollToStage(idx)}
-                  className={`px-3 py-1.5 rounded-full font-mono-label text-[9px] font-bold transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-full font-mono-label text-[9px] font-semibold transition-all cursor-pointer ${
                     activeStage === idx
                       ? "bg-[#14f884] text-[#050b09] shadow-[0_0_14px_rgba(20,248,132,0.85)] scale-105"
                       : "bg-[#060f0c]/90 text-white/60 border border-white/15 hover:text-white hover:border-[#14f884]/40"
@@ -228,7 +228,7 @@ export default function ApproachWaveSection() {
                                 {st.step} — {st.name}
                               </span>
                             </div>
-                            <h3 className="text-xs sm:text-sm font-bold text-white leading-snug">
+                            <h3 className="text-xs sm:text-sm font-semibold text-white leading-snug">
                               {st.lead}
                             </h3>
                             <p className="mt-0.5 text-[11px] sm:text-xs text-[#a9bfb8] font-light leading-relaxed">
@@ -240,7 +240,7 @@ export default function ApproachWaveSection() {
 
                       {stage.isRepeat && (
                         <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-end">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[8.5px] font-bold text-[#14f884]">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[8.5px] font-semibold text-[#14f884]">
                             ↻ {ARKAF_METHOD_HEADER.repeatLabel}
                           </span>
                         </div>
@@ -296,7 +296,7 @@ export default function ApproachWaveSection() {
                             {st.step} — {st.name}
                           </span>
                         </div>
-                        <h3 className="text-[13.5px] xl:text-[15px] font-bold text-white leading-snug">
+                        <h3 className="text-[13.5px] xl:text-[15px] font-semibold text-white leading-snug">
                           {st.lead}
                         </h3>
                         <p className="mt-0.5 text-[11.5px] xl:text-[12.5px] text-[#a9bfb8] font-light leading-relaxed">
@@ -308,7 +308,7 @@ export default function ApproachWaveSection() {
 
                   {stage.isRepeat && (
                     <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-end">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[9px] font-bold text-[#14f884]">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#14f884]/15 border border-[#14f884]/40 px-2.5 py-0.5 font-mono-label text-[9px] font-semibold text-[#14f884]">
                         ↻ {ARKAF_METHOD_HEADER.repeatLabel}
                       </span>
                     </div>

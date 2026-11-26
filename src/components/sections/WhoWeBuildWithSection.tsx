@@ -19,14 +19,14 @@ export default function WhoWeBuildWithSection() {
           <p className="text-lg sm:text-2xl font-light text-[#9abbb0] leading-snug">
             {WHO_WE_BUILD_WITH_CONTENT.polarityLeft}
           </p>
-          <p className="text-lg sm:text-2xl font-bold text-white md:text-right leading-snug">
+          <p className="text-lg sm:text-2xl font-medium text-white md:text-right leading-snug tracking-[-0.025em]">
             {WHO_WE_BUILD_WITH_CONTENT.polarityRight}
           </p>
         </div>
 
         {/* Core Qualification Statement */}
         <div className="mt-7 sm:mt-9 flex flex-col lg:flex-row lg:items-end justify-between gap-5 mb-10 sm:mb-12">
-          <h2 className="text-[clamp(1.85rem,4vw,3.4rem)] font-black tracking-[-0.03em] leading-[1.03] uppercase">
+          <h2 className="text-[clamp(1.85rem,4vw,3.4rem)] font-medium tracking-[-0.038em] leading-[1.03] uppercase">
             <span className="block text-white">
               {WHO_WE_BUILD_WITH_CONTENT.qualWhite}
             </span>
@@ -50,12 +50,12 @@ export default function WhoWeBuildWithSection() {
                 className={`group rounded-[22px] liquid-glass p-6 sm:p-7 min-h-[165px] sm:min-h-[185px] flex flex-col justify-between hover:border-[#14f884]/60 hover:-translate-y-0.5 transition-all duration-300 ${spanClass}`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono-label text-[10px] font-bold text-[#14f884]">
+                  <span className="font-mono-label text-[10px] font-semibold text-[#14f884]">
                     {item.num}
                   </span>
                   <span className="w-2 h-2 rounded-full bg-[#14f884]/35 group-hover:bg-[#14f884] group-hover:shadow-[0_0_10px_#14f884] transition-all" />
                 </div>
-                <p className="mt-6 text-lg sm:text-xl font-bold text-white leading-snug group-hover:text-[#c6f19d] transition-colors">
+                <p className="mt-6 text-lg sm:text-xl font-medium text-white leading-snug group-hover:text-[#c6f19d] transition-colors">
                   {item.text}
                 </p>
               </div>
@@ -70,7 +70,7 @@ export default function WhoWeBuildWithSection() {
           </p>
           <a
             href="#contact"
-            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10.5px] font-bold px-6 py-3.5 neon-box-glow hover:bg-[#c6f19d] hover:scale-[1.03] active:scale-[0.98] transition-all"
+            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10.5px] font-semibold px-6 py-3.5 neon-box-glow hover:bg-[#c6f19d] hover:scale-[1.03] active:scale-[0.98] transition-all"
           >
             <span>START A PROJECT</span>
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />

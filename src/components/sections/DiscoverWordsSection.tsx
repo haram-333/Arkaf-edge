@@ -39,12 +39,12 @@ export default function DiscoverWordsSection() {
 
         {/* Monumental Split Kinetic Lockup: WE BUILD + Rotating Vertical Reel */}
         <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6">
-          <h2 className="text-[clamp(2rem,6.4vw,6.2rem)] font-black tracking-[-0.035em] leading-[0.95] uppercase text-white shrink-0">
+          <h2 className="text-[clamp(2rem,6.4vw,6.2rem)] font-medium tracking-[-0.04em] leading-[0.95] uppercase text-white shrink-0">
             {ROTATING_WORDS.prefix}
           </h2>
 
           {/* Smooth CSS Vertical Slot Window */}
-          <div className="relative h-[1.08em] text-[clamp(2rem,6.4vw,6.2rem)] font-black tracking-[-0.035em] leading-[1.08] uppercase overflow-hidden w-full">
+          <div className="relative h-[1.08em] text-[clamp(2rem,6.4vw,6.2rem)] font-medium tracking-[-0.04em] leading-[1.08] uppercase overflow-hidden w-full">
             <div
               className="transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform"
               style={{ transform: `translate3d(0, -${activeIndex * 1.08}em, 0)` }}
@@ -84,7 +84,7 @@ export default function DiscoverWordsSection() {
                   setIsPaused(true);
                   setActiveIndex(idx);
                 }}
-                className={`px-4 py-2 rounded-full font-mono-label text-[10px] sm:text-[11px] font-bold transition-all duration-300 cursor-pointer ${
+                className={`px-4 py-2 rounded-full font-mono-label text-[10px] sm:text-[11px] font-semibold transition-all duration-300 cursor-pointer ${
                   active
                     ? "bg-[#14f884] text-[#050b09] shadow-[0_0_20px_rgba(20,248,132,0.45)] scale-105"
                     : "liquid-glass-pill text-white/65 hover:text-white"

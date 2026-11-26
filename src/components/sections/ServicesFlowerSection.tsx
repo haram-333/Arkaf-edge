@@ -88,7 +88,7 @@ export default function ServicesFlowerSection() {
             <span className="w-1.5 h-1.5 rounded-full bg-[#14f884] animate-pulse" />
             <span>{SERVICES_CONTENT.eyebrow}</span>
           </div>
-          <h2 className="text-[clamp(1.3rem,2.5vw,2.2rem)] font-black tracking-[-0.025em] uppercase leading-tight text-white">
+          <h2 className="text-[clamp(1.3rem,2.5vw,2.2rem)] font-medium tracking-[-0.035em] uppercase leading-tight text-white">
             One partner.{" "}
             <span className="text-[#14f884] neon-text-glow">Many edges.</span>
           </h2>
@@ -107,7 +107,7 @@ export default function ServicesFlowerSection() {
                   key={item.num}
                   type="button"
                   onClick={() => scrollToDiscipline(idx)}
-                  className={`shrink-0 px-3 py-1.5 rounded-full font-mono-label text-[9px] font-bold transition-all cursor-pointer ${
+                  className={`shrink-0 px-3 py-1.5 rounded-full font-mono-label text-[9px] font-semibold transition-all cursor-pointer ${
                     active
                       ? "bg-[#14f884] text-[#050b09] shadow-[0_0_12px_rgba(20,248,132,0.5)]"
                       : "liquid-glass-pill text-white/75"
@@ -124,11 +124,11 @@ export default function ServicesFlowerSection() {
             className="rounded-2xl liquid-glass p-4 max-h-[43dvh] overflow-y-auto"
           >
             <div className="flex items-center justify-between gap-2 mb-1">
-              <span className="font-mono-label text-[9px] text-[#14f884] font-bold">
+              <span className="font-mono-label text-[9px] text-[#14f884] font-semibold">
                 {activeDiscipline.num} // 05 — {activeDiscipline.label}
               </span>
             </div>
-            <p className="text-xs font-bold text-white mb-1">
+            <p className="text-xs font-semibold text-white mb-1">
               {activeDiscipline.tagline}
             </p>
             <div className="space-y-1.5 text-[11.5px] text-[#c7d6d1] font-light leading-relaxed">
@@ -180,7 +180,7 @@ export default function ServicesFlowerSection() {
                   className="group text-left h-[32px] flex items-center gap-3.5 cursor-pointer focus:outline-none transition-all duration-300"
                 >
                   <span
-                    className={`font-mono-label text-[10px] font-bold transition-colors duration-300 ${
+                    className={`font-mono-label text-[10px] font-semibold transition-colors duration-300 ${
                       isSelected
                         ? "text-[#14f884]"
                         : "text-white/30 group-hover:text-[#14f884]/75"
@@ -189,7 +189,7 @@ export default function ServicesFlowerSection() {
                     {item.num}
                   </span>
                   <span
-                    className={`font-black uppercase tracking-[-0.02em] transition-all duration-300 origin-left ${
+                    className={`font-medium uppercase tracking-[-0.03em] transition-all duration-300 origin-left ${
                       isSelected
                         ? "text-white text-[clamp(1.05rem,1.45vw,1.35rem)] translate-x-1.5 drop-shadow-[0_0_18px_rgba(20,248,132,0.28)]"
                         : "text-white/35 text-xs lg:text-sm group-hover:text-white/80 group-hover:translate-x-1"
@@ -210,12 +210,12 @@ export default function ServicesFlowerSection() {
               className="animate-fade-slide-up relative pl-5 lg:pl-6 py-2 border-l border-[#14f884]/45 bg-gradient-to-r from-black/55 via-black/35 to-transparent backdrop-blur-[2px] rounded-r-2xl max-h-[62dvh] overflow-y-auto"
             >
               <div className="flex items-center gap-2 mb-2">
-                <span className="font-mono-label text-[9.5px] font-bold text-[#14f884] tracking-[0.16em]">
+                <span className="font-mono-label text-[9.5px] font-semibold text-[#14f884] tracking-[0.16em]">
                   [ {activeDiscipline.num} // {activeDiscipline.label} ]
                 </span>
               </div>
 
-              <h3 className="text-[clamp(1.35rem,2.1vw,2rem)] font-black text-white leading-[1.12] tracking-[-0.02em]">
+              <h3 className="text-[clamp(1.35rem,2.1vw,2rem)] font-medium text-white leading-[1.12] tracking-[-0.035em]">
                 {activeDiscipline.tagline}
               </h3>
 

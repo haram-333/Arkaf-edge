@@ -131,7 +131,7 @@ export default function FactsUpcyclingSection() {
             <span className="inline-block rounded-full liquid-glass-pill px-4 py-1.5 font-mono-label text-[9.5px] text-[#14f884] mb-4">
               {FACTS_CONTENT.badge}
             </span>
-            <h2 className="text-[clamp(2rem,4.5vw,3.8rem)] font-black tracking-[-0.03em] leading-[0.98] uppercase">
+            <h2 className="text-[clamp(2rem,4.5vw,3.8rem)] font-medium tracking-[-0.035em] leading-[0.98] uppercase">
               <span className="text-white">{FACTS_CONTENT.headlineWhite} </span>
               <span className="text-[#14f884] neon-text-glow">
                 {FACTS_CONTENT.headlineGreen}
@@ -153,7 +153,7 @@ export default function FactsUpcyclingSection() {
                 <span className="font-mono-label text-[9px] text-[#14f884] block">
                   GROWTH INDEX TRAJECTORY (2020 = 100)
                 </span>
-                <p className="text-sm sm:text-base font-bold text-white mt-0.5">
+                <p className="text-sm sm:text-base font-semibold text-white mt-0.5">
                   {activeDatum.year} · India {activeDatum.india} vs Global {activeDatum.global}
                 </p>
               </div>
@@ -168,7 +168,7 @@ export default function FactsUpcyclingSection() {
                     key={tab.key}
                     type="button"
                     onClick={() => setRegionView(tab.key)}
-                    className={`px-3 py-1 rounded-full font-mono-label text-[9px] font-bold transition-all cursor-pointer ${
+                    className={`px-3 py-1 rounded-full font-mono-label text-[9px] font-semibold transition-all cursor-pointer ${
                       regionView === tab.key
                         ? "bg-[#14f884] text-[#050b09]"
                         : "border border-white/15 bg-white/5 text-white/70 hover:text-white"
@@ -306,7 +306,7 @@ export default function FactsUpcyclingSection() {
                         y={H - 12}
                         textAnchor="middle"
                         className={`text-[11px] font-mono ${
-                          isFocused ? "fill-[#14f884] font-bold" : "fill-white/55"
+                          isFocused ? "fill-[#14f884] font-semibold" : "fill-white/55"
                         }`}
                       >
                         {pt.year}
@@ -354,7 +354,7 @@ export default function FactsUpcyclingSection() {
                 </span>
                 <div className="my-3">
                   <span
-                    className={`block text-[clamp(2.2rem,4vw,3.4rem)] font-black tracking-tight leading-none ${
+                    className={`block text-[clamp(2.2rem,4vw,3.4rem)] font-medium tracking-[-0.035em] leading-none ${
                       idx === 0 ? "text-[#14f884] neon-text-glow" : "text-[#c6f19d]"
                     }`}
                   >
@@ -412,7 +412,7 @@ export default function FactsUpcyclingSection() {
                   />
 
                   <span
-                    className={`absolute bottom-3 left-3 font-mono-label text-[9px] font-bold px-2.5 py-0.5 rounded-full transition-all duration-500 ${
+                    className={`absolute bottom-3 left-3 font-mono-label text-[9px] font-semibold px-2.5 py-0.5 rounded-full transition-all duration-500 ${
                       isFocused
                         ? "bg-[#14f884] text-[#050b09]"
                         : "bg-black/60 text-white/60 border border-white/15"

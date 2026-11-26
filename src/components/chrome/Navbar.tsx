@@ -123,10 +123,10 @@ export default function Navbar() {
           href="#hero"
           className="inline-flex items-center gap-2.5 group focus:outline-none"
         >
-          <span className="w-8 h-8 rounded-[8px] bg-[#17f888] text-[#050b09] font-black text-[15px] flex items-center justify-center neon-logo-glow transition-transform duration-300 group-hover:scale-105">
+          <span className="w-8 h-8 rounded-[8px] bg-[#17f888] text-[#050b09] font-semibold text-[15px] flex items-center justify-center neon-logo-glow transition-transform duration-300 group-hover:scale-105">
             A
           </span>
-          <span className="font-black tracking-[-0.03em] text-[17px] leading-none">
+          <span className="font-semibold tracking-[-0.03em] text-[17px] leading-none">
             <span
               className={`transition-colors duration-300 ${
                 isLight ? "text-[#091412]" : "text-white"
@@ -145,7 +145,7 @@ export default function Navbar() {
           <div className="hidden sm:inline-flex liquid-glass-btn-wrap">
             <a
               href="#contact"
-              className="liquid-glass-btn px-4 py-1.5 font-mono-label text-[9.5px] font-bold text-[#14f884]"
+              className="liquid-glass-btn px-4 py-1.5 font-mono-label text-[9.5px] font-semibold text-[#14f884]"
             >
               <span className="liquid-glass-btn-shine" />
               <Sparkles className="w-3 h-3 text-[#14f884] shrink-0" />
@@ -200,7 +200,7 @@ export default function Navbar() {
               <span className="font-mono-label text-[10px] sm:text-[11px] text-[#14f884]">
                 {item.num}
               </span>
-              <span className="text-xl sm:text-3xl font-extrabold text-white group-hover:text-[#14f884] transition-colors">
+              <span className="text-xl sm:text-3xl font-medium tracking-[-0.03em] text-white group-hover:text-[#14f884] transition-colors">
                 {item.label}
               </span>
               <ArrowUpRight className="w-4 h-4 ml-auto text-white/30 group-hover:text-[#14f884] transition-colors" />

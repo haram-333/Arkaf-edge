@@ -118,7 +118,7 @@ export default function HeroWhoWeAreSection() {
             </div>
 
             {/* EXACT 3-Line Massive Display Headline from revised docx */}
-            <h1 className="text-[clamp(2.15rem,5.6vw,5.3rem)] font-black tracking-[-0.03em] leading-[1.02] uppercase">
+            <h1 className="text-[clamp(2.15rem,5.6vw,5.3rem)] font-medium tracking-[-0.038em] leading-[1.02] uppercase">
               <span className="block text-white whitespace-nowrap">
                 {HERO_CONTENT.line1}
               </span>
@@ -140,7 +140,7 @@ export default function HeroWhoWeAreSection() {
               {/* 1. What We Do */}
               <a
                 href="#services"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10px] sm:text-[11.5px] font-bold px-5 sm:px-6 py-3.5 sm:py-4 neon-box-glow hover:scale-[1.03] active:scale-[0.99] transition-transform"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4 neon-box-glow hover:scale-[1.03] active:scale-[0.99] transition-transform"
               >
                 {HERO_CONTENT.primaryCta}
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -193,11 +193,11 @@ export default function HeroWhoWeAreSection() {
           className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4 sm:px-8 pt-20 sm:pt-24 pb-8 sm:pb-12 will-change-transform"
         >
           <div className="w-full max-w-3xl mx-auto flex flex-col items-center justify-center my-auto">
-            <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[9px] sm:text-[10px] font-bold px-3 py-1 mb-2.5 sm:mb-3 shadow-[0_0_24px_rgba(169,245,207,0.38)]">
+            <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[9px] sm:text-[10px] font-semibold px-3 py-1 mb-2.5 sm:mb-3 shadow-[0_0_24px_rgba(169,245,207,0.38)]">
               {BRAND_STATEMENT.badge}
             </span>
 
-            <h2 className="text-[clamp(1.75rem,3.8vw,3.2rem)] font-black tracking-[-0.03em] leading-[1.08] max-w-3xl uppercase">
+            <h2 className="text-[clamp(1.75rem,3.8vw,3.2rem)] font-medium tracking-[-0.035em] leading-[1.08] max-w-3xl uppercase">
               <span className="block text-white">{BRAND_STATEMENT.headlineWhite}</span>
               <span className="block text-[#14f884] neon-text-glow">
                 {BRAND_STATEMENT.headlineGreen}
@@ -223,7 +223,7 @@ export default function HeroWhoWeAreSection() {
             <div className="mt-6 sm:mt-8 pointer-events-auto flex items-center gap-3">
               <a
                 href="#sustainability"
-                className="inline-flex items-center justify-center gap-2.5 rounded-full border border-[#14f884] bg-[#14f884] px-6 sm:px-8 py-3.5 sm:py-4 font-mono-label text-[10.5px] sm:text-[11.5px] font-bold text-[#050b09] shadow-[0_0_24px_rgba(20,248,132,0.45)] hover:bg-[#a9f5cf] hover:shadow-[0_0_36px_rgba(20,248,132,0.75)] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+                className="inline-flex items-center justify-center gap-2.5 rounded-full border border-[#14f884] bg-[#14f884] px-6 sm:px-8 py-3.5 sm:py-4 font-mono-label text-[10.5px] sm:text-[11.5px] font-semibold text-[#050b09] shadow-[0_0_24px_rgba(20,248,132,0.45)] hover:bg-[#a9f5cf] hover:shadow-[0_0_36px_rgba(20,248,132,0.75)] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
               >
                 <span>OUR COMMITMENT TO IMPACT</span>
                 <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />

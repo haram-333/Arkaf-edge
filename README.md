@@ -47,3 +47,14 @@ npm start
 ## 📄 License
 
 MIT
+
+
+
+Event.prototype.preventDefault = function(){};
+document.querySelectorAll('style').forEach(s => s.innerHTML.includes('no-scroll') && s.remove());
+document.documentElement.className = '';
+document.body.className = '';
+const s = document.createElement('style');
+s.innerHTML = 'html, body, #main, [data-layout-template] { overflow: auto !important; height: auto !important; max-height: none !important; position: static !important; }';
+document.head.appendChild(s);
+console.log('UNLOCKED!');
