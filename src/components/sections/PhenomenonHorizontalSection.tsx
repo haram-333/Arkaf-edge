@@ -28,9 +28,9 @@ export default function PhenomenonHorizontalSection() {
 
       const getPinDistance = () => {
         if (window.innerWidth < 768) {
-          return Math.max(getScrollAmount() * 1.65, window.innerHeight * 2.5);
+          return Math.max(getScrollAmount() * 0.9, window.innerHeight * 1.1);
         }
-        return Math.max(getScrollAmount() * 3.1, window.innerHeight * 4.4);
+        return Math.max(getScrollAmount() * 1.05, window.innerHeight * 1.35);
       };
 
       gsap.to(track, {
@@ -41,7 +41,7 @@ export default function PhenomenonHorizontalSection() {
           start: "top top",
           end: () => `+=${getPinDistance()}`,
           pin: true,
-          scrub: 1.5,
+          scrub: 0.45,
           invalidateOnRefresh: true,
           anticipatePin: 1,
         },
@@ -58,7 +58,7 @@ export default function PhenomenonHorizontalSection() {
               trigger: section,
               start: "top top",
               end: () => `+=${getPinDistance()}`,
-              scrub: 1.5,
+              scrub: 0.45,
               invalidateOnRefresh: true,
             },
           }
@@ -70,13 +70,13 @@ export default function PhenomenonHorizontalSection() {
   }, []);
 
   const stepTrack = (direction: 1 | -1) => {
-    const step = window.innerWidth < 640 ? 320 : 480;
-    const target = window.scrollY + direction * step * 1.6;
+    const step = window.innerWidth < 640 ? 280 : 440;
+    const target = window.scrollY + direction * step;
     const lenis = (window as unknown as { __lenis?: { scrollTo: (target: number, opts?: object) => void } }).__lenis;
     if (lenis) {
-      lenis.scrollTo(target, { duration: 0.9 });
+      lenis.scrollTo(target, { duration: 0.55 });
     } else {
-      window.scrollBy({ top: direction * step * 1.6, behavior: "smooth" });
+      window.scrollBy({ top: direction * step, behavior: "smooth" });
     }
   };
 
