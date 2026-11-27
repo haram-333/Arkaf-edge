@@ -48,10 +48,10 @@ export default function HeroSection() {
           const p = self.progress;
           progressRef.current = p;
 
-          // 0.00 -> 0.58: Hero copy softly scales & dissolves into the vortex before Sustainability arrives
-          const heroOpacity = Math.max(0, 1 - Math.max(0, (p - 0.06) / 0.44));
-          const heroScale = 1 + Math.min(p / 0.55, 1) * 0.05;
-          const heroBlur = Math.min(Math.max(0, (p - 0.1) / 0.4) * 7, 7);
+          // 0.00 -> 0.36: Hero copy softly scales & dissolves into the vortex before Sustainability arrives
+          const heroOpacity = Math.max(0, 1 - Math.max(0, (p - 0.03) / 0.30));
+          const heroScale = 1 + Math.min(p / 0.36, 1) * 0.05;
+          const heroBlur = Math.min(Math.max(0, (p - 0.05) / 0.28) * 7, 7);
           heroEl.style.opacity = String(heroOpacity);
           heroEl.style.transform = `scale(${heroScale.toFixed(4)})`;
           heroEl.style.filter = `blur(${heroBlur.toFixed(1)}px)`;
