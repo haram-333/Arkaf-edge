@@ -26,19 +26,20 @@ export default function ServicesFlowerSection() {
     if (!wrapper || !flowerLayer) return;
 
     const ctx = gsap.context(() => {
-      // Smoothly fade ONLY the flower in as you scroll into #services (never overlaps #who-we-are above)
+      // Fade ONLY the flower in once #services pins at viewport top (zero premature visibility!)
       gsap.fromTo(
         flowerLayer,
         { opacity: 0, scale: 0.94 },
         {
           opacity: 1,
           scale: 1,
+          duration: 0.95,
           ease: "power2.out",
           scrollTrigger: {
             trigger: wrapper,
-            start: "top 65%",
-            end: "top 2%",
-            scrub: true,
+            start: "top 2px",
+            end: "bottom bottom",
+            toggleActions: "play none none reverse",
           },
         }
       );
