@@ -211,6 +211,160 @@ export default function ImpactFoundersSection() {
       </div>
 
       {/* =========================================================================
+          PART 3: INTERACTIVE FOUNDER CARDS
+          - Exact doc heading (NO patronizing hover guide text!)
+          - Slow, silky circular wave on hover (1200ms)
+          - Responsive mobile auto-height + CSS Grid crossfade (zero clipping!)
+          - Clicking launches slow 1.35s full-viewport circular-wave monograph
+      ========================================================================= */}
+      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-10 sm:py-16">
+        <div className="mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-2 font-mono-label text-[10px] text-[#14f884] mb-2 uppercase">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>THE FOUNDERS</span>
+          </div>
+          <h3 className="text-2xl sm:text-4xl font-medium uppercase tracking-[-0.035em]">
+            <span className="text-white">TWO JOURNEYS. </span>
+            <span className="text-[#14f884] neon-text-glow">ONE EDGE.</span>
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+          {FOUNDERS.map((founder) => {
+            const isHovered = hoveredFounder === founder.name;
+
+            return (
+              <div
+                key={founder.name}
+                onMouseEnter={() => setHoveredFounder(founder.name)}
+                onMouseLeave={() => setHoveredFounder(null)}
+                onClick={(e) => openFounderOverlay(founder, e)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && openFounderOverlay(founder)}
+                className="group relative rounded-[24px] sm:rounded-[28px] border border-white/20 bg-[#051e17] overflow-hidden p-6 sm:p-8 lg:p-9 min-h-[430px] h-auto md:h-[600px] lg:h-[615px] flex flex-col justify-between transition-all duration-700 shadow-2xl cursor-pointer select-none focus:outline-none"
+              >
+                {/* Visual Background Photography Layer */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                  <Image
+                    src={founder.image}
+                    alt={founder.name}
+                    fill
+                    className="object-cover opacity-20 group-hover:opacity-10 scale-100 group-hover:scale-105 transition-all duration-1000 ease-out"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#041d1a] via-[#051e17]/80 to-transparent" />
+                </div>
+
+                {/* Slow & Smooth Circular Wave Fill on Hover (1200ms) */}
+                <div
+                  className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  style={{
+                    clipPath: isHovered
+                      ? "circle(165% at calc(100% - 56px) 56px)"
+                      : "circle(0px at calc(100% - 56px) 56px)",
+                  }}
+                />
+
+                {/* Card Top Row: Role tag + Arrow Button */}
+                <div className="relative z-20 flex items-center justify-between mb-6 md:mb-0">
+                  <span
+                    className={`font-mono-label text-[10px] sm:text-[11px] font-semibold px-3 py-1 rounded-full border transition-colors duration-700 ${
+                      isHovered
+                        ? "border-[#051f10]/30 bg-white/45 text-[#051f10]"
+                        : "border-[#14f884]/40 bg-[#051a12]/80 text-[#14f884]"
+                    }`}
+                  >
+                    {founder.tag}
+                  </span>
+
+                  <div
+                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-700 shadow-md ${
+                      isHovered
+                        ? "bg-[#051f10] text-[#c6f19d] scale-105"
+                        : "bg-[#14f884] text-[#050b09] shadow-[0_0_16px_rgba(20,248,132,0.4)]"
+                    }`}
+                  >
+                    <ArrowRight
+                      className={`w-4 h-4 stroke-[2.5] transition-transform duration-700 ${
+                        isHovered ? "rotate-[-45deg]" : "rotate-0"
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                {/* Card Bottom: CSS Grid stacking prevents clipping at any viewport width */}
+                <div className="relative z-20 mt-auto">
+                  <h4
+                    className={`text-2xl sm:text-3xl font-medium uppercase tracking-[-0.03em] transition-colors duration-700 ${
+                      isHovered ? "text-[#051f10]" : "text-white"
+                    }`}
+                  >
+                    {founder.name}
+                  </h4>
+
+                  <p
+                    className={`mt-1 font-mono-label text-[11px] sm:text-[12px] italic transition-colors duration-700 ${
+                      isHovered ? "text-[#0b3322] font-semibold" : "text-[#c7f5dd]/90"
+                    }`}
+                  >
+                    &ldquo;{founder.hook}&rdquo;
+                  </p>
+
+                  {/* Auto-sizing CSS Grid crossfade on mobile, clean fixed slot on desktop */}
+                  <div className="grid grid-cols-1 md:h-[280px] mt-3">
+                    {/* LAYER 1: Excerpt Preview */}
+                    <div
+                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-700 ${
+                        isHovered
+                          ? "opacity-0 -translate-y-3 pointer-events-none"
+                          : "opacity-100 translate-y-0 pointer-events-auto"
+                      }`}
+                    >
+                      <p className="text-xs sm:text-sm font-light leading-relaxed text-[#a8beb8]">
+                        {founder.preview}
+                      </p>
+                      <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                        <span className="font-mono-label text-[9.5px] text-white/50">
+                          {founder.role}
+                        </span>
+                        <ArrowUpRight className="w-4 h-4 text-[#14f884]" />
+                      </div>
+                    </div>
+
+                    {/* LAYER 2: Revealed Highlights */}
+                    <div
+                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-700 delay-150 ${
+                        isHovered
+                          ? "opacity-100 translate-y-0 pointer-events-auto"
+                          : "opacity-0 translate-y-3 pointer-events-none"
+                      }`}
+                    >
+                      <div className="space-y-1.5 text-[11px] sm:text-[12px] text-[#051f10] font-medium leading-snug sm:leading-relaxed">
+                        {founder.revealedHighlights.map((hl, i) => (
+                          <div key={i} className="flex items-start gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#051f10] shrink-0 mt-1.5" />
+                            <span>{hl}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-4 pt-3 border-t border-[#051f10]/15 flex items-center justify-between gap-2">
+                        <span className="font-mono-label text-[9.5px] text-[#051f10]/70">
+                          {founder.role}
+                        </span>
+                        <ArrowUpRight className="w-4 h-4 text-[#051f10] stroke-[2.5]" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* =========================================================================
           PART 2: ABOUT — OPEN ARCHITECTURAL PROSE + LUMINOUS CONVERGENCE SPINE
           - Frameless sculptural typography (zero admin filter boxes or truncated text!)
           - Scroll-drawn central emerald spine tracing two paths merging into one edge
@@ -400,160 +554,6 @@ export default function ImpactFoundersSection() {
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* =========================================================================
-          PART 3: INTERACTIVE FOUNDER CARDS
-          - Exact doc heading (NO patronizing hover guide text!)
-          - Slow, silky circular wave on hover (1200ms)
-          - Responsive mobile auto-height + CSS Grid crossfade (zero clipping!)
-          - Clicking launches slow 1.35s full-viewport circular-wave monograph
-      ========================================================================= */}
-      <div className="max-w-[1140px] mx-auto px-5 sm:px-10 py-10 sm:py-16">
-        <div className="mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 font-mono-label text-[10px] text-[#14f884] mb-2 uppercase">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>THE FOUNDERS</span>
-          </div>
-          <h3 className="text-2xl sm:text-4xl font-medium uppercase tracking-[-0.035em]">
-            <span className="text-white">TWO JOURNEYS. </span>
-            <span className="text-[#14f884] neon-text-glow">ONE EDGE.</span>
-          </h3>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-          {FOUNDERS.map((founder) => {
-            const isHovered = hoveredFounder === founder.name;
-
-            return (
-              <div
-                key={founder.name}
-                onMouseEnter={() => setHoveredFounder(founder.name)}
-                onMouseLeave={() => setHoveredFounder(null)}
-                onClick={(e) => openFounderOverlay(founder, e)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === "Enter" && openFounderOverlay(founder)}
-                className="group relative rounded-[24px] sm:rounded-[28px] border border-white/20 bg-[#051e17] overflow-hidden p-6 sm:p-8 lg:p-9 min-h-[430px] h-auto md:h-[600px] lg:h-[615px] flex flex-col justify-between transition-all duration-700 shadow-2xl cursor-pointer select-none focus:outline-none"
-              >
-                {/* Visual Background Photography Layer */}
-                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                  <Image
-                    src={founder.image}
-                    alt={founder.name}
-                    fill
-                    className="object-cover opacity-20 group-hover:opacity-10 scale-100 group-hover:scale-105 transition-all duration-1000 ease-out"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#041d1a] via-[#051e17]/80 to-transparent" />
-                </div>
-
-                {/* Slow & Smooth Circular Wave Fill on Hover (1200ms) */}
-                <div
-                  className="pointer-events-none absolute inset-0 z-10 bg-[#c6f19d] transition-[clip-path] duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  style={{
-                    clipPath: isHovered
-                      ? "circle(165% at calc(100% - 56px) 56px)"
-                      : "circle(0px at calc(100% - 56px) 56px)",
-                  }}
-                />
-
-                {/* Card Top Row: Role tag + Arrow Button */}
-                <div className="relative z-20 flex items-center justify-between mb-6 md:mb-0">
-                  <span
-                    className={`font-mono-label text-[10px] sm:text-[11px] font-semibold px-3 py-1 rounded-full border transition-colors duration-700 ${
-                      isHovered
-                        ? "border-[#051f10]/30 bg-white/45 text-[#051f10]"
-                        : "border-[#14f884]/40 bg-[#051a12]/80 text-[#14f884]"
-                    }`}
-                  >
-                    {founder.tag}
-                  </span>
-
-                  <div
-                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-700 shadow-md ${
-                      isHovered
-                        ? "bg-[#051f10] text-[#c6f19d] scale-105"
-                        : "bg-[#14f884] text-[#050b09] shadow-[0_0_16px_rgba(20,248,132,0.4)]"
-                    }`}
-                  >
-                    <ArrowRight
-                      className={`w-4 h-4 stroke-[2.5] transition-transform duration-700 ${
-                        isHovered ? "rotate-[-45deg]" : "rotate-0"
-                      }`}
-                    />
-                  </div>
-                </div>
-
-                {/* Card Bottom: CSS Grid stacking prevents clipping at any viewport width */}
-                <div className="relative z-20 mt-auto">
-                  <h4
-                    className={`text-2xl sm:text-3xl font-medium uppercase tracking-[-0.03em] transition-colors duration-700 ${
-                      isHovered ? "text-[#051f10]" : "text-white"
-                    }`}
-                  >
-                    {founder.name}
-                  </h4>
-
-                  <p
-                    className={`mt-1 font-mono-label text-[11px] sm:text-[12px] italic transition-colors duration-700 ${
-                      isHovered ? "text-[#0b3322] font-semibold" : "text-[#c7f5dd]/90"
-                    }`}
-                  >
-                    &ldquo;{founder.hook}&rdquo;
-                  </p>
-
-                  {/* Auto-sizing CSS Grid crossfade on mobile, clean fixed slot on desktop */}
-                  <div className="grid grid-cols-1 md:h-[280px] mt-3">
-                    {/* LAYER 1: Excerpt Preview */}
-                    <div
-                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-700 ${
-                        isHovered
-                          ? "opacity-0 -translate-y-3 pointer-events-none"
-                          : "opacity-100 translate-y-0 pointer-events-auto"
-                      }`}
-                    >
-                      <p className="text-xs sm:text-sm font-light leading-relaxed text-[#a8beb8]">
-                        {founder.preview}
-                      </p>
-                      <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
-                        <span className="font-mono-label text-[9.5px] text-white/50">
-                          {founder.role}
-                        </span>
-                        <ArrowUpRight className="w-4 h-4 text-[#14f884]" />
-                      </div>
-                    </div>
-
-                    {/* LAYER 2: Revealed Highlights */}
-                    <div
-                      className={`col-start-1 row-start-1 flex flex-col justify-between transition-all duration-700 delay-150 ${
-                        isHovered
-                          ? "opacity-100 translate-y-0 pointer-events-auto"
-                          : "opacity-0 translate-y-3 pointer-events-none"
-                      }`}
-                    >
-                      <div className="space-y-1.5 text-[11px] sm:text-[12px] text-[#051f10] font-medium leading-snug sm:leading-relaxed">
-                        {founder.revealedHighlights.map((hl, i) => (
-                          <div key={i} className="flex items-start gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#051f10] shrink-0 mt-1.5" />
-                            <span>{hl}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="mt-4 pt-3 border-t border-[#051f10]/15 flex items-center justify-between gap-2">
-                        <span className="font-mono-label text-[9.5px] text-[#051f10]/70">
-                          {founder.role}
-                        </span>
-                        <ArrowUpRight className="w-4 h-4 text-[#051f10] stroke-[2.5]" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </div>
 
