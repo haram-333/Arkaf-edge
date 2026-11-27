@@ -1,65 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SUSTAINABILITY_CONTENT } from "@/data/content";
 
 gsap.registerPlugin(ScrollTrigger);
-
-interface Hotspot {
-  id: string;
-  category: string;
-  metric: string;
-  detail: string;
-  top?: string;
-  left?: string;
-  right?: string;
-  bottom?: string;
-  tooltipPos: "left" | "right" | "top";
-}
-
-// 4 Interactive Sensor Nodes from Alethia screenshots
-const SENSOR_HOTSPOTS: Hotspot[] = [
-  {
-    id: "circularity",
-    category: "CIRCULAR UP-CYCLING",
-    metric: "12,000+ KG RECLAIMED",
-    detail: "Repurposing industrial textile & material discard into scalable commercial assets.",
-    top: "56%",
-    left: "14%",
-    tooltipPos: "right",
-  },
-  {
-    id: "accountability",
-    category: "VERIFIABLE METRICS",
-    metric: "ZERO GREENWASHING",
-    detail: "Scientific clarity & commercial logic translate into verifiable, compliance-ready metrics.",
-    top: "61%",
-    left: "36%",
-    tooltipPos: "right",
-  },
-  {
-    id: "nature-tech",
-    category: "NATURE-POSITIVE TECH",
-    metric: "COMPOUNDING REACH",
-    detail: "Organic ecosystems designed to compound over time without endless paid ad spend.",
-    bottom: "20%",
-    left: "62%",
-    tooltipPos: "top",
-  },
-  {
-    id: "regenerative",
-    category: "REGENERATIVE SCALE",
-    metric: "GLOBAL BRAND CALIBER",
-    detail: "Giving ethical organisations access to the strategic caliber of global market leaders.",
-    top: "66%",
-    right: "16%",
-    tooltipPos: "left",
-  },
-];
 
 export default function SustainabilitySection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -68,15 +16,8 @@ export default function SustainabilitySection() {
   const fogVideoRef = useRef<HTMLDivElement | null>(null);
   const eyebrowRef = useRef<HTMLDivElement | null>(null);
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
-  const subtextRef = useRef<HTMLParagraphElement | null>(null);
-  const ctaRef = useRef<HTMLDivElement | null>(null);
-  const pillsRef = useRef<HTMLDivElement | null>(null);
-  const pinsRef = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Hotspot states (starts completely clean & closed)
-  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
-  const activeHotspotRef = useRef<string | null>(null);
-  activeHotspotRef.current = activeHotspot;
+  const subtextRef = useRef<HTMLDivElement | null>(null);
+  const rightPanelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -86,15 +27,11 @@ export default function SustainabilitySection() {
     const eyebrow = eyebrowRef.current;
     const headline = headlineRef.current;
     const subtext = subtextRef.current;
-    const cta = ctaRef.current;
-    const pills = pillsRef.current;
+    const rightPanel = rightPanelRef.current;
 
     if (!container || !fixedStage || !bgImage) return;
 
-    // 1. FRAME-PERFECT TICKER EXIT SYNC:
-    // Tracks the exact physical top of the next section (#services) on every single frame.
-    // When #services enters the bottom of the viewport, fixedStage translates up at the EXACT
-    // same sub-pixel speed with ZERO scrub delay, ZERO lag, ZERO gap, and ZERO clipping!
+    // Tracks #services top so fixedStage slides out seamlessly with zero gap
     const updateSlide = () => {
       const nextSection = document.getElementById("services");
       if (!nextSection || !fixedStage) return;
@@ -104,13 +41,7 @@ export default function SustainabilitySection() {
       if (rect.top < h) {
         const offset = rect.top - h;
         fixedStage.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
-        if (rect.top <= 0) {
-          fixedStage.style.visibility = "hidden";
-          fixedStage.style.pointerEvents = "none";
-        } else {
-          fixedStage.style.visibility = "visible";
-          fixedStage.style.pointerEvents = "none";
-        }
+        fixedStage.style.visibility = rect.top <= 0 ? "hidden" : "visible";
       } else {
         fixedStage.style.transform = "translate3d(0, 0, 0)";
       }
@@ -119,19 +50,14 @@ export default function SustainabilitySection() {
     gsap.ticker.add(updateSlide);
 
     const ctx = gsap.context(() => {
-      const activePins = pinsRef.current.filter(Boolean);
       const headlineLines = headline ? headline.querySelectorAll(".reveal-line") : [];
 
-      // 2. MASTER TIMELINE:
-      // Controls entrance fade at top: 0, zoom-out, blur clearing, creeping fog entrance,
-      // and complete text reveal. ALL reveals finish by p = 0.49, leaving a crisp ~1-second
-      // hold window (~50vh) before #services arrives to slide it up smoothly.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
           start: "top bottom",
           end: "bottom top",
-          scrub: 0.5,
+          scrub: 0.45,
           onUpdate: (self) => {
             const p = self.progress;
             const nextSection = document.getElementById("services");
@@ -144,17 +70,13 @@ export default function SustainabilitySection() {
             } else {
               fixedStage.style.visibility = "visible";
               fixedStage.style.pointerEvents =
-                p >= 0.18 && (!rect || rect.top >= h) ? "auto" : "none";
-            }
-
-            if ((p >= 0.65 || p < 0.18) && activeHotspotRef.current !== null) {
-              setActiveHotspot(null);
+                p >= 0.14 && (!rect || rect.top >= h) ? "auto" : "none";
             }
           },
         },
       });
 
-      // --- PHASE 1: STAGE SOFTLY FADES IN AT TOP 0 (0.00 -> 0.12) ---
+      // Stage fades cleanly in right as hero dissolves
       tl.fromTo(
         fixedStage,
         { opacity: 0 },
@@ -162,69 +84,53 @@ export default function SustainabilitySection() {
         0
       );
 
-      // --- PHASE 2: CINEMATIC ZOOM OUT & DIRECT BLUR CLEARING (0.08 -> 0.28) ---
+      // Terrarium zoom out & sharpen
       tl.fromTo(
         bgImage,
-        { scale: 1.35, filter: "blur(12px)" },
-        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.20 },
-        0.08
+        { scale: 1.28, filter: "blur(10px)" },
+        { scale: 1.0, filter: "blur(0px)", ease: "power2.out", duration: 0.2 },
+        0.04
       );
 
-      // --- PHASE 3: RICH ATMOSPHERIC FOG ROLL-IN ANIMATION (0.18 -> 0.38) ---
-      // Rises up from floor (y: 75 -> 0), scales, diffuses from blur(12px) -> blur(0px)
+      // Drifting organic mist roll-in
       if (fogVideo) {
         tl.fromTo(
           fogVideo,
+          { opacity: 0, y: 60, scale: 1.12, filter: "blur(10px)" },
           {
-            opacity: 0,
-            y: 75,
-            scale: 1.15,
-            filter: "blur(12px)",
-          },
-          {
-            opacity: 0.75,
+            opacity: 0.72,
             y: 0,
             scale: 1.0,
             filter: "blur(0px)",
             ease: "power2.out",
-            duration: 0.20,
+            duration: 0.18,
           },
-          0.18
+          0.1
         );
       }
 
-      // --- PHASE 4: FULL GSAP TEXT REVEAL & SENSOR NODES (0.26 -> 0.49) ---
-      // Everything finishes revealing by 0.49 — completely revealed before exit starts at 0.67!
+      // Sequential doc text reveal completes cleanly by p = 0.34
       if (eyebrow) {
         tl.fromTo(
           eyebrow,
-          { opacity: 0, y: 18 },
-          { opacity: 1, y: 0, ease: "power3.out", duration: 0.08 },
-          0.26
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, ease: "power3.out", duration: 0.07 },
+          0.14
         );
       }
 
       if (headlineLines.length > 0) {
         tl.fromTo(
           headlineLines,
-          { yPercent: 115, opacity: 0 },
+          { yPercent: 110, opacity: 0 },
           {
             yPercent: 0,
             opacity: 1,
-            stagger: 0.025,
+            stagger: 0.02,
             ease: "power3.out",
-            duration: 0.10,
+            duration: 0.09,
           },
-          0.30
-        );
-      }
-
-      if (activePins.length > 0) {
-        tl.fromTo(
-          activePins,
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, stagger: 0.025, ease: "back.out(2)", duration: 0.09 },
-          0.32
+          0.17
         );
       }
 
@@ -233,31 +139,20 @@ export default function SustainabilitySection() {
           subtext,
           { opacity: 0, y: 14 },
           { opacity: 1, y: 0, ease: "power2.out", duration: 0.08 },
-          0.36
+          0.22
         );
       }
 
-      if (cta) {
+      if (rightPanel) {
         tl.fromTo(
-          cta,
-          { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
-          0.39
+          rightPanel,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, ease: "power2.out", duration: 0.09 },
+          0.25
         );
       }
 
-      if (pills) {
-        tl.fromTo(
-          pills,
-          { opacity: 0, y: 12 },
-          { opacity: 1, y: 0, ease: "power2.out", duration: 0.07 },
-          0.42
-        );
-      }
-
-      // --- PHASE 5: CRISP 1-SECOND EXPLORATION HOLD (0.49 -> 1.00) ---
-      // Holds statically for ~50vh until #services arrives at 0.67 to slide it up!
-      tl.to({}, { duration: 0.51 }, 0.49);
+      tl.to({}, { duration: 0.66 }, 0.34);
     }, container);
 
     return () => {
@@ -270,62 +165,44 @@ export default function SustainabilitySection() {
     <section
       id="sustainability"
       ref={containerRef}
-      className="relative z-20 w-full h-[200vh] bg-transparent"
+      className="relative z-20 w-full h-[185vh] bg-transparent"
     >
-      {/* =====================================================================
-          FIXED VIEWPORT STAGE:
-          - Spans 100% of viewport from top: 0 with ZERO container edge slicing!
-          - Fades in softly at top: 0 during entrance
-          - Exit slide-up is 1:1 hardware-synchronized with #services via ticker
-      ===================================================================== */}
+      {/* Anchor positioned where scroll reveal is complete */}
+      <div id="who-we-are" className="absolute top-[52vh] inset-x-0 pointer-events-none" />
+
       <div
         ref={fixedStageRef}
         style={{ opacity: 0, visibility: "hidden", transform: "translate3d(0, 0, 0)" }}
         className="fixed inset-0 top-0 left-0 w-full h-full z-20 pointer-events-none overflow-hidden bg-[#031513] text-white will-change-[transform,opacity,visibility]"
       >
-        {/* =====================================================================
-            LAYER 1: NATURE LANDSCAPE IMAGE (2880x1800 UNCOMPRESSED TERRARIUM)
-            - Fixed at top: 0 of default viewport
-            - Direct blur (12px) on the image itself (no separate overlay sliding up!)
-            - Smoothly unblurs to 0px as it zooms out from 1.35 to 1.0
-        ===================================================================== */}
+        {/* Terrarium Background */}
         <div
           ref={bgImageRef}
-          style={{ filter: "blur(12px)", transform: "scale(1.35)" }}
-          className="absolute inset-0 z-0 pointer-events-none will-change-[transform,filter]"
+          className="absolute inset-0 will-change-transform origin-center"
         >
           <Image
             src="/images/sustainability-landscape.jpg"
-            alt="ARKAF Edge Nature-Positive Terrarium Landscape"
+            alt="Nature landscape and organic moss ecosystem"
             fill
             priority
-            unoptimized
-            className="object-cover object-top"
+            quality={95}
+            className="object-cover object-[50%_75%] sm:object-bottom"
             sizes="100vw"
           />
-          {/* Subtle vignette protecting text legibility without obscuring nature */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "linear-gradient(to bottom, rgba(3,21,19,0.50) 0%, rgba(3,21,19,0.08) 45%, rgba(3,21,19,0.55) 100%)",
+                "linear-gradient(180deg, rgba(3,21,19,0.92) 0%, rgba(3,21,19,0.72) 48%, rgba(3,21,19,0.28) 78%, rgba(2,14,12,0.78) 100%)",
             }}
           />
         </div>
 
-        {/* =====================================================================
-            LAYER 2: AUTHENTIC ALETHIA CORNER & FLOOR FOG
-            - Clean screen mix-blend with rich creeping entrance animation
-            - Floats up from floor, expands, diffuses and rolls across moss & corners
-        ===================================================================== */}
+        {/* Creeping Atmosphere Mist */}
         <div
           ref={fogVideoRef}
-          style={{
-            opacity: 0,
-            transform: "translate3d(0, 80px, 0) scale(1.15)",
-            filter: "blur(14px)",
-          }}
-          className="absolute inset-0 z-[14] pointer-events-none overflow-hidden mix-blend-screen will-change-[transform,opacity,filter]"
+          style={{ opacity: 0 }}
+          className="hidden sm:block absolute inset-0 z-[5] pointer-events-none mix-blend-screen will-change-transform overflow-hidden"
         >
           <video
             src="/videos/clouds-fog.webm"
@@ -333,11 +210,12 @@ export default function SustainabilitySection() {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover object-center animate-fog-drift"
+            preload="auto"
+            className="w-full h-full object-cover opacity-80"
           />
         </div>
 
-        {/* Seamless bottom vignette melting into the next section */}
+        {/* Bottom Vignette */}
         <div
           className="absolute inset-x-0 bottom-0 h-28 pointer-events-none z-10"
           style={{
@@ -346,193 +224,91 @@ export default function SustainabilitySection() {
           }}
         />
 
-        {/* =====================================================================
-            LAYER 4: 4 INTERACTIVE SENSOR NODES (Exact Alethia 5-Dot Matrix + Inline Labels)
-            - Shown cleanly on tablet/desktop (sm+) in open lower terrarium zone
-            - Mobile keeps pure uninterrupted typography & pills with zero dot overlap
-        ===================================================================== */}
-        <div className="hidden sm:block absolute inset-0 z-30 pointer-events-none">
-          {SENSOR_HOTSPOTS.map((spot, idx) => {
-            const isActive = activeHotspot === spot.id;
-
-            return (
-              <div
-                key={spot.id}
-                ref={(el) => {
-                  pinsRef.current[idx] = el;
-                }}
-                style={{
-                  top: spot.top,
-                  left: spot.left,
-                  right: spot.right,
-                  bottom: spot.bottom,
-                }}
-                className="absolute pointer-events-auto transform -translate-x-1/2 -translate-y-1/2 will-change-transform"
-              >
-                {/* 5-Dot Matrix Sensor Pin Button + Inline Label */}
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setActiveHotspot(isActive ? null : spot.id)}
-                    onMouseEnter={() => setActiveHotspot(spot.id)}
-                    onMouseLeave={() => setActiveHotspot(null)}
-                    aria-label={`Inspect ${spot.category}`}
-                    className="group relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#c6f19d] text-[#051f10] shadow-[0_0_20px_rgba(198,241,157,0.7)] flex items-center justify-center transition-all duration-300 hover:scale-115 focus:outline-none cursor-pointer shrink-0"
-                  >
-                    <span className="absolute -inset-1 rounded-full bg-[#c6f19d]/40 animate-ping pointer-events-none" />
-
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="w-4 h-4 fill-current transition-transform duration-300 group-hover:rotate-45"
-                    >
-                      <circle cx="12" cy="12" r="1.8" />
-                      <circle cx="12" cy="6" r="1.8" />
-                      <circle cx="12" cy="18" r="1.8" />
-                      <circle cx="6" cy="12" r="1.8" />
-                      <circle cx="18" cy="12" r="1.8" />
-                    </svg>
-                  </button>
-
-                  {/* Inline Tag beside dot with Liquid Glass pill */}
-                  <div
-                    onClick={() => setActiveHotspot(isActive ? null : spot.id)}
-                    className="hidden sm:inline-block cursor-pointer select-none font-mono-label text-[8px] uppercase tracking-wider font-medium text-[#c6f19d] liquid-glass-pill px-2.5 py-1 rounded-full whitespace-nowrap hover:text-[#14f884] hover:scale-105 transition-all"
-                  >
-                    {spot.metric}
-                  </div>
-                </div>
-
-                {/* Tooltip Capsule with Liquid Glass Surface */}
-                <div
-                  className={`absolute z-40 transition-all duration-300 ease-out pointer-events-none ${
-                    isActive
-                      ? "opacity-100 scale-100 translate-y-0"
-                      : "opacity-0 scale-95 translate-y-1.5 pointer-events-none"
-                  } ${
-                    spot.tooltipPos === "right"
-                      ? "left-12 sm:left-14 top-1/2 -translate-y-1/2"
-                      : spot.tooltipPos === "left"
-                      ? "right-12 sm:right-14 top-1/2 -translate-y-1/2"
-                      : "bottom-12 sm:bottom-14 left-1/2 -translate-x-1/2"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 rounded-2xl liquid-glass px-3.5 py-2.5 min-w-[210px] max-w-[270px]">
-                    <div className="w-2 h-2 rounded-full bg-[#14f884] shrink-0 animate-pulse" />
-                    <div className="text-left">
-                      <span className="block font-mono-label text-[7.5px] text-[#14f884] font-semibold tracking-wider uppercase">
-                        {spot.category}
-                      </span>
-                      <span className="block text-[10.5px] font-semibold text-white leading-tight mt-0.5">
-                        {spot.metric}
-                      </span>
-                      <span className="block text-[8.5px] text-[#c7d6d1] font-light leading-snug mt-0.5">
-                        {spot.detail}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+        {/* Editorial Content Matching Exact Website Written Content (1).docx Sequence */}
+        <div
+          data-lenis-prevent
+          className="relative z-20 w-full max-w-[1340px] mx-auto px-5 sm:px-10 lg:px-12 h-full overflow-y-auto no-scrollbar pt-20 sm:pt-24 pb-8 pointer-events-auto flex flex-col justify-start lg:justify-center"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
+            {/* LEFT COLUMN: [P11–P18] Headline, Purpose & Earliest Ambition */}
+            <div className="lg:col-span-6 space-y-4 sm:space-y-5">
+              <div ref={eyebrowRef}>
+                <span className="inline-block rounded-[5px] bg-[#a9f5cf] text-[#051a12] font-mono-label text-[9px] sm:text-[10px] font-semibold px-3 py-1 shadow-[0_0_20px_rgba(169,245,207,0.3)]">
+                  {SUSTAINABILITY_CONTENT.badge}
+                </span>
               </div>
-            );
-          })}
-        </div>
 
-        {/* =====================================================================
-            LAYER 5: FULL-HEIGHT EDITORIAL TYPOGRAPHY & GSAP TEXT REVEAL
-            - Upper Deck fits comfortably above lower terrarium showcase
-            - Left Column: Impact Intelligence eyebrow + Origin Story pull-quote
-            - Right Column: Core Sustainability headline, closing mission & CTAs
-            - Bottom Dock: Industry focus lead + 9 liquid-glass vertical pills
-        ===================================================================== */}
-        <div className="relative z-20 w-full max-w-[1360px] mx-auto px-5 sm:px-10 lg:px-12 h-screen h-[100dvh] flex flex-col justify-between pt-20 sm:pt-24 pb-4 sm:pb-7 pointer-events-none">
-          {/* Top Row: Origin Story Pull-Quote (Left) + Core Headline & Mission (Right) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start">
-            {/* Top-Left: Eyebrow + Earliest Ambition Origin Story */}
-            <div ref={eyebrowRef} className="lg:col-span-5 pointer-events-auto">
-              <span className="block font-mono-label text-[8.5px] sm:text-[10px] text-[#14f884] font-semibold uppercase tracking-[0.16em] leading-relaxed">
-                {SUSTAINABILITY_CONTENT.badge}
-              </span>
-
-              <div className="mt-2 sm:mt-3 pl-3 sm:pl-4 border-l border-[#14f884]/55 max-w-md">
-                <p className="text-[11px] sm:text-[12.5px] text-[#c7d6d1] font-light leading-relaxed">
-                  {SUSTAINABILITY_CONTENT.storyLead}
-                </p>
-                <p className="mt-1 text-[11.5px] sm:text-[13px] font-semibold text-white leading-snug">
-                  {SUSTAINABILITY_CONTENT.storyQuestion}
-                </p>
-              </div>
-            </div>
-
-            {/* Upper-Right Headline + Exact Doc Copy + CTAs */}
-            <div className="lg:col-span-7 lg:pl-4 pointer-events-auto">
               <h2
                 ref={headlineRef}
-                className="text-[clamp(1.12rem,1.85vw,1.82rem)] font-medium sm:font-semibold text-[#f5f4f2] tracking-[-0.025em] leading-[1.26]"
+                className="text-[clamp(1.4rem,2.75vw,2.65rem)] font-medium tracking-[-0.035em] leading-[1.08]"
               >
                 <span className="block overflow-hidden py-0.5">
-                  <span className="reveal-line block will-change-transform">
+                  <span className="reveal-line block text-white will-change-transform">
                     {SUSTAINABILITY_CONTENT.headlineWhite}
                   </span>
                 </span>
                 <span className="block overflow-hidden py-0.5 mt-0.5">
-                  <span className="reveal-line block text-[#14f884] font-semibold will-change-transform">
+                  <span className="reveal-line block text-[#14f884] neon-text-glow will-change-transform">
                     {SUSTAINABILITY_CONTENT.headlineGreen}
                   </span>
                 </span>
               </h2>
 
-              <p
-                ref={subtextRef}
-                className="mt-2.5 max-w-xl text-[11.5px] sm:text-[13px] text-[#d4e4df] font-light leading-relaxed"
-              >
-                {SUSTAINABILITY_CONTENT.lead} {SUSTAINABILITY_CONTENT.closing}
+              <div ref={subtextRef} className="space-y-3 sm:space-y-4 max-w-xl">
+                <p className="text-sm sm:text-[15.5px] text-[#e2efe9] font-light leading-relaxed">
+                  {SUSTAINABILITY_CONTENT.lead}{" "}
+                  <span className="text-white font-medium">
+                    {SUSTAINABILITY_CONTENT.leadHighlight}
+                  </span>
+                </p>
+
+                <div className="pl-3.5 sm:pl-4 border-l border-[#14f884]/55 space-y-1.5">
+                  <p className="text-xs sm:text-sm text-[#c7d6d1] font-light leading-relaxed">
+                    {SUSTAINABILITY_CONTENT.storyLead}
+                  </p>
+                  <p className="text-sm sm:text-[15px] font-semibold text-[#c6f19d] leading-snug">
+                    {SUSTAINABILITY_CONTENT.storyQuestion}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: [P19–P24] Affection, 9 Focus Sectors, Closing Mission & Discover CTA */}
+            <div
+              ref={rightPanelRef}
+              className="lg:col-span-6 rounded-2xl sm:rounded-[24px] liquid-glass p-5 sm:p-7 space-y-4 sm:space-y-5"
+            >
+              <p className="text-xs sm:text-sm text-[#d4ede4] font-light leading-relaxed">
+                {SUSTAINABILITY_CONTENT.affection}
               </p>
 
-              {/* Clean Action Buttons */}
-              <div ref={ctaRef} className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                {SUSTAINABILITY_CONTENT.industries.map((ind) => (
+                  <span
+                    key={ind}
+                    className="px-2.5 sm:px-3 py-1 rounded-full liquid-glass-pill font-mono-label text-[8.5px] sm:text-[9.5px] text-[#e2efe9] hover:text-[#14f884] transition-colors"
+                  >
+                    {ind}
+                  </span>
+                ))}
+              </div>
+
+              <p className="pt-3 border-t border-white/15 text-xs sm:text-sm text-[#d4e4df] font-light leading-relaxed">
+                {SUSTAINABILITY_CONTENT.closing}
+              </p>
+
+              <div className="pt-1">
                 <a
-                  href="#impact"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-4 sm:px-6 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10.5px] font-semibold shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#a9f5cf] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+                  href="#discover-us"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-5 sm:px-6 py-2.5 sm:py-3 font-mono-label text-[10px] sm:text-[11px] font-semibold shadow-[0_0_20px_rgba(20,248,132,0.38)] hover:bg-[#c6f19d] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
                 >
                   <span>{SUSTAINABILITY_CONTENT.cta}</span>
-                  <span className="text-[8.5px] opacity-75 font-semibold hidden sm:inline">
+                  <span className="text-[9px] opacity-75 font-medium hidden sm:inline">
                     ({SUSTAINABILITY_CONTENT.ctaKicker})
                   </span>
                   <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
                 </a>
-
-                <div className="liquid-glass-btn-wrap">
-                  <a
-                    href="#work"
-                    className="liquid-glass-btn px-4 sm:px-5 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10px] font-medium text-white hover:text-[#14f884]"
-                  >
-                    <span className="liquid-glass-btn-shine" />
-                    <span className="relative z-10">CIRCULAR WORK ↗</span>
-                  </a>
-                </div>
               </div>
-            </div>
-          </div>
-
-          {/* Lower Row: Full Affection Copy + 9 Focus Circular Sectors Pills */}
-          <div ref={pillsRef} className="pt-2.5 sm:pt-3 pointer-events-auto border-t border-white/10">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <span className="text-[10.5px] sm:text-xs text-[#d4ede4] font-light leading-snug">
-                {SUSTAINABILITY_CONTENT.affection}
-              </span>
-              <span className="hidden lg:inline-block font-mono-label text-[8px] text-[#14f884]/75">
-                CIRCULAR &amp; REGENERATIVE VERTICALS
-              </span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              {SUSTAINABILITY_CONTENT.industries.map((ind) => (
-                <span
-                  key={ind}
-                  className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full liquid-glass-pill font-mono-label text-[8px] sm:text-[9px] text-[#d4ede4] hover:text-[#14f884] transition-colors"
-                >
-                  {ind}
-                </span>
-              ))}
             </div>
           </div>
         </div>

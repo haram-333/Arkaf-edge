@@ -6,6 +6,7 @@ import SustainabilitySection from "@/components/sections/SustainabilitySection";
 import ServicesFlowerSection from "@/components/sections/ServicesFlowerSection";
 import DiscoverWordsSection from "@/components/sections/DiscoverWordsSection";
 import FactsUpcyclingSection from "@/components/sections/FactsUpcyclingSection";
+import BrandStatementSection from "@/components/sections/BrandStatementSection";
 import PhenomenonHorizontalSection from "@/components/sections/PhenomenonHorizontalSection";
 import ApproachWaveSection from "@/components/sections/ApproachWaveSection";
 import ClientApproachSection from "@/components/sections/ClientApproachSection";
@@ -26,6 +27,7 @@ export default function HomePage() {
         <ServicesFlowerSection />
         <DiscoverWordsSection />
         <FactsUpcyclingSection />
+        <BrandStatementSection />
         <PhenomenonHorizontalSection />
         <ApproachWaveSection />
         <ClientApproachSection />
