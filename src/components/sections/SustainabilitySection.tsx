@@ -491,7 +491,7 @@ export default function SustainabilitySection() {
               <div ref={ctaRef} className="mt-3 sm:mt-4 flex flex-wrap items-center gap-2.5 sm:gap-3">
                 <a
                   href="#who-we-are"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] px-4 sm:px-6 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10.5px] font-semibold shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#a9f5cf] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#55b886] text-[#04140d] px-4 sm:px-6 py-2 sm:py-2.5 font-mono-label text-[9.5px] sm:text-[10.5px] font-semibold shadow-[0_6px_18px_rgba(72,168,118,0.22)] hover:bg-[#6bc999] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
                 >
                   <span>{SUSTAINABILITY_CONTENT.cta}</span>
                   <span className="text-[8.5px] opacity-75 font-semibold hidden sm:inline">

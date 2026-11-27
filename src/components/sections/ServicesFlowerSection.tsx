@@ -144,7 +144,7 @@ export default function ServicesFlowerSection() {
                   onClick={() => scrollToDiscipline(idx)}
                   className={`shrink-0 px-3 py-1.5 rounded-full font-mono-label text-[9px] font-semibold transition-all cursor-pointer ${
                     active
-                      ? "bg-[#14f884] text-[#050b09] shadow-[0_0_12px_rgba(20,248,132,0.5)]"
+                      ? "bg-[#55b886] text-[#04140d] shadow-[0_4px_12px_rgba(72,168,118,0.22)]"
                       : "liquid-glass-pill text-white/75"
                   }`}
                 >

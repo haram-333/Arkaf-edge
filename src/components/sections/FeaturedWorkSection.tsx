@@ -150,7 +150,7 @@ export default function FeaturedWorkSection() {
           <button
             type="button"
             onClick={handleStartSimilarProject}
-            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10px] sm:text-[11px] font-semibold px-6 py-3.5 neon-box-glow hover:scale-[1.03] active:scale-[0.98] transition-transform cursor-pointer"
+            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#55b886] hover:bg-[#6bc999] text-[#04140d] font-mono-label text-[10px] sm:text-[11px] font-semibold px-6 py-3.5 neon-box-glow hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
           >
             PARTNER WITH US
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -258,7 +258,7 @@ export default function FeaturedWorkSection() {
               <button
                 type="button"
                 onClick={handleStartSimilarProject}
-                className="inline-flex items-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10.5px] font-semibold px-5 py-2.5 neon-box-glow hover:scale-[1.02] cursor-pointer transition-transform"
+                className="inline-flex items-center gap-2 rounded-full bg-[#55b886] hover:bg-[#6bc999] text-[#04140d] font-mono-label text-[10.5px] font-semibold px-5 py-2.5 neon-box-glow hover:scale-[1.02] cursor-pointer transition-all"
               >
                 START A PROJECT
                 <ArrowRight className="w-3.5 h-3.5" />

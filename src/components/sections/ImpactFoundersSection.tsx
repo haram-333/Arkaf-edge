@@ -282,7 +282,7 @@ export default function ImpactFoundersSection() {
                     className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-700 shadow-md ${
                       isHovered
                         ? "bg-[#051f10] text-[#c6f19d] scale-105"
-                        : "bg-[#14f884] text-[#050b09] shadow-[0_0_16px_rgba(20,248,132,0.4)]"
+                        : "bg-[#55b886] text-[#04140d] shadow-[0_4px_14px_rgba(72,168,118,0.25)]"
                     }`}
                   >
                     <ArrowRight

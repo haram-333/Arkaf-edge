@@ -49,7 +49,7 @@ export default function WhoWeAreSection() {
         <div className="mt-6 sm:mt-8 flex items-center gap-3">
           <a
             href="#impact"
-            className="inline-flex items-center justify-center gap-2.5 rounded-full border border-[#14f884] bg-[#14f884] px-6 sm:px-8 py-3.5 sm:py-4 font-mono-label text-[10.5px] sm:text-[11.5px] font-semibold text-[#050b09] shadow-[0_0_24px_rgba(20,248,132,0.45)] hover:bg-[#a9f5cf] hover:shadow-[0_0_36px_rgba(20,248,132,0.75)] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
+            className="inline-flex items-center justify-center gap-2.5 rounded-full border border-[#6bc999]/40 bg-[#55b886] px-6 sm:px-8 py-3.5 sm:py-4 font-mono-label text-[10.5px] sm:text-[11.5px] font-semibold text-[#04140d] shadow-[0_6px_18px_rgba(72,168,118,0.22)] hover:bg-[#6bc999] hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer"
           >
             <span>OUR COMMITMENT TO IMPACT</span>
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />

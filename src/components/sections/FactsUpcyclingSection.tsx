@@ -170,7 +170,7 @@ export default function FactsUpcyclingSection() {
                     onClick={() => setRegionView(tab.key)}
                     className={`px-3 py-1 rounded-full font-mono-label text-[9px] font-semibold transition-all cursor-pointer ${
                       regionView === tab.key
-                        ? "bg-[#14f884] text-[#050b09]"
+                        ? "bg-[#55b886] text-[#04140d]"
                         : "border border-white/15 bg-white/5 text-white/70 hover:text-white"
                     }`}
                   >
@@ -414,7 +414,7 @@ export default function FactsUpcyclingSection() {
                   <span
                     className={`absolute bottom-3 left-3 font-mono-label text-[9px] font-semibold px-2.5 py-0.5 rounded-full transition-all duration-500 ${
                       isFocused
-                        ? "bg-[#14f884] text-[#050b09]"
+                        ? "bg-[#55b886] text-[#04140d]"
                         : "bg-black/60 text-white/60 border border-white/15"
                     }`}
                   >

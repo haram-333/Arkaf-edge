@@ -337,7 +337,7 @@ export default function InsightsContactFooter() {
               <button
                 type="button"
                 onClick={closeNoteOverlay}
-                className="rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10.5px] font-semibold px-5 py-2.5 cursor-pointer hover:bg-[#c6f19d] transition-colors"
+                className="rounded-full bg-[#55b886] text-[#04140d] font-mono-label text-[10.5px] font-semibold px-5 py-2.5 cursor-pointer hover:bg-[#6bc999] transition-colors"
               >
                 BACK TO PAGE
               </button>
@@ -400,7 +400,7 @@ export default function InsightsContactFooter() {
                 <button
                   type="button"
                   onClick={focusForm}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10px] font-semibold px-4 py-2 shadow-[0_0_18px_rgba(20,248,132,0.35)] hover:bg-[#c6f19d] cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#55b886] text-[#04140d] font-mono-label text-[10px] font-semibold px-4 py-2 shadow-[0_4px_14px_rgba(72,168,118,0.22)] hover:bg-[#6bc999] cursor-pointer transition-colors"
                 >
                   START A PROJECT
                   <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -533,7 +533,7 @@ export default function InsightsContactFooter() {
                               onClick={() => setSelectedService(chip)}
                               className={`px-3.5 py-1.5 rounded-full font-mono-label text-[9px] sm:text-[9.5px] font-medium transition-all cursor-pointer ${
                                 active
-                                  ? "bg-[#14f884] text-[#050b09] font-semibold shadow-[0_0_14px_rgba(20,248,132,0.5)]"
+                                  ? "bg-[#55b886] text-[#04140d] font-semibold shadow-[0_4px_12px_rgba(72,168,118,0.22)]"
                                   : "liquid-glass-pill text-white/75 hover:text-[#14f884]"
                               }`}
                             >
@@ -562,7 +562,7 @@ export default function InsightsContactFooter() {
                     <div className="pt-1">
                       <button
                         type="submit"
-                        className="w-full inline-flex items-center justify-center gap-2.5 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[11px] sm:text-xs font-semibold px-7 py-4 neon-box-glow hover:bg-[#c6f19d] hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
+                        className="w-full inline-flex items-center justify-center gap-2.5 rounded-full bg-[#55b886] hover:bg-[#6bc999] text-[#04140d] font-mono-label text-[11px] sm:text-xs font-semibold px-7 py-4 neon-box-glow hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
                       >
                         <span>SEND IT TO THE EDGE</span>
                         <ArrowRight className="w-4 h-4 stroke-[2.5]" />

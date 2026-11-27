@@ -75,7 +75,7 @@ export default function SelectedEcosystemSection() {
                     className={`w-9 h-9 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
                       isHeroTile
                         ? "bg-[#051f10] text-[#c6f19d]"
-                        : "bg-white/5 text-[#14f884] group-hover:bg-[#14f884] group-hover:text-[#050b09]"
+                        : "bg-white/5 text-[#55b886] group-hover:bg-[#55b886] group-hover:text-[#04140d]"
                     }`}
                   >
                     {isHeroTile ? (

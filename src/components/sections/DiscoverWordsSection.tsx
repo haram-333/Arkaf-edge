@@ -86,7 +86,7 @@ export default function DiscoverWordsSection() {
                 }}
                 className={`px-4 py-2 rounded-full font-mono-label text-[10px] sm:text-[11px] font-semibold transition-all duration-300 cursor-pointer ${
                   active
-                    ? "bg-[#14f884] text-[#050b09] shadow-[0_0_20px_rgba(20,248,132,0.45)] scale-105"
+                    ? "bg-[#55b886] text-[#04140d] shadow-[0_4px_14px_rgba(72,168,118,0.25)] scale-105"
                     : "liquid-glass-pill text-white/65 hover:text-white"
                 }`}
               >

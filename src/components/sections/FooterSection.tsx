@@ -171,7 +171,7 @@ export default function FooterSection() {
                 e.preventDefault();
                 scrollToTarget("#contact");
               }}
-              className="group inline-flex items-center gap-4 rounded-[8px] bg-[#c6f19d] text-[#071c12] pl-5 pr-2 py-2 font-mono-label text-[11px] font-semibold tracking-[0.14em] shadow-[0_14px_40px_rgba(0,0,0,0.45)] hover:bg-[#d8f8b8] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+              className="group inline-flex items-center gap-4 rounded-[8px] bg-[#a6d482] text-[#071c12] pl-5 pr-2 py-2 font-mono-label text-[11px] font-semibold tracking-[0.14em] shadow-[0_14px_40px_rgba(0,0,0,0.45)] hover:bg-[#b8e096] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
             >
               <span>LET&apos;S TALK</span>
               <span className="w-7 h-7 rounded-[5px] bg-[#071c12] text-[#c6f19d] flex items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5">

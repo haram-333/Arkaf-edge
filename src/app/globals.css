@@ -53,11 +53,11 @@ body {
 }
 
 .neon-box-glow {
-  box-shadow: 0 0 28px rgba(15, 250, 127, 0.42), 0 0 10px rgba(20, 248, 132, 0.28);
+  box-shadow: 0 6px 20px rgba(72, 168, 118, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .neon-logo-glow {
-  box-shadow: 0 0 20px rgba(23, 248, 136, 0.55);
+  box-shadow: 0 0 12px rgba(85, 184, 134, 0.32);
 }
 
 @keyframes marquee-scroll {

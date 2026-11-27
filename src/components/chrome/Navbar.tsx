@@ -124,7 +124,7 @@ export default function Navbar() {
           href="#hero"
           className="inline-flex items-center gap-2.5 group focus:outline-none"
         >
-          <span className="w-8 h-8 rounded-[8px] bg-[#17f888] text-[#050b09] font-semibold text-[15px] flex items-center justify-center neon-logo-glow transition-transform duration-300 group-hover:scale-105">
+          <span className="w-8 h-8 rounded-[8px] bg-[#55b886] text-[#04140d] font-semibold text-[15px] flex items-center justify-center neon-logo-glow transition-transform duration-300 group-hover:scale-105">
             A
           </span>
           <span className="font-semibold tracking-[-0.03em] text-[17px] leading-none">

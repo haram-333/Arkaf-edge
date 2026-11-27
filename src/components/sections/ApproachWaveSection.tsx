@@ -183,7 +183,7 @@ export default function ApproachWaveSection() {
                   onClick={() => scrollToStage(idx)}
                   className={`px-3 py-1.5 rounded-full font-mono-label text-[9px] font-semibold transition-all cursor-pointer ${
                     activeStage === idx
-                      ? "bg-[#14f884] text-[#050b09] shadow-[0_0_14px_rgba(20,248,132,0.85)] scale-105"
+                      ? "bg-[#55b886] text-[#04140d] shadow-[0_4px_14px_rgba(72,168,118,0.28)] scale-105"
                       : "bg-[#060f0c]/90 text-white/60 border border-white/15 hover:text-white hover:border-[#14f884]/40"
                   }`}
                 >

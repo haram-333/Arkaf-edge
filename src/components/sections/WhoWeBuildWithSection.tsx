@@ -70,7 +70,7 @@ export default function WhoWeBuildWithSection() {
           </p>
           <a
             href="#contact"
-            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#14f884] text-[#050b09] font-mono-label text-[10.5px] font-semibold px-6 py-3.5 neon-box-glow hover:bg-[#c6f19d] hover:scale-[1.03] active:scale-[0.98] transition-all"
+            className="shrink-0 inline-flex items-center justify-center gap-2 rounded-full bg-[#55b886] text-[#04140d] font-mono-label text-[10.5px] font-semibold px-6 py-3.5 neon-box-glow hover:bg-[#6bc999] hover:scale-[1.03] active:scale-[0.98] transition-all"
           >
             <span>START A PROJECT</span>
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />

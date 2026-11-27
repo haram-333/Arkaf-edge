@@ -121,7 +121,7 @@ export default function HeroSection() {
               {/* 1. What We Do */}
               <a
                 href="#services"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4 neon-box-glow hover:scale-[1.03] active:scale-[0.99] transition-transform"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#55b886] hover:bg-[#6bc999] text-[#04140d] font-mono-label text-[10px] sm:text-[11.5px] font-semibold px-5 sm:px-6 py-3.5 sm:py-4 neon-box-glow hover:scale-[1.03] active:scale-[0.99] transition-all"
               >
                 {HERO_CONTENT.primaryCta}
                 <ArrowRight className="w-3.5 h-3.5" />

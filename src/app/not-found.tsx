@@ -22,7 +22,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#0ffa7f] text-[#050b09] font-mono-label text-xs font-semibold px-7 py-3.5 neon-box-glow hover:scale-[1.03] transition-transform relative z-10"
+        className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#55b886] hover:bg-[#6bc999] text-[#04140d] font-mono-label text-xs font-semibold px-7 py-3.5 neon-box-glow hover:scale-[1.03] transition-all relative z-10"
       >
         BACK TO ARKAF EDGE →
       </Link>
