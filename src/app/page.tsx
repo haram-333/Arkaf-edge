@@ -1,12 +1,12 @@
 import SmoothScroll from "@/components/chrome/SmoothScroll";
 import Navbar from "@/components/chrome/Navbar";
 import CustomCursor from "@/components/chrome/CustomCursor";
-import HeroWhoWeAreSection from "@/components/sections/HeroWhoWeAreSection";
+import HeroSection from "@/components/sections/HeroSection";
 import SustainabilitySection from "@/components/sections/SustainabilitySection";
+import WhoWeAreSection from "@/components/sections/WhoWeAreSection";
 import ServicesFlowerSection from "@/components/sections/ServicesFlowerSection";
 import DiscoverWordsSection from "@/components/sections/DiscoverWordsSection";
 import FactsUpcyclingSection from "@/components/sections/FactsUpcyclingSection";
-import BrandStatementSection from "@/components/sections/BrandStatementSection";
 import PhenomenonHorizontalSection from "@/components/sections/PhenomenonHorizontalSection";
 import ApproachWaveSection from "@/components/sections/ApproachWaveSection";
 import ClientApproachSection from "@/components/sections/ClientApproachSection";
@@ -22,12 +22,12 @@ export default function HomePage() {
       <Navbar />
       <CustomCursor />
       <main>
-        <HeroWhoWeAreSection />
+        <HeroSection />
         <SustainabilitySection />
+        <WhoWeAreSection />
         <ServicesFlowerSection />
         <DiscoverWordsSection />
         <FactsUpcyclingSection />
-        <BrandStatementSection />
         <PhenomenonHorizontalSection />
         <ApproachWaveSection />
         <ClientApproachSection />

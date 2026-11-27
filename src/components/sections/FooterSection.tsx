@@ -5,9 +5,9 @@ import { ArrowUp, ArrowUpRight, Check, ChevronRight, Copy } from "lucide-react";
 
 const COLUMN_PRIMARY = [
   { label: "Home", href: "#hero" },
+  { label: "Sustainability", href: "#sustainability" },
   { label: "Who We Are", href: "#who-we-are" },
   { label: "What We Do", href: "#services" },
-  { label: "Sustainability", href: "#sustainability" },
 ];
 
 const COLUMN_METHOD = [

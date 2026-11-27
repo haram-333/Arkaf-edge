@@ -12,11 +12,10 @@ export const HERO_CONTENT = {
 };
 
 export const SUSTAINABILITY_CONTENT = {
-  badge: "WHO WE ARE · SUSTAINABILITY",
+  badge: "SUSTAINABILITY — WHO WE ARE",
   headlineWhite: "The future shouldn't need another marketing campaign.",
   headlineGreen: "It needs businesses willing to build it.",
-  lead: "Sustainability isn't a green badge we attach to our services.",
-  leadHighlight: "It is one of the reasons ARKAF Edge exists.",
+  lead: "Sustainability isn't a green badge we attach to our services. It is one of the reasons ARKAF Edge exists.",
   storyLead:
     "Our earliest ambition was to explore how waste itself could become useful, productive and scalable. That idea eventually evolved into a larger question:",
   storyQuestion: "What if we helped the businesses already building that future?",

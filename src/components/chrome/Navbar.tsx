@@ -6,14 +6,15 @@ import { Menu, X, ArrowUpRight, Sparkles, Sun, Moon } from "lucide-react";
 
 const NAV_LINKS = [
   { num: "01", label: "Home", href: "#hero" },
-  { num: "02", label: "Who We Are", href: "#who-we-are" },
-  { num: "03", label: "Services", href: "#services" },
-  { num: "04", label: "The ARKAF Edge", href: "#phenomenon" },
-  { num: "05", label: "Our Approach", href: "#approach" },
-  { num: "06", label: "Impact & Numbers", href: "#impact" },
-  { num: "07", label: "Featured Work", href: "#work" },
-  { num: "08", label: "Edge Notes", href: "#insights" },
-  { num: "09", label: "Start a Project", href: "#contact" },
+  { num: "02", label: "Sustainability", href: "#sustainability" },
+  { num: "03", label: "Who We Are", href: "#who-we-are" },
+  { num: "04", label: "Services", href: "#services" },
+  { num: "05", label: "The ARKAF Edge", href: "#phenomenon" },
+  { num: "06", label: "Our Approach", href: "#approach" },
+  { num: "07", label: "Impact & Numbers", href: "#impact" },
+  { num: "08", label: "Featured Work", href: "#work" },
+  { num: "09", label: "Edge Notes", href: "#insights" },
+  { num: "10", label: "Start a Project", href: "#contact" },
 ];
 
 export default function Navbar() {
