@@ -680,8 +680,8 @@ export default function GlassFlowerCanvas({ progressRef }: GlassFlowerCanvasProp
       headGroup.rotation.y = -0.30 + p * 0.68 + Math.sin(t * 0.22) * 0.04 + pointer.x * 0.12;
       headGroup.rotation.z = -0.12 + bloom * 0.09;
 
-      flowerRoot.position.y = -0.40 + bloom * 0.22;
-      flowerRoot.scale.setScalar(0.92 + bloom * 0.11);
+      flowerRoot.position.y = -0.66 + bloom * 0.20;
+      flowerRoot.scale.setScalar(0.90 + bloom * 0.10);
 
       renderer.render(scene, camera);
       rafId = requestAnimationFrame(animate);

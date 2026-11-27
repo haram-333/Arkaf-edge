@@ -26,15 +26,16 @@ export default function ServicesFlowerSection() {
     if (!wrapper || !flowerLayer) return;
 
     const ctx = gsap.context(() => {
-      // Fade ONLY the flower in once #services pins at viewport top (zero premature visibility!)
+      // Fade + rise smoothly from bottom to top once #services pins at viewport top
       gsap.fromTo(
         flowerLayer,
-        { opacity: 0, scale: 0.94 },
+        { opacity: 0, y: 120, scale: 0.92 },
         {
           opacity: 1,
+          y: 0,
           scale: 1,
-          duration: 0.95,
-          ease: "power2.out",
+          duration: 1.15,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: wrapper,
             start: "top 2px",
