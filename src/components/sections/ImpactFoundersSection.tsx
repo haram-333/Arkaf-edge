@@ -432,8 +432,13 @@ export default function ImpactFoundersSection() {
                 style={{ transformOrigin: "top center" }}
                 className="absolute left-3 md:left-1/2 top-2 bottom-0 w-[2px] bg-gradient-to-b from-[#14f884] via-[#14f884] to-[#c6f19d] shadow-[0_0_14px_rgba(20,248,132,0.85)] -translate-x-1/2 will-change-transform"
               />
+              {/* Terminal convergence node anchored right at spine end */}
+              <span
+                aria-hidden="true"
+                className="hidden md:block absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 w-3.5 h-3.5 rounded-full bg-[#14f884] border-2 border-[#041d1a] shadow-[0_0_16px_rgba(20,248,132,0.9)]"
+              />
 
-              <div className="space-y-10 sm:space-y-12 pb-6 sm:pb-8">
+              <div className="space-y-10 sm:space-y-12 pb-10 sm:pb-14">
                 {timelineBeats.map((item) => {
                   const isLeft = item.founderKey === "anurag";
                   const isActive = hoveredNodeId === item.id;
@@ -535,11 +540,7 @@ export default function ImpactFoundersSection() {
 
             {/* Luminous Convergence Keystone — Spacious architectural glass card below spine */}
             {convergenceBeat && (
-              <div className="convergence-beat relative pt-6 sm:pt-8 flex justify-center">
-                <span
-                  aria-hidden="true"
-                  className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-[#14f884] border-2 border-[#041d1a] shadow-[0_0_16px_rgba(20,248,132,0.9)]"
-                />
+              <div className="convergence-beat relative pt-12 sm:pt-16 flex justify-center">
                 <div className="w-full max-w-2xl rounded-2xl sm:rounded-[24px] liquid-glass px-6 sm:px-10 py-6 sm:py-8 text-left sm:text-center">
                   <span className="inline-block font-mono-label text-[10px] text-[#14f884] tracking-[0.2em] mb-2">
                     {convergenceBeat.badge}
