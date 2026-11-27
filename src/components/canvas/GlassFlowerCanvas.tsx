@@ -63,22 +63,22 @@ const PETAL_FRAG = `
       : 0.0;
     float midrib = exp(-uCentered * uCentered * 16.0) * 0.25 * sin(vTip * 3.14159);
 
-    // Deep dark emerald core + vibrant bioluminescent jade-mint rims (zero flat X-ray wash)
-    vec3 coreObsidian = mix(vec3(0.008, 0.045, 0.032), vec3(0.014, 0.075, 0.038), uTintLeaf);
-    vec3 midJade = mix(vec3(0.025, 0.42, 0.27), vec3(0.055, 0.56, 0.26), uTintLeaf);
-    vec3 neonEmerald = vec3(0.08, 0.96, 0.52);
-    vec3 chromeMint = vec3(0.68, 0.99, 0.84);
+    // Deep dark emerald core + luminous liquid-chrome jade-mint rims matching reference video
+    vec3 coreObsidian = mix(vec3(0.012, 0.065, 0.045), vec3(0.02, 0.11, 0.052), uTintLeaf);
+    vec3 midJade = mix(vec3(0.04, 0.58, 0.36), vec3(0.08, 0.72, 0.34), uTintLeaf);
+    vec3 neonEmerald = vec3(0.10, 0.99, 0.56);
+    vec3 chromeMint = vec3(0.84, 1.0, 0.92);
 
-    float shimmer = 0.92 + 0.08 * sin(uTime * 1.1 + vTip * 5.0);
-    float tipMask = 0.35 + 0.65 * smoothstep(0.0, 0.85, vTip);
+    float shimmer = 0.94 + 0.06 * sin(uTime * 1.1 + vTip * 5.0);
+    float tipMask = 0.45 + 0.55 * smoothstep(0.0, 0.82, vTip);
 
     vec3 col = coreObsidian;
-    col += midJade * (max(dot(N, L1), 0.0) * 0.42 + fresnel * 0.72 + fluteVein * 0.5 + lateralVein) * tipMask;
-    col += neonEmerald * (fresnel * 1.15 + spec2 * 0.52 + midrib * 0.75 + lateralVein * 0.65) * shimmer;
-    col += chromeMint * (spec1 * 0.78 + spec3 * 0.35 + sharpRim * 0.48);
+    col += midJade * (max(dot(N, L1), 0.0) * 0.52 + fresnel * 0.92 + fluteVein * 0.65 + lateralVein) * tipMask;
+    col += neonEmerald * (fresnel * 1.55 + spec2 * 0.82 + midrib * 0.95 + lateralVein * 0.85) * shimmer;
+    col += chromeMint * (spec1 * 1.35 + spec3 * 0.52 + sharpRim * 0.82);
 
     col *= uGlow;
-    col = col / (1.0 + col * 0.38);
+    col = col / (1.0 + col * 0.28);
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -98,18 +98,18 @@ const SEED_FRAG = `
     vec3 H = normalize(L + V);
 
     float ndotv = max(dot(N, V), 0.0);
-    float fresnel = pow(1.0 - ndotv, 2.0);
+    float fresnel = pow(1.0 - ndotv, 1.85);
     float diff = max(dot(N, L), 0.0);
-    float spec = pow(max(dot(N, H), 0.0), 46.0);
+    float spec = pow(max(dot(N, H), 0.0), 30.0);
 
-    vec3 darkSeed = vec3(0.008, 0.048, 0.034);
-    vec3 jade = vec3(0.04, 0.58, 0.34);
-    vec3 brightEmerald = vec3(0.10, 0.98, 0.54);
-    vec3 mintSpec = vec3(0.72, 1.0, 0.86);
+    vec3 darkSeed = vec3(0.01, 0.055, 0.038);
+    vec3 jade = vec3(0.06, 0.72, 0.42);
+    vec3 brightEmerald = vec3(0.12, 1.0, 0.58);
+    vec3 mintSpec = vec3(0.86, 1.0, 0.92);
 
-    vec3 col = darkSeed + jade * (diff * 0.55) + brightEmerald * (fresnel * 0.95) + mintSpec * (spec * 0.72);
+    vec3 col = darkSeed + jade * (diff * 0.68) + brightEmerald * (fresnel * 1.35) + mintSpec * (spec * 1.15);
     col *= uGlow;
-    col = col / (1.0 + col * 0.35);
+    col = col / (1.0 + col * 0.25);
     gl_FragColor = vec4(col, 1.0);
   }
 `;

@@ -10,89 +10,43 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ServicesFlowerSection() {
   const wrapperRef = useRef<HTMLElement | null>(null);
-  const stageRef = useRef<HTMLDivElement | null>(null);
+  const flowerFadeRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef<number>(0);
   const animTriggerRef = useRef<ScrollTrigger | null>(null);
-  const interactiveRef = useRef(false);
   const [scrollActive, setScrollActive] = useState(0);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [mobileActive, setMobileActive] = useState(0);
-  const [stageInteractive, setStageInteractive] = useState(false);
 
   const activeIdx = hoveredIdx !== null ? hoveredIdx : scrollActive;
   const activeDiscipline = SERVICES_DISCIPLINES[activeIdx] || SERVICES_DISCIPLINES[0];
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    const stage = stageRef.current;
-    if (!wrapper || !stage) return;
-
-    const syncInteractive = (next: boolean) => {
-      if (interactiveRef.current !== next) {
-        interactiveRef.current = next;
-        setStageInteractive(next);
-      }
-    };
-
-    // 1. Frame-perfect 1:1 exit sync with #discover-us (matches SustainabilitySection — zero sticky bottom lag)
-    const updateSlide = () => {
-      const nextSection = document.getElementById("discover-us");
-      if (!nextSection || !stage) return;
-      const rect = nextSection.getBoundingClientRect();
-      const h = window.innerHeight;
-
-      if (rect.top < h) {
-        const offset = rect.top - h;
-        stage.style.transform = `translate3d(0, ${offset.toFixed(2)}px, 0)`;
-        if (rect.top <= 0) {
-          stage.style.visibility = "hidden";
-          syncInteractive(false);
-        } else {
-          stage.style.visibility = "visible";
-          syncInteractive(false);
-        }
-      } else {
-        stage.style.transform = "translate3d(0, 0, 0)";
-      }
-    };
-    gsap.ticker.add(updateSlide);
+    const flowerLayer = flowerFadeRef.current;
+    if (!wrapper || !flowerLayer) return;
 
     const ctx = gsap.context(() => {
-      // 2. Clean viewport fade-in when entering #services (eliminates flower being stuck at bottom edge)
+      // Smoothly fade ONLY the flower in as you scroll into #services (never overlaps #who-we-are above)
       gsap.fromTo(
-        stage,
-        { opacity: 0 },
+        flowerLayer,
+        { opacity: 0, scale: 0.94 },
         {
           opacity: 1,
+          scale: 1,
           ease: "power2.out",
           scrollTrigger: {
             trigger: wrapper,
-            start: "top 80%",
-            end: "top 18%",
+            start: "top 65%",
+            end: "top 2%",
             scrub: true,
-            onUpdate: (self) => {
-              const p = self.progress;
-              const nextSection = document.getElementById("discover-us");
-              const rect = nextSection ? nextSection.getBoundingClientRect() : null;
-              const h = window.innerHeight;
-              const exiting = Boolean(rect && rect.top < h);
-
-              if (p <= 0.01 || (rect && rect.top <= 0)) {
-                stage.style.visibility = "hidden";
-                syncInteractive(false);
-              } else {
-                stage.style.visibility = "visible";
-                syncInteractive(p >= 0.25 && !exiting);
-              }
-            },
           },
         }
       );
 
-      // 3. Continuous flower bloom & discipline progression across scroll
+      // Continuous flower bloom + rotation + 01..05 discipline progression as user scrolls through #services
       const st = ScrollTrigger.create({
         trigger: wrapper,
-        start: "top 40%",
+        start: "top top",
         end: "bottom bottom",
         scrub: true,
         onUpdate: (self) => {
@@ -115,10 +69,7 @@ export default function ServicesFlowerSection() {
       };
     }, wrapper);
 
-    return () => {
-      gsap.ticker.remove(updateSlide);
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
   const scrollToDiscipline = (idx: number) => {
@@ -127,7 +78,7 @@ export default function ServicesFlowerSection() {
     const wrapper = wrapperRef.current;
     const st = animTriggerRef.current;
     if (!wrapper) return;
-    const progressTargets = [0.14, 0.32, 0.50, 0.70, 0.88];
+    const progressTargets = [0.10, 0.30, 0.50, 0.70, 0.90];
     const targetScroll = st
       ? st.start + progressTargets[idx] * (st.end - st.start)
       : wrapper.offsetTop + progressTargets[idx] * (wrapper.offsetHeight - window.innerHeight);
@@ -143,17 +94,17 @@ export default function ServicesFlowerSection() {
     <section
       id="services"
       ref={wrapperRef}
-      className="relative z-[34] h-[290vh] md:h-[340vh] bg-black"
+      className="relative z-30 h-[290vh] md:h-[340vh] bg-black"
     >
-      <div
-        ref={stageRef}
-        style={{ opacity: 0, visibility: "hidden", transform: "translate3d(0, 0, 0)" }}
-        className={`fixed inset-0 top-0 left-0 w-full h-screen h-[100dvh] z-[35] overflow-hidden bg-black flex flex-col justify-between will-change-[transform,opacity,visibility] ${
-          stageInteractive ? "" : "pointer-events-none [&_*]:!pointer-events-none"
-        }`}
-      >
-        {/* Centered 3D Translucent Emerald Glass Gerbera Daisy */}
-        <GlassFlowerCanvas progressRef={progressRef} />
+      <div className="sticky top-0 h-screen h-[100dvh] w-full overflow-hidden bg-black flex flex-col justify-between">
+        {/* Flower fades in gently as section enters focus, then animates smoothly across scroll */}
+        <div
+          ref={flowerFadeRef}
+          style={{ opacity: 0 }}
+          className="absolute inset-0 will-change-[opacity,transform] pointer-events-none"
+        >
+          <GlassFlowerCanvas progressRef={progressRef} />
+        </div>
 
         {/* Subtle radial dark edge fade */}
         <div
