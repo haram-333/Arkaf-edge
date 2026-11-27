@@ -18,7 +18,7 @@ export default function DiscoverWordsSection() {
   return (
     <section
       id="discover-us"
-      className="relative z-30 bg-gradient-to-b from-black via-[#02120e] to-[#031613] text-white py-20 sm:py-28 border-t border-white/10 overflow-hidden"
+      className="relative z-40 bg-gradient-to-b from-black via-[#02120e] to-[#031613] text-white py-20 sm:py-28 border-t border-white/10 overflow-hidden"
     >
       {/* Subtle ambient glow centered behind kinetic word reel */}
       <div
